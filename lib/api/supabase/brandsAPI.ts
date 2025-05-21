@@ -1,15 +1,7 @@
 import { supabase } from "@/lib/supabase";
-import { BrandType, ApiErrorType } from "@/lib/types";
-
-// Supabaseから返されるデータの型定義
-interface SupabaseBrandType {
-  id: number;
-  name: string;
-  image_url: string;
-  description: string | null;
-  deleted_at?: string | null;
-  updated_at?: string;
-}
+import { BrandType } from "@/lib/types";
+import { SupabaseBrandType } from "./utils/types";
+import { mapBrand, processSupabaseArrayResponse } from "./utils/formatHelper";
 
 export class brandsAPI {
   static async getBrands(): Promise<BrandType[]> {
@@ -19,26 +11,11 @@ export class brandsAPI {
       .is("deleted_at", null)
       .order("updated_at", { ascending: true });
 
-    if (error) {
-      const apiError: ApiErrorType = {
-        message: error.message,
-        code: error.code,
-      };
-      throw apiError;
-    }
-
-    const formattedData: BrandType[] = (data || []).map(
-      (item: SupabaseBrandType) => {
-        return {
-          id: item.id,
-          name: item.name,
-          imageUrl: item.image_url,
-          description: item.description || "",
-          products: [], // 必要に応じて別のクエリで取得するか、空配列を設定
-        };
-      },
+    // 共通の配列レスポンス処理関数を使用
+    return processSupabaseArrayResponse<SupabaseBrandType, BrandType>(
+      data,
+      error,
+      mapBrand,
     );
-
-    return formattedData;
   }
 }

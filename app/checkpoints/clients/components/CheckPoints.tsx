@@ -13,7 +13,7 @@ import { ApiErrorType, CheckPointType } from "@/lib/types";
 export default function CheckPoints() {
   const [checkPoints, setCheckPoints] = useState<CheckPointType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<ApiErrorType>(null);
+  const [error, setError] = useState<ApiErrorType | null>(null);
 
   useEffect(() => {
     const fetchCheckPoints = async () => {

@@ -22,6 +22,7 @@ export async function productParams(params: { productId: string }): Promise<{
   try {
     product = await productsAPI.getProduct(productId);
   } catch (err) {
+    console.log("--3");
     const apiError = err as Error | ApiErrorType;
     error =
       "message" in apiError

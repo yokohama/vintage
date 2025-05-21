@@ -1,19 +1,10 @@
 import { supabase } from "@/lib/supabase";
-import { UserProfileType, ApiErrorType } from "@/lib/types";
-
-interface SupabaseProfileType {
-  id: string;
-  display_name: string | null;
-  email: string | null;
-  avatar_url: string | null;
-  website_url: string | null;
-  twitter_url: string | null;
-  instagram_url: string | null;
-  facebook_url: string | null;
-  linkedin_url: string | null;
-  youtube_url: string | null;
-  deleted_at: string | null;
-}
+import { UserProfileType } from "@/lib/types";
+import { SupabaseProfileType } from "./utils/types";
+import {
+  handleSupabaseError,
+  processSupabaseResponse,
+} from "./utils/formatHelper";
 
 const mapUserProfile = (data: SupabaseProfileType): UserProfileType => {
   return {
@@ -37,24 +28,22 @@ export class userProfilesAPI {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      const apiError: ApiErrorType = {
+      handleSupabaseError({
         message: "認証されたユーザーが見つかりません",
         code: "auth/user-not-found",
-      };
-      throw apiError;
+      });
     }
+
+    // この時点でuserはnullではないことが確定しているため、型アサーションを使用
+    const userId = user!.id;
 
     const { data, error } = await supabase
       .from("profiles")
       .select("*")
-      .eq("id", user.id)
+      .eq("id", userId)
       .single();
 
-    if (error) {
-      throw error;
-    }
-
-    return mapUserProfile(data);
+    return processSupabaseResponse(data, error, mapUserProfile, "プロフィール");
   }
 
   static async getUserProfile(id: string): Promise<UserProfileType> {
