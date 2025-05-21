@@ -119,4 +119,31 @@ export class checkPointsAPI {
     } = supabase.storage.from("images").getPublicUrl(filePath);
     return publicUrl;
   }
+
+  // チェックポイントを削除する
+  static async deleteCheckPoint(checkPointId: string): Promise<void> {
+    // 実際のAPI呼び出しをここに実装
+    // 例: await fetch(`/api/checkpoints/${checkPointId}`, { method: 'DELETE' });
+    console.log(`チェックポイント削除: ${checkPointId}`);
+    // 仮の実装としてPromiseを返す
+    return Promise.resolve();
+  }
+
+  // チェックポイントにいいねする
+  static async likeCheckPoint(checkPointId: number | string): Promise<void> {
+    // 実際のAPI呼び出しをここに実装
+    // 例: await fetch(`/api/checkpoints/${checkPointId}/like`, { method: 'POST' });
+    console.log(`チェックポイントいいね: ${checkPointId}`);
+    // 仮の実装としてPromiseを返す
+    return Promise.resolve();
+  }
+
+  // チェックポイントのいいねを取り消す
+  static async unlikeCheckPoint(checkPointId: number | string): Promise<void> {
+    // 実際のAPI呼び出しをここに実装
+    // 例: await fetch(`/api/checkpoints/${checkPointId}/unlike`, { method: 'DELETE' });
+    console.log(`チェックポイントいいね取り消し: ${checkPointId}`);
+    // 仮の実装としてPromiseを返す
+    return Promise.resolve();
+  }
 }
