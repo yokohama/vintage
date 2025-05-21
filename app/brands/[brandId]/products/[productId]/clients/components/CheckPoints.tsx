@@ -1,0 +1,185 @@
+"use client";
+
+import { VintageType } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import AddCheckPointModal from "./AddCheckPointModal";
+//import ActiveCheckPoint from "./ActiveCheckPoint";
+import { useCheckPoints } from "../hooks/useCheckPoints";
+import NotFound from "@/components/ui/NotFound";
+import { siteConfig } from "@/lib/config/siteConfig";
+import { usePageTitle } from "@/contexts/PageTitleContext";
+import { useEffect, useRef, useState } from "react";
+
+interface CheckPointsProps {
+  vintage: VintageType;
+}
+
+const CheckPoints = ({ vintage }: CheckPointsProps) => {
+  useEffect(() => {
+    console.log(vintage.id);
+  }, [vintage]);
+
+  const {
+    isAddModalOpen,
+    setIsAddModalOpen,
+    handleAddButtonClick,
+    addNewCheckPoint,
+  } = useCheckPoints(vintage.checkPoints || []);
+  const { isFixed } = usePageTitle();
+  /*
+  const [activeCheckPointIndex, setActiveCheckPointIndex] = useState<
+    number | null
+  >(null);
+  */
+  const checkPointsRef = useRef<HTMLDivElement>(null);
+  const checkPointRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // フッターエリアにスクロールしているかどうかを追跡する状態
+  const [isInFooterArea, setIsInFooterArea] = useState(false);
+
+  // スクロール位置に基づいて、一番近いCheckPointを特定する
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!checkPointsRef.current || !vintage.checkPoints?.length) return;
+
+      // PageTitleが固定されていない場合は、activeCheckPointIndexをnullに設定
+      /*
+      if (!isFixed) {
+        if (activeCheckPointIndex !== null) {
+          setActiveCheckPointIndex(null);
+        }
+        return;
+      }
+      */
+
+      // ページ下部に到達したかチェック
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      //const lastCheckPointIndex = vintage.checkPoints.length - 1;
+
+      // フッターエリアの検出（ドキュメントの最下部から200px以内）
+      const isNearFooter = scrollTop + windowHeight >= documentHeight - 200;
+
+      // フッターエリアに入った場合
+      if (isNearFooter) {
+        if (!isInFooterArea) {
+          setIsInFooterArea(true);
+        }
+
+        // フッターエリアでは最後のチェックポイントをアクティブにしたままにする
+        /*
+        if (activeCheckPointIndex !== lastCheckPointIndex) {
+          setActiveCheckPointIndex(lastCheckPointIndex);
+        }
+        */
+        return;
+      } else if (isInFooterArea) {
+        // フッターエリアから出た場合
+        setIsInFooterArea(false);
+      }
+
+      // 通常のスクロール検出ロジック（フッターエリア外の場合）
+      // PageTitleが固定されている場合、PageTitleの高さを取得
+      const pageTitleHeight =
+        document.querySelector(".fixed")?.getBoundingClientRect().height || 0;
+      const threshold = pageTitleHeight + 50; // PageTitleの高さ + 余白
+
+      //let closestIndex = null;
+      let closestDistance = Infinity;
+
+      // 各CheckPointの位置を確認
+      checkPointRefs.current.forEach((ref /*index*/) => {
+        if (!ref) return;
+
+        const rect = ref.getBoundingClientRect();
+        const distance = Math.abs(rect.top - threshold);
+
+        // PageTitleと重なっている場合はスキップ
+        if (rect.top < pageTitleHeight) return;
+
+        // 最も近いCheckPointを特定
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          //closestIndex = index;
+        }
+      });
+
+      // 前回と同じインデックスの場合は更新しない
+      /*
+      if (closestIndex !== activeCheckPointIndex) {
+        setActiveCheckPointIndex(closestIndex);
+      }
+      */
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    // 初期表示時には、isFixedがfalseの場合はactiveCheckPointIndexをnullに設定
+    /*
+    if (!isFixed) {
+      setActiveCheckPointIndex(null);
+    } else {
+      // PageTitleが固定されている場合のみ初期実行
+      handleScroll();
+    }
+    */
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [isFixed, vintage.checkPoints, /*activeCheckPointIndex,*/ isInFooterArea]);
+
+  return (
+    <div>
+      <AddCheckPointModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        vintageId={vintage.id}
+        onSuccess={(newCheckPoint) => {
+          // 新しい鑑定ポイントを状態に追加
+          addNewCheckPoint(newCheckPoint);
+          setIsAddModalOpen(false);
+        }}
+      />
+
+      <div className="mt-6 rounded-sm p-4 shadow-sm">
+        <Button
+          variant="default"
+          size="sm"
+          className="bg-amber-600 hover:bg-amber-700 text-white text-xs"
+          onClick={handleAddButtonClick}
+        >
+          <svg
+            xmlns={siteConfig.svg.xmlns}
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mr-1"
+          >
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          追加
+        </Button>
+      </div>
+      <div className="space-y-4 px-2" ref={checkPointsRef}>
+        {vintage.checkPoints && vintage.checkPoints.length == 0 ? (
+          <NotFound msg="鑑定ポイントがまだありません。" />
+        ) : (
+          vintage.checkPoints.map((cp, index) => (
+            <div key={index}>
+              {cp.id}: {cp.point}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default CheckPoints;
