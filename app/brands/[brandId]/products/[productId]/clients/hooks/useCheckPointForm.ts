@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { toast } from "sonner";
 import { CheckPointType } from "@/lib/types";
 import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
@@ -18,7 +18,7 @@ interface UseCheckPointFormReturn {
   handleRemoveFile: () => void;
   handleSubmit: (
     e: React.FormEvent,
-    productEraId: number,
+    productVintateId: number,
     onSuccess: (newCheckPoint: CheckPointType) => void,
     onClose: () => void,
   ) => Promise<void>;
@@ -34,7 +34,7 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
   const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleAdd = async (
-    productEraId: number,
+    productVintageId: number,
     point: string,
     file: File,
     description: string | null,
@@ -57,7 +57,7 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
 
       // 鑑定ポイントの追加
       const newCheckPoint = await checkPointsAPI.addCheckPoint(
-        productEraId,
+        productVintageId,
         point,
         imageUrl,
         description,
@@ -112,7 +112,7 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
 
   const handleSubmit = async (
     e: React.FormEvent,
-    productEraId: number,
+    productVintageId: number,
     onSuccess: (newCheckPoint: CheckPointType) => void,
   ) => {
     e.preventDefault();
@@ -129,7 +129,7 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
 
     // カスタムフックのaddCheckPoint関数を使用
     const result = await handleAdd(
-      productEraId,
+      productVintageId,
       point,
       selectedFile,
       description || null,

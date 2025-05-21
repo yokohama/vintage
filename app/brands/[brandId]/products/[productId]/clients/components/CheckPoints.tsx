@@ -1,6 +1,6 @@
 "use client";
 
-import { VintageType } from "@/lib/types";
+import { CheckPointType, VintageType } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import AddCheckPointModal from "./AddCheckPointModal";
 //import ActiveCheckPoint from "./ActiveCheckPoint";
@@ -9,14 +9,36 @@ import NotFound from "@/components/ui/NotFound";
 import { siteConfig } from "@/lib/config/siteConfig";
 import { usePageTitle } from "@/contexts/PageTitleContext";
 import { useEffect, useRef, useState } from "react";
+import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
 
 interface CheckPointsProps {
   vintage: VintageType;
 }
 
 const CheckPoints = ({ vintage }: CheckPointsProps) => {
+  const [checkPoints, setCheckPoints] = useState<CheckPointType[]>(
+    vintage.checkPoints,
+  );
+
   useEffect(() => {
     console.log(vintage.id);
+
+    const fetchCheckPoints = async () => {
+      try {
+        const checkPointsData = await checkPointsAPI.getCheckPointsByVintageId(
+          vintage.id,
+        );
+        const ids = checkPointsData.map((cp) => {
+          return cp.id;
+        });
+        console.log(ids);
+        setCheckPoints(checkPointsData);
+      } catch (error) {
+        console.error("チェックポイントの取得に失敗しました:", error);
+      }
+    };
+
+    fetchCheckPoints();
   }, [vintage]);
 
   const {
@@ -24,7 +46,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
     setIsAddModalOpen,
     handleAddButtonClick,
     addNewCheckPoint,
-  } = useCheckPoints(vintage.checkPoints || []);
+  } = useCheckPoints(checkPoints || []);
   const { isFixed } = usePageTitle();
   /*
   const [activeCheckPointIndex, setActiveCheckPointIndex] = useState<
@@ -138,6 +160,10 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         onSuccess={(newCheckPoint) => {
           // 新しい鑑定ポイントを状態に追加
           addNewCheckPoint(newCheckPoint);
+          setCheckPoints((prevCheckPoints) => [
+            ...prevCheckPoints,
+            newCheckPoint,
+          ]);
           setIsAddModalOpen(false);
         }}
       />
@@ -171,7 +197,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         {vintage.checkPoints && vintage.checkPoints.length == 0 ? (
           <NotFound msg="鑑定ポイントがまだありません。" />
         ) : (
-          vintage.checkPoints.map((cp, index) => (
+          checkPoints.map((cp, index) => (
             <div key={index}>
               {cp.id}: {cp.point}
             </div>
