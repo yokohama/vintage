@@ -36,7 +36,10 @@ export default async function BrandsPage() {
               {brands.map((brand) => (
                 <div key={brand.id} className="item-card">
                   <Link href={`/brands/${brand?.id}/products`}>
-                    <div className="item-card-image-container">
+                    <div
+                      className="item-card-image-container"
+                      style={{ position: "relative" }}
+                    >
                       <Image
                         src={brand.imageUrl}
                         alt={`${brand.name} | ${siteConfig.name}`}

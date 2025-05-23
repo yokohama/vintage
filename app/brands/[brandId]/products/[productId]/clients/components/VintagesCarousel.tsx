@@ -81,7 +81,10 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
             >
               <Card className="oldies-card overflow-hidden">
                 <CardContent className="p-0">
-                  <div className="relative h-52 w-full oldies-bg-secondary">
+                  <div
+                    className="relative h-52 w-full oldies-bg-secondary"
+                    style={{ position: "relative" }}
+                  >
                     <div id="scrollArea">
                       {/* 左側（戻る）インジケーター */}
                       <div

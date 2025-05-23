@@ -94,7 +94,10 @@ const AddCheckPointModal = ({
                   </div>
                 ) : (
                   <div className="relative">
-                    <div className="relative aspect-video w-full overflow-hidden rounded-sm oldies-border oldies-bg-accent">
+                    <div
+                      className="relative aspect-video w-full overflow-hidden rounded-sm oldies-border oldies-bg-accent"
+                      style={{ position: "relative" }}
+                    >
                       <Image
                         src={previewUrl}
                         alt="プレビュー"

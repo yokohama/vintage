@@ -33,7 +33,10 @@ export default async function ProductsPage({
                 {products.map((product) => (
                   <div key={product.id} className="item-card">
                     <Link href={`/brands/${brand.id}/products/${product.id}`}>
-                      <div className="item-card-image-container">
+                      <div
+                        className="item-card-image-container"
+                        style={{ position: "relative" }}
+                      >
                         <Image
                           src={product.imageUrl}
                           alt={`${product.name} | ${siteConfig.name}`}

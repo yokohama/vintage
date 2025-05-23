@@ -1,208 +1,250 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f9f6f0;
-  --foreground: #171717;
+	--background: #f9f6f0;
+	--foreground: #171717;
 }
 
 @theme {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+	--color-background: var(--background);
+	--color-foreground: var(--foreground);
+	--font-sans: var(--font-geist-sans);
+	--font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #f9f6f0;
-    --foreground: #171717;
-  }
+	:root {
+		--background: #f9f6f0;
+		--foreground: #171717;
+	}
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+	background: var(--background);
+	color: var(--foreground);
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 h1,
 h2,
 h3 {
-  @apply mb-4 leading-tight font-bold text-amber-800 relative transition-colors inline-block italic;
+	@apply mb-4 leading-tight font-bold text-amber-800 relative transition-colors inline-block italic;
 
-  &:hover {
-    @apply text-amber-900;
-  }
+	&:hover {
+		@apply text-amber-900;
+	}
 
-  &.cursor-pointer:hover {
-    @apply scale-105 transition-transform duration-200;
-  }
+	&.cursor-pointer:hover {
+		@apply scale-105 transition-transform duration-200;
+	}
 
-  &.title {
-    @apply relative;
+	&.title {
+		@apply relative;
 
-    &::after {
-      content: "";
-      @apply absolute left-0 bottom-[-5px] w-full h-[2px] bg-[#d3c7a7];
-    }
+		&::after {
+			content: "";
+			@apply absolute left-0 bottom-[-5px] w-full h-[2px] bg-[#d3c7a7];
+		}
 
-    &:hover::after {
-      @apply bg-amber-800;
-    }
-  }
+		&:hover::after {
+			@apply bg-amber-800;
+		}
+	}
 }
 
 /* 見出しのサイズ設定 */
 h1 {
-  @apply text-4xl;
+	@apply text-4xl;
 
-  @media (max-width: 768px) {
-    @apply text-3xl;
-  }
+	@media (max-width: 768px) {
+		@apply text-3xl;
+	}
 }
 
 h2 {
-  @apply text-3xl;
+	@apply text-3xl;
 
-  @media (max-width: 768px) {
-    @apply text-2xl;
-  }
+	@media (max-width: 768px) {
+		@apply text-2xl;
+	}
 }
 
 h2 {
-  @apply text-2xl;
+	@apply text-2xl;
 
-  @media (max-width: 768px) {
-    @apply text-xl;
-  }
+	@media (max-width: 768px) {
+		@apply text-xl;
+	}
 }
 
 .description {
-  @apply text-sm text-stone-600 leading-relaxed max-w-md mt-3 mb-4;
+	@apply text-sm text-stone-600 leading-relaxed max-w-md mt-3 mb-4;
 }
 
 .copyright {
-  @apply pt-4 border-t border-amber-100 text-center;
+	@apply pt-4 border-t border-amber-100 text-center;
 }
 
 .copyright p {
-  @apply text-xs text-stone-500 flex items-center justify-center;
+	@apply text-xs text-stone-500 flex items-center justify-center;
 }
 
 a.sns {
-  @apply text-amber-700 hover:text-amber-900 transition-colors;
+	@apply text-amber-700 hover:text-amber-900 transition-colors;
 }
 
 .nav-link {
-  @apply text-stone-600 hover:text-amber-800 transition-colors text-sm text-center;
+	@apply text-stone-600 hover:text-amber-800 transition-colors text-sm text-center;
 }
 
 .nav-grid {
-  @apply grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2 max-w-2xl mx-auto mb-8;
+	@apply grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-2 max-w-2xl mx-auto mb-8;
 }
 
 /* ヘッダースタイル */
 .oldies-header {
-  @apply py-24 border-b border-amber-100 mb-6 relative bg-cover bg-center;
-  background-image: url("/images/cover.webp");
+	@apply py-24 border-b border-amber-100 mb-6 relative bg-cover bg-center;
+	background-image: url("/images/cover.webp");
 }
 
 .oldies-header-container {
-  @apply relative container mx-auto px-4;
+	@apply relative container mx-auto px-4;
 }
 
 /* ドロップダウンメニューのスタイル */
 .dropdown-profile-menu-container {
-  @apply absolute right-4 top-1/2 -translate-y-1/2 z-10;
+	@apply absolute right-4 top-1/2 -translate-y-1/2 z-10;
 }
 
 .dropdown-profile-menu-trigger-avatar {
-  @apply w-12 h-12 rounded-full overflow-hidden border-2 border-amber-200 shadow-sm hover:border-amber-300 hover:scale-110 transition-all duration-200 bg-amber-50 focus:outline-none;
+	@apply w-12 h-12 rounded-full overflow-hidden border-2 border-amber-200 shadow-sm hover:border-amber-300 hover:scale-110 transition-all duration-200 bg-amber-50 focus:outline-none;
 }
 
 .dropdown-profile-menu-trigger-icon {
-  @apply w-10 h-10 rounded-full flex items-center justify-center bg-amber-50 border border-amber-200 hover:bg-amber-100 transition-colors focus:outline-none;
+	@apply w-10 h-10 rounded-full flex items-center justify-center bg-amber-50 border border-amber-200 hover:bg-amber-100 transition-colors focus:outline-none;
 }
 
 .dropdown-profile-menu-content {
-  @apply min-w-[250px] w-[90vw] max-w-[320px] bg-[#f9f6f0] rounded-md p-3 shadow-md z-50 border border-amber-200;
+	@apply min-w-[250px] w-[90vw] max-w-[320px] bg-[#f9f6f0] rounded-md p-3 shadow-md z-50 border border-amber-200;
 }
 
 .dropdown-profile-menu-item {
-  @apply px-4 py-3 text-base text-stone-800 hover:bg-amber-100 rounded cursor-pointer focus:outline-none;
+	@apply px-4 py-3 text-base text-stone-800 hover:bg-amber-100 rounded cursor-pointer focus:outline-none;
 }
 
 .dropdown-profile-menu-item-with-icon {
-  @apply flex w-full items-center gap-2;
+	@apply flex w-full items-center gap-2;
 }
 
 .dropdown-profile-menu-item-icon {
-  @apply h-4 w-4 text-amber-700;
+	@apply h-4 w-4 text-amber-700;
 }
 
 .dropdown-profile-menu-separator {
-  @apply h-px bg-amber-200 my-2;
+	@apply h-px bg-amber-200 my-2;
 }
 
 .dropdown-profile-menu-footer-item {
-  @apply px-4 py-2 text-sm text-stone-600 hover:bg-amber-100 rounded cursor-pointer focus:outline-none font-serif italic;
+	@apply px-4 py-2 text-sm text-stone-600 hover:bg-amber-100 rounded cursor-pointer focus:outline-none font-serif italic;
 }
 
 .dropdown-profile-menu-item-font-medium {
-  @apply font-medium;
+	@apply font-medium;
 }
 
 /* フッタースタイル */
 .footer {
-  @apply mt-12 border-t border-amber-100 pt-6 pb-4 bg-amber-50;
+	@apply mt-12 border-t border-amber-100 pt-6 pb-4 bg-amber-50;
 }
 
 .footer-container {
-  @apply container mx-auto px-4;
+	@apply container mx-auto px-4;
 }
 
 .footer-content {
-  @apply flex flex-col items-center text-center mb-6;
+	@apply flex flex-col items-center text-center mb-6;
 }
 
 /* ページタイトルスタイル */
 .page-title-container {
-  @apply text-center transition-all duration-300 w-full bg-[#f9f6f0];
+	@apply text-center transition-all duration-300 w-full bg-[#f9f6f0];
 }
 
 .page-title-fixed {
-  @apply fixed top-0 left-0 right-0 py-4 shadow-md bg-amber-100 z-30;
+	@apply fixed top-0 left-0 right-0 py-4 shadow-md bg-amber-100 z-30;
 }
 
 /* エラーページスタイル */
 .error-page-container {
-  @apply text-center py-10 border-2 border-dashed border-[#d3c7a7] rounded-md max-w-3xl mx-auto my-8;
+	@apply text-center py-10 border-2 border-dashed border-[#d3c7a7] rounded-md max-w-3xl mx-auto my-8;
 }
 
 .error-page-message {
-  @apply text-lg text-[#7a6b59] italic;
+	@apply text-lg text-[#7a6b59] italic;
 }
 
 .error-page-link {
-  @apply mt-4 inline-block text-[#5c4d3c] hover:text-[#7a6b59] border-b border-[#d3c7a7] font-serif;
+	@apply mt-4 inline-block text-[#5c4d3c] hover:text-[#7a6b59] border-b border-[#d3c7a7] font-serif;
 }
 
 .item-cards-container {
-  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4;
+	@apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4;
 }
 
 .item-card {
-  @apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100;
+	@apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100;
 }
 
 .item-card-image-container {
-  @apply h-48 overflow-hidden relative;
+	@apply h-48 overflow-hidden relative;
 }
 
 .item-card-image {
-  @apply object-cover sepia-[0.2] brightness-[0.95] transition-transform duration-300 hover:scale-105;
+	@apply object-cover sepia-[0.2] brightness-[0.95] transition-transform duration-300 hover:scale-105;
 }
 
 .item-card-text {
-  @apply p-2;
+	@apply p-2;
+}
+
+.checkpoint-inactive-card-container {
+	@apply p-0 transition-colors duration-300 bg-white border-transparent rounded-lg;
+}
+
+.checkpoint-inactive-card-body {
+	@apply p-2 relative flex items-start gap-3;
+}
+
+.checkpoint-inactive-card-footer {}
+
+.checkpoint-inactive-card-image-container {
+	@apply relative h-16 w-16 mr-3 flex-shrink-0 rounded-sm overflow-hidden flex-shrink-0;
+}
+
+.checkpoint-inactive-card-image {
+	@apply object-cover sepia-[0.15] brightness-[0.98];
+}
+
+.checkpoint-inactive-card-description {
+	@apply text-sm text-stone-600 leading-relaxed max-w-md;
+}
+
+.checkpoint-active-card-container {
+	@apply p-0 transition-colors duration-300 bg-amber-500 rounded-lg shadow-lg w-full;
+}
+
+.checkpoint-active-card-body {
+	@apply p-2 relative w-full;
+}
+
+.checkpoint-active-card-image-container {
+	@apply relative rounded-sm overflow-hidden w-full;
+}
+
+.checkpoint-active-card-image {
+	@apply object-cover sepia-[0.15] brightness-[0.98];
+}
+
+.checkpoint-active-card-description {
+	@apply text-lg text-stone-600 leading-relaxed max-w-md;
 }

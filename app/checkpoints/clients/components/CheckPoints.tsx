@@ -51,7 +51,10 @@ export default function CheckPoints() {
           <div className="oldies-card cursor-pointer flex flex-col h-full">
             <div className="flex items-start p-3 flex-grow">
               {checkPoint.imageUrl && (
-                <div className="relative h-16 w-16 mr-3 flex-shrink-0 oldies-bg-accent rounded-sm overflow-hidden oldies-border">
+                <div
+                  className="relative h-16 w-16 mr-3 flex-shrink-0 oldies-bg-accent rounded-sm overflow-hidden oldies-border"
+                  style={{ position: "relative" }}
+                >
                   <Image
                     src={checkPoint.imageUrl}
                     alt={checkPoint.point}

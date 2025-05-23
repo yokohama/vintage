@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { CheckPointType } from "@/lib/types";
-import { Trash2 } from "lucide-react";
 import CheckPointFooter from "./CheckPointFooter";
+import OwnCheckPoint from "./OwnCheckPoint";
 
 interface ActiveCheckPointProps {
   checkPoint: CheckPointType;
@@ -33,31 +33,36 @@ const ActiveCheckPoint = ({
   handleDelete,
 }: ActiveCheckPointProps) => {
   return (
-    <div className="p-4 transition-colors duration-300 bg-amber-500 border-2 border-black">
-      {isOwnCheckPoint && (
-        <button
-          onClick={(e) => handleDelete(checkPoint.id, e, setCheckPoints)}
-          aria-label="削除"
-        >
-          <Trash2 size={18} />
-        </button>
-      )}
-      <div>
+    <div className="checkpoint-active-card-container w-full max-w-full">
+      <div className="checkpoint-active-card-body relative flex flex-col w-full p-4">
         {checkPoint.imageUrl && (
-          <div className="relative h-16 w-16 mr-3 flex-shrink-0 rounded-sm overflow-hidden">
+          <div
+            className="checkpoint-active-card-image-container w-full"
+            style={{ position: "relative", height: "200px" }}
+          >
             <Image
               src={checkPoint.imageUrl}
               alt={checkPoint.point || "チェックポイント画像"}
               fill
-              sizes="(max-width: 768px) 100vw, 64px"
-              className="object-cover sepia-[0.15] brightness-[0.98]"
+              sizes="100vw"
+              className="checkpoint-active-card-image object-cover"
               priority={true}
             />
           </div>
         )}
-        <div>
-          <h4>{checkPoint.point}</h4>
-          <p>{checkPoint.description}</p>
+        <div className="mt-4 w-full">
+          <div className="flex justify-between items-center">
+            <h3 className="font-medium text-lg">{checkPoint.point}</h3>
+            <OwnCheckPoint
+              checkPoint={checkPoint}
+              setCheckPoints={setCheckPoints}
+              isOwnCheckPoint={isOwnCheckPoint}
+              handleDelete={handleDelete}
+            />
+          </div>
+          <p className="checkpoint-active-card-description">
+            {checkPoint.description}
+          </p>
         </div>
       </div>
       <CheckPointFooter
