@@ -44,14 +44,14 @@ export function useCheckPoints(
     setCheckPoints((prevCheckPoints) => [newCheckPoint, ...prevCheckPoints]);
 
     // 新しい鑑定ポイントのユーザープロフィールを取得
-    if (newCheckPoint.profileId && !userProfiles[newCheckPoint.profileId]) {
+    if (newCheckPoint.profile?.id && !userProfiles[newCheckPoint.profile.id]) {
       userProfilesAPI
         .getCurrentUserProfile()
         .then((profile: UserProfileType) => {
           if (profile) {
             setUserProfiles((prev) => ({
               ...prev,
-              [newCheckPoint.profileId as string]: profile,
+              [newCheckPoint.profile?.id as string]: profile,
             }));
           }
         });
@@ -62,7 +62,7 @@ export function useCheckPoints(
   useEffect(() => {
     const fetchUserProfiles = async () => {
       const userIds = checkPoints
-        .map((cp) => cp.profileId)
+        .map((cp) => cp.profile?.id)
         .filter(
           (userId): userId is string => userId !== null && userId !== undefined,
         );

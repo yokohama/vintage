@@ -7,45 +7,6 @@ export interface SupabaseErrorType {
   status?: number;
 }
 
-// Supabaseから返されるデータの型定義
-export interface SupabaseBrandType {
-  id: number;
-  name: string;
-  image_url: string;
-  description: string | null;
-  deleted_at?: string | null;
-  updated_at?: string;
-}
-
-export interface SupabaseProductType {
-  id: number;
-  brand_id?: number;
-  brands: SupabaseBrandType;
-  name: string;
-  image_url: string;
-  description: string | null;
-  vintages: SupabaseVintageType[];
-}
-
-export interface SupabaseVintageType {
-  id: number;
-  name: string | null;
-  manufacturing_start_year: number;
-  manufacturing_end_year: number;
-  image_url: string;
-  description: string | null;
-  checkpoints: SupabaseCheckPointType[];
-}
-
-export interface SupabaseCheckPointType {
-  id: number;
-  profile_id: string | null;
-  image_url: string;
-  point: string;
-  description: string | null;
-  created_at?: string | null;
-}
-
 export interface SupabaseProfileType {
   id: string;
   display_name: string | null;
@@ -57,5 +18,56 @@ export interface SupabaseProfileType {
   facebook_url: string | null;
   linkedin_url: string | null;
   youtube_url: string | null;
-  deleted_at: string | null;
+  created_at?: string | null;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+// Supabaseから返されるデータの型定義
+export interface SupabaseBrandType {
+  id: number;
+  name: string;
+  image_url: string;
+  description: string | null;
+  created_at?: string | null;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export interface SupabaseProductType {
+  id: number;
+  brand_id?: number;
+  brands: SupabaseBrandType;
+  name: string;
+  image_url: string;
+  description: string | null;
+  vintages: SupabaseVintageType[];
+  created_at?: string | null;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export interface SupabaseVintageType {
+  id: number;
+  name: string | null;
+  manufacturing_start_year: number;
+  manufacturing_end_year: number;
+  image_url: string;
+  description: string | null;
+  checkpoints: SupabaseCheckPointType[];
+  created_at?: string | null;
+  updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export interface SupabaseCheckPointType {
+  id: number;
+  profile_id: string | null;
+  image_url: string;
+  point: string;
+  description: string | null;
+  profiles?: SupabaseProfileType | null;
+  created_at?: string | null;
+  updated_at?: string;
+  deleted_at?: string | null;
 }

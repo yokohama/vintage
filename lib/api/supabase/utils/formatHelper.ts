@@ -4,6 +4,7 @@ import {
   VintageType,
   CheckPointType,
   ApiErrorType,
+  UserProfileType,
 } from "@/lib/types";
 
 import {
@@ -11,6 +12,7 @@ import {
   SupabaseProductType,
   SupabaseVintageType,
   SupabaseCheckPointType,
+  SupabaseProfileType,
   SupabaseErrorType,
 } from "./types";
 
@@ -42,7 +44,7 @@ export const processSupabaseResponse = <T, R>(
   mapper: (item: T) => R,
   entityName: string = "データ",
 ): R => {
-  if (error) {
+  if (error !== null) {
     handleSupabaseError(error);
   }
 
@@ -65,6 +67,19 @@ export const processSupabaseArrayResponse = <T, R>(
 
   return (data || []).map((item) => mapper(item));
 };
+
+export const mapProfile = (profile: SupabaseProfileType): UserProfileType => ({
+  id: profile.id,
+  displayName: profile.display_name,
+  email: profile.email,
+  avatarUrl: profile.avatar_url,
+  websiteUrl: profile.website_url,
+  twitterUrl: profile.twitter_url,
+  instagramUrl: profile.instagram_url,
+  facebookUrl: profile.facebook_url,
+  linkedinUrl: profile.linkedin_url,
+  youtubeUrl: profile.youtube_url,
+});
 
 export const mapBrand = (brand: SupabaseBrandType): BrandType => ({
   id: brand.id,
@@ -96,7 +111,7 @@ export const mapVintage = (vintage: SupabaseVintageType): VintageType => ({
 
 export const mapCheckPoint = (cp: SupabaseCheckPointType): CheckPointType => ({
   id: cp.id,
-  profileId: cp.profile_id,
+  profile: cp.profiles ? mapProfile(cp.profiles) : null,
   vintage: {} as VintageType, // 循環参照を避けるため一時的に空オブジェクトを設定
   imageUrl: cp.image_url,
   point: cp.point,

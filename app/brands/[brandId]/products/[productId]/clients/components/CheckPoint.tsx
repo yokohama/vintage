@@ -14,7 +14,6 @@ interface CheckPointProps {
 
 const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
   const {
-    profile,
     isOwnCheckPoint,
     liked,
     likeCount,
@@ -22,23 +21,21 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
     handleShare,
     handleLike,
     handleDelete,
-  } = useCheckPoint(checkPoint);
+  } = useCheckPoint(checkPoint, false);
+
   return (
-    <div className="oldies-card cursor-pointer flex flex-col h-full transition-all duration-300">
+    <div className="item-card">
       {isOwnCheckPoint && (
         <button
-          onClick={(e) =>
-            handleDelete(String(checkPoint.id), e, setCheckPoints)
-          }
-          className="absolute top-2 right-2 text-[var(--oldies-accent-primary)] hover:text-[var(--oldies-accent-secondary)] transition-colors z-10"
+          onClick={(e) => handleDelete(checkPoint.id, e, setCheckPoints)}
           aria-label="削除"
         >
           <Trash2 size={18} />
         </button>
       )}
-      <div className="flex items-start p-3 flex-grow">
+      <div>
         {checkPoint.imageUrl && (
-          <div className="relative h-16 w-16 mr-3 flex-shrink-0 oldies-bg-accent rounded-sm overflow-hidden oldies-border">
+          <div className="relative h-16 w-16 mr-3 flex-shrink-0 rounded-sm overflow-hidden">
             <Image
               src={checkPoint.imageUrl}
               alt={checkPoint.point || "チェックポイント画像"}
@@ -49,57 +46,51 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
             />
           </div>
         )}
-        <div className="flex-1">
-          <h4 className="oldies-card-header">{checkPoint.point}</h4>
-          <p className="text-xs oldies-text-secondary font-light italic">
-            {checkPoint.description}
-          </p>
+        <div>
+          <h4>{checkPoint.point}</h4>
+          <p>{checkPoint.description}</p>
         </div>
       </div>
 
       {/* フッター部分（SNS領域） */}
-      <div className="oldies-card-footer mt-auto">
-        <div className="flex items-center justify-between space-x-2">
+      <div>
+        <div>
           {/* 投稿者情報 - クリックでプロフィールページへ */}
           <Link
-            href={`/profile/${checkPoint.profileId}`}
-            className="flex items-center gap-2 group"
+            href={`/profile/${checkPoint.profile?.id}`}
             onClick={(e) => e.stopPropagation()} // 親要素のクリックイベントを停止
           >
             <div className="flex-shrink-0 w-6 h-6 rounded-full overflow-hidden">
               <Image
                 src={
-                  profile.avatarUrl || siteConfig.images.defaultProfileAvatar
+                  checkPoint.profile?.avatarUrl ||
+                  siteConfig.images.defaultProfileAvatar
                 }
-                alt={profile.displayName || "ユーザー"}
+                alt={checkPoint.profile?.displayName || "ユーザー"}
                 width={24}
                 height={24}
                 className="object-cover w-full h-full"
                 unoptimized={
-                  profile.avatarUrl?.includes("api.dicebear.com") || false
+                  checkPoint.profile?.avatarUrl?.includes("api.dicebear.com") ||
+                  false
                 }
               />
             </div>
-            <span className="text-xs oldies-text-primary font-medium group-hover:text-[var(--oldies-accent-primary)] transition-colors truncate max-w-[100px]">
-              {profile.displayName}
-            </span>
+            <span className="">{checkPoint.profile?.displayName}</span>
           </Link>
 
           {/* インタラクションボタン */}
-          <div className="flex items-center space-x-3">
+          <div className="">
             <button
               onClick={(e) => {
                 e.stopPropagation(); // 親要素のクリックイベントを停止
                 handleLike(e);
               }}
-              className={`flex items-center text-xs ${liked ? "oldies-text-accent" : "oldies-text-secondary"} hover:oldies-text-accent transition-colors ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
+              className={`flex items-center text-xs ${liked ? "" : ""} hover:oldies-text-accent transition-colors ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
               aria-label="いいね"
               disabled={isLikeLoading}
             >
-              <Heart
-                size={14}
-                className={liked ? "fill-[var(--oldies-accent-primary)]" : ""}
-              />
+              <Heart size={14} className={liked ? "" : ""} />
               <span className="ml-1">{likeCount}</span>
             </button>
             <button
@@ -107,7 +98,7 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
                 e.stopPropagation(); // 親要素のクリックイベントを停止
                 handleShare(e);
               }}
-              className="flex items-center text-xs oldies-text-secondary hover:oldies-text-primary transition-colors"
+              className=""
               aria-label="シェア"
             >
               <Share2 size={14} />

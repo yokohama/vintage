@@ -12,7 +12,7 @@ export class checkPointsAPI {
   static async getCheckPoints(): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
-      .select("*, vintages(*, products(*))")
+      .select("*, vintages(*, products(*)), profiles(*)")
       .is("deleted_at", null)
       .order("updated_at", { ascending: false });
 
@@ -28,7 +28,7 @@ export class checkPointsAPI {
   ): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
-      .select("*, vintages(*, products(*))")
+      .select("*, vintages(*, products(*)), profiles(*)")
       .eq("vintage_id", vintageId)
       .is("deleted_at", null)
       .order("updated_at", { ascending: false });
@@ -57,7 +57,7 @@ export class checkPointsAPI {
           description: description || null,
           profile_id: userId, // user_idではなくprofile_idを使用
         })
-        .select("*, vintages(*, products(*, brands(*)))")
+        .select("*, vintages(*, products(*, brands(*))), profiles(*)")
         .single();
 
       if (error !== null) {
@@ -121,29 +121,103 @@ export class checkPointsAPI {
   }
 
   // チェックポイントを削除する
-  static async deleteCheckPoint(checkPointId: string): Promise<void> {
-    // 実際のAPI呼び出しをここに実装
-    // 例: await fetch(`/api/checkpoints/${checkPointId}`, { method: 'DELETE' });
-    console.log(`チェックポイント削除: ${checkPointId}`);
-    // 仮の実装としてPromiseを返す
-    return Promise.resolve();
+  static async deleteCheckPoint(checkPointId: number): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from("check_points")
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", checkPointId);
+
+      if (error !== null) {
+        console.error("Delete check point error:", error);
+        handleSupabaseError(error, "チェックポイントの削除に失敗しました");
+      }
+    } catch (error: unknown) {
+      console.error("Delete check point error:", error);
+      // 未知のエラーの場合
+      const apiError = {
+        message:
+          error instanceof Error
+            ? error.message
+            : "チェックポイントの削除に失敗しました",
+        code:
+          typeof error === "object" && error !== null && "code" in error
+            ? (error.code as string)
+            : "unknown",
+      };
+      throw apiError;
+    }
   }
 
   // チェックポイントにいいねする
-  static async likeCheckPoint(checkPointId: number | string): Promise<void> {
-    // 実際のAPI呼び出しをここに実装
-    // 例: await fetch(`/api/checkpoints/${checkPointId}/like`, { method: 'POST' });
-    console.log(`チェックポイントいいね: ${checkPointId}`);
-    // 仮の実装としてPromiseを返す
-    return Promise.resolve();
+  static async likeCheckPoint(
+    checkPointId: number,
+    profileId: string,
+  ): Promise<void> {
+    try {
+      // いいねを追加（重複を防ぐためにupsertを使用）
+      const { error } = await supabase.from("check_point_likes").upsert(
+        {
+          check_point_id: checkPointId,
+          profile_id: profileId,
+          created_at: new Date().toISOString(),
+        },
+        {
+          onConflict: "check_point_id,profile_id",
+          ignoreDuplicates: true,
+        },
+      );
+
+      if (error) {
+        console.error("Like check point error:", error);
+        handleSupabaseError(error, "いいねの追加に失敗しました");
+      }
+    } catch (error: unknown) {
+      console.error("Like check point error:", error);
+      // 未知のエラーの場合
+      const apiError = {
+        message:
+          error instanceof Error ? error.message : "いいねの追加に失敗しました",
+        code:
+          typeof error === "object" && error !== null && "code" in error
+            ? (error.code as string)
+            : "unknown",
+      };
+      throw apiError;
+    }
   }
 
   // チェックポイントのいいねを取り消す
-  static async unlikeCheckPoint(checkPointId: number | string): Promise<void> {
-    // 実際のAPI呼び出しをここに実装
-    // 例: await fetch(`/api/checkpoints/${checkPointId}/unlike`, { method: 'DELETE' });
-    console.log(`チェックポイントいいね取り消し: ${checkPointId}`);
-    // 仮の実装としてPromiseを返す
-    return Promise.resolve();
+  static async unlikeCheckPoint(
+    checkPointId: number,
+    profileId: string,
+  ): Promise<void> {
+    try {
+      // いいねを削除
+      const { error } = await supabase
+        .from("check_point_likes")
+        .delete()
+        .eq("check_point_id", checkPointId)
+        .eq("profile_id", profileId);
+
+      if (error) {
+        console.error("Unlike check point error:", error);
+        handleSupabaseError(error, "いいねの取り消しに失敗しました");
+      }
+    } catch (error: unknown) {
+      console.error("Unlike check point error:", error);
+      // 未知のエラーの場合
+      const apiError = {
+        message:
+          error instanceof Error
+            ? error.message
+            : "いいねの取り消しに失敗しました",
+        code:
+          typeof error === "object" && error !== null && "code" in error
+            ? (error.code as string)
+            : "unknown",
+      };
+      throw apiError;
+    }
   }
 }

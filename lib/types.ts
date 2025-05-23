@@ -33,7 +33,7 @@ export interface CheckPointType {
   point: string;
   imageUrl: string;
   description: string;
-  profileId?: string | null;
+  profile: UserProfileType | null;
   createdAt?: string | null;
   isLiked?: boolean;
   likeCount?: number;

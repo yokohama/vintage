@@ -2,23 +2,16 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { CheckPointType, UserProfileType } from "@/lib/types";
 import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
-import { useUserProfile } from "@/hooks/useUserProfile";
-import { siteConfig } from "@/lib/config/siteConfig";
+import { useUserProfile } from "@/contexts/ProfileContext";
 
-// CheckPointTypeを拡張して必要なプロパティを追加
-interface ExtendedCheckPointType extends CheckPointType {
-  profile?: UserProfileType;
-  likedByCurrentUser?: boolean;
-}
-
-export const useCheckPoint = (checkPoint?: ExtendedCheckPointType) => {
-  const { userProfile } = useUserProfile();
-  const [profile, setProfile] = useState<UserProfileType>({
-    id: "",
-    displayName: "",
-    email: null,
-    avatarUrl: siteConfig.images.defaultProfileAvatar,
-  });
+export const useCheckPoint = (
+  checkPoint: CheckPointType,
+  likedByCurrentUser: boolean,
+) => {
+  const { userProfile: currentUserProfile } = useUserProfile();
+  const [profile, setProfile] = useState<UserProfileType | null>(
+    checkPoint.profile,
+  );
   const [isOwnCheckPoint, setIsOwnCheckPoint] = useState(false);
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
@@ -33,13 +26,15 @@ export const useCheckPoint = (checkPoint?: ExtendedCheckPointType) => {
     }
 
     // 自分の投稿かどうかの判定
-    if (userProfile && checkPoint.profileId === userProfile.id) {
+    if (currentUserProfile && profile && profile.id === currentUserProfile.id) {
       setIsOwnCheckPoint(true);
+    } else {
+      setIsOwnCheckPoint(false);
     }
 
     // いいね状態の初期化
-    if (checkPoint.likedByCurrentUser !== undefined) {
-      setLiked(checkPoint.likedByCurrentUser);
+    if (likedByCurrentUser !== undefined) {
+      setLiked(likedByCurrentUser);
     } else if (checkPoint.isLiked !== undefined) {
       // 代替プロパティとしてisLikedを使用
       setLiked(checkPoint.isLiked);
@@ -49,11 +44,11 @@ export const useCheckPoint = (checkPoint?: ExtendedCheckPointType) => {
     if (checkPoint.likeCount !== undefined) {
       setLikeCount(checkPoint.likeCount);
     }
-  }, [checkPoint, userProfile]);
+  }, [checkPoint, currentUserProfile, profile, likedByCurrentUser]);
 
   // チェックポイントの削除処理
   const handleDelete = async (
-    checkPointId: string,
+    checkPointId: number,
     e: React.MouseEvent,
     setCheckPoints: React.Dispatch<React.SetStateAction<CheckPointType[]>>,
   ) => {
@@ -82,7 +77,7 @@ export const useCheckPoint = (checkPoint?: ExtendedCheckPointType) => {
   const handleLike = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (!userProfile || !checkPoint) {
+    if (!currentUserProfile || !checkPoint) {
       toast.error("ログインが必要です");
       return;
     }
@@ -92,12 +87,18 @@ export const useCheckPoint = (checkPoint?: ExtendedCheckPointType) => {
     try {
       if (liked) {
         // いいねを取り消す
-        await checkPointsAPI.unlikeCheckPoint(checkPoint.id);
+        await checkPointsAPI.unlikeCheckPoint(
+          checkPoint.id,
+          currentUserProfile.id,
+        );
         setLiked(false);
         setLikeCount((prev) => Math.max(0, prev - 1));
       } else {
         // いいねする
-        await checkPointsAPI.likeCheckPoint(checkPoint.id);
+        await checkPointsAPI.likeCheckPoint(
+          checkPoint.id,
+          currentUserProfile.id,
+        );
         setLiked(true);
         setLikeCount((prev) => prev + 1);
       }
@@ -138,7 +139,6 @@ export const useCheckPoint = (checkPoint?: ExtendedCheckPointType) => {
   };
 
   return {
-    profile,
     isOwnCheckPoint,
     liked,
     likeCount,
