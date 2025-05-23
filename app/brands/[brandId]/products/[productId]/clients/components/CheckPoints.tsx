@@ -5,11 +5,11 @@ import AddCheckPointModal from "./AddCheckPointModal";
 //import ActiveCheckPoint from "./ActiveCheckPoint";
 import { useCheckPoints } from "../hooks/useCheckPoints";
 import NotFound from "@/components/ui/NotFound";
-import { usePageTitle } from "@/contexts/PageTitleContext";
 import { useEffect, useRef, useState } from "react";
 import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
 import { Standerd } from "@/components/ui/OriginalButton";
 import CheckPoint from "./CheckPoint";
+import { usePageTitle } from "@/contexts/PageTitleContext";
 
 interface CheckPointsProps {
   vintage: VintageType;
@@ -19,6 +19,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
   const [checkPoints, setCheckPoints] = useState<CheckPointType[]>(
     vintage.checkPoints,
   );
+  const { isFixed } = usePageTitle();
 
   useEffect(() => {
     const fetchCheckPoints = async () => {
@@ -41,99 +42,48 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
     handleAddButtonClick,
     addNewCheckPoint,
   } = useCheckPoints(checkPoints || []);
-  const { isFixed } = usePageTitle();
-  const [activeCheckPointIndex, setActiveCheckPointIndex] = useState<
-    number | null
-  >(null);
   const checkPointsRef = useRef<HTMLDivElement>(null);
   const checkPointRefs = useRef<(HTMLDivElement | null)[]>([]);
-  // フッターエリアにスクロールしているかどうかを追跡する状態
-  const [isInFooterArea, setIsInFooterArea] = useState(false);
 
-  // スクロール位置に基づいて、一番近いCheckPointを特定する
+  const [closestCheckPointId, setClosestCheckPointId] = useState<number | null>(
+    null,
+  );
+
+  // スクロール時に固定されているPageTitleに最も近いCheckPointのIDをログ出力
   useEffect(() => {
+    if (!isFixed || !checkPointRefs.current.length) return;
+
     const handleScroll = () => {
-      if (!checkPointsRef.current || !vintage.checkPoints?.length) return;
+      const pageTitleHeight = 60; // PageTitleの高さを仮定（実際の値に調整してください）
+      const pageTitleBottom = pageTitleHeight;
 
-      // PageTitleが固定されていない場合は、activeCheckPointIndexをnullに設定
-      if (!isFixed) {
-        if (activeCheckPointIndex !== null) {
-          setActiveCheckPointIndex(null);
-        }
-        return;
-      }
+      let closestCheckPoint: CheckPointType | null = null;
+      let minDistance = Infinity;
 
-      // ページ下部に到達したかチェック
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const lastCheckPointIndex = vintage.checkPoints.length - 1;
-
-      // フッターエリアの検出（ドキュメントの最下部から200px以内）
-      const isNearFooter = scrollTop + windowHeight >= documentHeight - 200;
-
-      // フッターエリアに入った場合
-      if (isNearFooter) {
-        if (!isInFooterArea) {
-          setIsInFooterArea(true);
-        }
-
-        // フッターエリアでは最後のチェックポイントをアクティブにしたままにする
-        if (activeCheckPointIndex !== lastCheckPointIndex) {
-          setActiveCheckPointIndex(lastCheckPointIndex);
-        }
-        return;
-      } else if (isInFooterArea) {
-        // フッターエリアから出た場合
-        setIsInFooterArea(false);
-      }
-
-      // 通常のスクロール検出ロジック（フッターエリア外の場合）
-      // PageTitleが固定されている場合、PageTitleの高さを取得
-      const pageTitleHeight =
-        document.querySelector(".fixed")?.getBoundingClientRect().height || 0;
-      const threshold = pageTitleHeight + 50; // PageTitleの高さ + 余白
-
-      let closestIndex = null;
-      let closestDistance = Infinity;
-
-      // 各CheckPointの位置を確認
+      // 各CheckPointの位置を確認し、PageTitleに最も近いものを見つける
       checkPointRefs.current.forEach((ref, index) => {
-        if (!ref) return;
+        if (ref && index < checkPoints.length) {
+          const rect = ref.getBoundingClientRect();
+          const distance = Math.abs(rect.top - pageTitleBottom);
 
-        const rect = ref.getBoundingClientRect();
-        const distance = Math.abs(rect.top - threshold);
-
-        // PageTitleと重なっている場合はスキップ
-        if (rect.top < pageTitleHeight) return;
-
-        // 最も近いCheckPointを特定
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          closestIndex = index;
+          // PageTitleに重なっていない場合
+          if (rect.top > pageTitleBottom && distance < minDistance) {
+            minDistance = distance;
+            closestCheckPoint = checkPoints[index];
+          }
         }
       });
 
-      // 前回と同じインデックスの場合は更新しない
-      if (closestIndex !== activeCheckPointIndex) {
-        setActiveCheckPointIndex(closestIndex);
+      if (closestCheckPoint) {
+        setClosestCheckPointId(closestCheckPoint.id);
+      } else {
+        setClosestCheckPointId(null);
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-
-    // 初期表示時には、isFixedがfalseの場合はactiveCheckPointIndexをnullに設定
-    if (!isFixed) {
-      setActiveCheckPointIndex(null);
-    } else {
-      // PageTitleが固定されている場合のみ初期実行
-      handleScroll();
-    }
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isFixed, vintage.checkPoints, /*activeCheckPointIndex,*/ isInFooterArea]);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isFixed, checkPoints]);
 
   return (
     <div>
@@ -167,9 +117,15 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
             {checkPoints.map((cp, index) => (
               <div
                 key={index}
-                ref={(el) => (checkPointRefs.current[index] = el)}
+                ref={(el) => {
+                  checkPointRefs.current[index] = el;
+                }}
               >
-                <CheckPoint checkPoint={cp} setCheckPoints={setCheckPoints} />
+                <CheckPoint
+                  checkPoint={cp}
+                  setCheckPoints={setCheckPoints}
+                  isClosest={cp.id === closestCheckPointId}
+                />
               </div>
             ))}
           </div>

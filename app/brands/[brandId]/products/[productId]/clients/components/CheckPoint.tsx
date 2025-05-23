@@ -10,9 +10,14 @@ import { siteConfig } from "@/lib/config/siteConfig";
 interface CheckPointProps {
   checkPoint: CheckPointType;
   setCheckPoints: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
+  isClosest?: boolean;
 }
 
-const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
+const CheckPoint = ({
+  checkPoint,
+  setCheckPoints,
+  isClosest = false,
+}: CheckPointProps) => {
   const {
     isOwnCheckPoint,
     liked,
@@ -23,8 +28,22 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
     handleDelete,
   } = useCheckPoint(checkPoint, false);
 
+  // isClosestの値をコンソールに出力して確認
+  console.log(
+    `CheckPoint ${checkPoint.id} rendering with isClosest:`,
+    isClosest,
+  );
+
   return (
-    <div className="item-card">
+    <div
+      className={`p-4 transition-colors duration-300 ${isClosest
+          ? "bg-amber-500 border-2 border-black"
+          : "bg-white border-transparent"
+        }`}
+    >
+      <p
+        className={`${isClosest ? "font-bold" : "font-normal"}`}
+      >{`id: ${checkPoint.id}: ${isClosest} `}</p>
       {isOwnCheckPoint && (
         <button
           onClick={(e) => handleDelete(checkPoint.id, e, setCheckPoints)}
@@ -48,6 +67,7 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
         )}
         <div>
           <h4>{checkPoint.point}</h4>
+          <p>{`id: ${checkPoint.id}: ${isClosest} `}</p>
           <p>{checkPoint.description}</p>
         </div>
       </div>
