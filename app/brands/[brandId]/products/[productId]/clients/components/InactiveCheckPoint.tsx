@@ -39,8 +39,8 @@ const InactiveCheckPoint = ({
   handleDelete,
 }: InactiveCheckPointProps) => {
   return (
-    <div className="checkpoint-inactive-card-container">
-      <div className="checkpoint-inactive-card-body">
+    <div className="checkpoint-inactive-card-container transition-all duration-300 ease-in-out transform">
+      <div className="checkpoint-inactive-card-body transition-all duration-300">
         {checkPoint.imageUrl && (
           <div
             className="checkpoint-inactive-card-image-container"
