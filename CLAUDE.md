@@ -5,6 +5,13 @@
 - [Next.js v14 Project tructure](https://nextjs.org/docs/app/getting-started/project-structure)
 - [Next.js v14 Error Handling](https://nextjs.org/docs/app/getting-started/error-handling)
 
+# リントに関するガイドライン
+- 以下の内容に準拠してビルドエラーが出ないコードにする。
+1. [Next.js ESLint公式ドキュメント](https://nextjs.org/docs/app/api-reference/config/eslint)
+2. [typescript-eslint公式ドキュメント](https://typescript-eslint.io/rules/)
+3. [ESLint公式ドキュメント](https://eslint.org/docs/latest/rules/)
+
+
 # 開発指示
 ## 指示に忠実に従うプロンプト
 
