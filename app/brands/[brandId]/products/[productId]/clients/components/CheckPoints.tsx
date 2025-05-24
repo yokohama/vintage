@@ -17,7 +17,7 @@ interface CheckPointsProps {
 
 const CheckPoints = ({ vintage }: CheckPointsProps) => {
   const [checkPoints, setCheckPoints] = useState<CheckPointType[]>(
-    vintage.checkPoints,
+    vintage.checkPoints || [],
   );
   const { isFixed } = usePageTitle();
 
@@ -34,7 +34,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
     };
 
     fetchCheckPoints();
-  }, [vintage]);
+  }, [vintage.id]);
 
   const {
     isAddModalOpen,
@@ -57,7 +57,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       const pageTitleHeight = 60; // PageTitleの高さを仮定（実際の値に調整してください）
       const pageTitleBottom = pageTitleHeight;
 
-      let closestCheckPoint: CheckPointType | null = null;
+      let closestCheckPoint = checkPoints[0];
       let minDistance = Infinity;
 
       // 各CheckPointの位置を確認し、PageTitleに最も近いものを見つける
@@ -75,7 +75,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       });
 
       if (closestCheckPoint) {
-        setClosestCheckPointId(closestCheckPoint.id);
+        setClosestCheckPointId(closestCheckPoint?.id);
       } else {
         setClosestCheckPointId(null);
       }
@@ -110,7 +110,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         />
       </div>
       <div className="" ref={checkPointsRef}>
-        {vintage.checkPoints && vintage.checkPoints.length == 0 ? (
+        {checkPoints.length === 0 ? (
           <NotFound msg="鑑定ポイントがまだありません。" />
         ) : (
           <div className="item-cards-container">
