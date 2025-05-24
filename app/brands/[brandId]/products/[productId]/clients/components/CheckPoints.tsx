@@ -20,6 +20,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
   );
   const { isFixed } = usePageTitle();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const [locked, setLocked] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCheckPoints = async () => {
@@ -56,17 +57,21 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       );
 
       // まずすべてのカードをinactiveに戻す
-      setActiveIndex(null);
+      if (!locked) {
+        setActiveIndex(null);
+      }
 
       // PageTitleと重なっていない最初のcheckPointCardを探す
-      for (let i = 0; i < allCheckPointCards.length; i++) {
-        const cardRect = allCheckPointCards[i].getBoundingClientRect();
+      if (!locked) {
+        for (let i = 0; i < allCheckPointCards.length; i++) {
+          const cardRect = allCheckPointCards[i].getBoundingClientRect();
 
-        // このItemがPageTitleと重なっていない（下にある）場合
-        if (cardRect.top >= pageTitleBottom) {
-          // このItemをactiveに変更
-          setActiveIndex(i);
-          break;
+          // このItemがPageTitleと重なっていない（下にある）場合
+          if (cardRect.top >= pageTitleBottom) {
+            // このItemをactiveに変更
+            setActiveIndex(i);
+            break;
+          }
         }
       }
     };
@@ -83,6 +88,21 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [isFixed]);
+
+  // activeIndexが変更されたときに実行されるエフェクト
+  useEffect(() => {
+    // 最後のCheckPointがactiveになったかどうかをチェック
+    if (
+      activeIndex !== null &&
+      checkPoints.length > 0 &&
+      activeIndex === checkPoints.length - 1
+    ) {
+      console.log("デバッグ: 最後のCheckPointがactiveになりました");
+      setLocked(true);
+    } else {
+      setLocked(false);
+    }
+  }, [activeIndex, checkPoints]);
 
   const {
     isAddModalOpen,
