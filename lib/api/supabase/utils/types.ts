@@ -19,7 +19,7 @@ export interface SupabaseProfileType {
   linkedin_url: string | null;
   youtube_url: string | null;
   created_at?: string | null;
-  updated_at?: string;
+  updated_at?: string | null;
   deleted_at?: string | null;
 }
 
@@ -30,7 +30,7 @@ export interface SupabaseBrandType {
   image_url: string;
   description: string | null;
   created_at?: string | null;
-  updated_at?: string;
+  updated_at?: string | null;
   deleted_at?: string | null;
 }
 
@@ -41,9 +41,9 @@ export interface SupabaseProductType {
   name: string;
   image_url: string;
   description: string | null;
-  vintages: SupabaseVintageType[];
+  vintages?: SupabaseVintageType[];
   created_at?: string | null;
-  updated_at?: string;
+  updated_at?: string | null;
   deleted_at?: string | null;
 }
 
@@ -56,7 +56,7 @@ export interface SupabaseVintageType {
   description: string | null;
   checkpoints: SupabaseCheckPointType[];
   created_at?: string | null;
-  updated_at?: string;
+  updated_at?: string | null;
   deleted_at?: string | null;
 }
 
@@ -68,6 +68,6 @@ export interface SupabaseCheckPointType {
   description: string | null;
   profiles?: SupabaseProfileType | null;
   created_at?: string | null;
-  updated_at?: string;
+  updated_at?: string | null;
   deleted_at?: string | null;
 }
