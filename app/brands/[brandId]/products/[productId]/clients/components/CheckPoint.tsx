@@ -64,12 +64,14 @@ const CheckPoint = ({
               src={checkPoint.imageUrl}
               alt={checkPoint.point || "チェックポイント画像"}
               fill
-              className={`transition-all duration-500 ease-in-out ${isClosest
+              className={`${isClosest
                   ? "checkpoint-active-card-image object-cover"
                   : "checkpoint-inactive-card-image"
                 }`}
               sizes={isClosest ? "100vw" : "64px"}
               priority={true}
+              // トランジションを削除して即座に切り替わるようにする
+              style={{ transition: "none" }}
             />
           </div>
         )}
@@ -122,14 +124,16 @@ const CheckPoint = ({
         </div>
       </div>
 
-      <CheckPointFooter
-        checkPoint={checkPoint}
-        liked={liked}
-        likeCount={likeCount}
-        isLikeLoading={isLikeLoading}
-        handleLike={handleLike}
-        handleShare={handleShare}
-      />
+      {isClosest && (
+        <CheckPointFooter
+          checkPoint={checkPoint}
+          liked={liked}
+          likeCount={likeCount}
+          isLikeLoading={isLikeLoading}
+          handleLike={handleLike}
+          handleShare={handleShare}
+        />
+      )}
     </div>
   );
 };
