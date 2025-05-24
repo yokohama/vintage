@@ -74,35 +74,11 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
 
           // 最後から一つ前のCheckPointがPageTitleに重なっていない場合
           if (secondLastCardRect.top >= pageTitleBottom) {
-            console.log(
-              `デバッグ: 最後のCheckPointはロックされていますが、最後から一つ前のCheckPointがPageTitleに重なっていないため、これをactiveにします`,
-              {
-                secondLastIndex,
-                cardTop: secondLastCardRect.top,
-                pageTitleBottom,
-                timestamp: new Date().toISOString(),
-              },
-            );
             setActiveIndex(secondLastIndex);
           } else {
             // 最後のCheckPointをactiveに保持
-            console.log(
-              `デバッグ: 最後のCheckPointはロックされており、最後から一つ前のCheckPointもPageTitleに重なっているため、最後のCheckPointをactiveに保持します`,
-              {
-                lastIndex: checkPoints.length - 1,
-                timestamp: new Date().toISOString(),
-              },
-            );
             setActiveIndex(checkPoints.length - 1);
           }
-        } else {
-          console.log(
-            `デバッグ: 最後のCheckPointがロックされているため処理をスキップ (lastCheckPointLocked: ${lastCheckPointLocked})`,
-            {
-              checkPointsLength: checkPoints.length,
-              timestamp: new Date().toISOString(),
-            },
-          );
         }
         return;
       }
@@ -119,11 +95,9 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       );
 
       // まずすべてのカードをinactiveに戻す
-      console.log(`hoge: ${lastCheckPointLocked}`);
       setActiveIndex(null);
 
       // PageTitleと重なっていない最初のcheckPointCardを探す
-      console.log(`moge: ${lastCheckPointLocked}`);
       for (let i = 0; i < allCheckPointCards.length; i++) {
         const cardRect = allCheckPointCards[i].getBoundingClientRect();
 
@@ -157,20 +131,8 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       checkPoints.length > 0 &&
       activeIndex === checkPoints.length - 1
     ) {
-      console.log("デバッグ: 最後のCheckPointがactiveになりました", {
-        activeIndex,
-        checkPointsLength: checkPoints.length,
-        lastCheckPointLocked: true,
-        timestamp: new Date().toISOString(),
-      });
       setLastCheckPointLocked(true);
     } else {
-      console.log("デバッグ: lastCheckPointLockedをfalseに設定", {
-        activeIndex,
-        checkPointsLength: checkPoints.length,
-        lastCheckPointLocked: false,
-        timestamp: new Date().toISOString(),
-      });
       setLastCheckPointLocked(false);
     }
   }, [activeIndex, checkPoints]);
@@ -198,7 +160,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         }}
       />
 
-      <div className="flex justify-end m-4">
+      <div className="flex justify-end mr-4">
         <Standerd
           label="追加"
           className="bg-amber-600 hover:bg-amber-700 text-white text-xs"

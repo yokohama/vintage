@@ -42,6 +42,9 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
 
   return (
     <div>
+      <div className="text-center font-bold text-lg text-amber-800">
+        {selectedVintage.name}
+      </div>
       <Carousel
         setApi={setApi}
         opts={{
@@ -51,7 +54,7 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
           containScroll: "trimSnaps",
           skipSnaps: false,
         }}
-        className="w-full relative mb-0 transition-all duration-700"
+        className="w-full relative transition-all duration-700"
       >
         {/* カルーセルのナビゲーションインジケーター */}
         <div className="flex justify-center mt-4 gap-2">
@@ -74,7 +77,7 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
               key={vintage.id}
               className="basis-full pl-1.5 pr-1.5 pt-3 pb-0"
             >
-              <Card className="overflow-hidden">
+              <Card className="overflow-hidden border-0 rounded-none">
                 <CardContent className="p-0">
                   <div
                     className="relative h-52 w-full oldies-bg-secondary"
@@ -141,11 +144,11 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
                       </span>
                     </div>
                   </div>
-                  <h3 className="text-sm px-2 mt-2">
+                  <h4 className="text-sm px-2 mt-2">
                     {currentVintage?.description}
-                  </h3>
+                  </h4>
                 </CardContent>
-                <CardFooter className="p-3 flex justify-between items-center"></CardFooter>
+                <CardFooter className=""></CardFooter>
               </Card>
             </CarouselItem>
           ))}
