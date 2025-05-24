@@ -20,7 +20,8 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
   );
   const { isFixed } = usePageTitle();
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const [locked, setLocked] = useState<boolean>(false);
+  const [lastCheckPointLocked, setLastCheckPointLocked] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fetchCheckPoints = async () => {
@@ -45,6 +46,67 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
     }
 
     const handleScroll = () => {
+      // 最初にlastCheckPointLockedをチェックして特別な処理を行う
+      if (lastCheckPointLocked) {
+        const pageTitleElement = document.querySelector(
+          ".page-title-container",
+        );
+        if (!pageTitleElement) return;
+
+        const pageTitleRect = pageTitleElement.getBoundingClientRect();
+        const pageTitleBottom = pageTitleRect.bottom;
+
+        // すべてのCheckPointを取得
+        const allCheckPointCards = document.querySelectorAll(
+          ".checkpoint-card-container",
+        );
+
+        // 最後から一つ前のCheckPointのインデックス
+        const secondLastIndex = checkPoints.length - 2;
+
+        // 最後から一つ前のCheckPointが存在する場合
+        if (
+          secondLastIndex >= 0 &&
+          allCheckPointCards.length > secondLastIndex
+        ) {
+          const secondLastCardRect =
+            allCheckPointCards[secondLastIndex].getBoundingClientRect();
+
+          // 最後から一つ前のCheckPointがPageTitleに重なっていない場合
+          if (secondLastCardRect.top >= pageTitleBottom) {
+            console.log(
+              `デバッグ: 最後のCheckPointはロックされていますが、最後から一つ前のCheckPointがPageTitleに重なっていないため、これをactiveにします`,
+              {
+                secondLastIndex,
+                cardTop: secondLastCardRect.top,
+                pageTitleBottom,
+                timestamp: new Date().toISOString(),
+              },
+            );
+            setActiveIndex(secondLastIndex);
+          } else {
+            // 最後のCheckPointをactiveに保持
+            console.log(
+              `デバッグ: 最後のCheckPointはロックされており、最後から一つ前のCheckPointもPageTitleに重なっているため、最後のCheckPointをactiveに保持します`,
+              {
+                lastIndex: checkPoints.length - 1,
+                timestamp: new Date().toISOString(),
+              },
+            );
+            setActiveIndex(checkPoints.length - 1);
+          }
+        } else {
+          console.log(
+            `デバッグ: 最後のCheckPointがロックされているため処理をスキップ (lastCheckPointLocked: ${lastCheckPointLocked})`,
+            {
+              checkPointsLength: checkPoints.length,
+              timestamp: new Date().toISOString(),
+            },
+          );
+        }
+        return;
+      }
+
       const pageTitleElement = document.querySelector(".page-title-container");
       if (!pageTitleElement) return;
 
@@ -57,21 +119,19 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       );
 
       // まずすべてのカードをinactiveに戻す
-      if (!locked) {
-        setActiveIndex(null);
-      }
+      console.log(`hoge: ${lastCheckPointLocked}`);
+      setActiveIndex(null);
 
       // PageTitleと重なっていない最初のcheckPointCardを探す
-      if (!locked) {
-        for (let i = 0; i < allCheckPointCards.length; i++) {
-          const cardRect = allCheckPointCards[i].getBoundingClientRect();
+      console.log(`moge: ${lastCheckPointLocked}`);
+      for (let i = 0; i < allCheckPointCards.length; i++) {
+        const cardRect = allCheckPointCards[i].getBoundingClientRect();
 
-          // このItemがPageTitleと重なっていない（下にある）場合
-          if (cardRect.top >= pageTitleBottom) {
-            // このItemをactiveに変更
-            setActiveIndex(i);
-            break;
-          }
+        // このItemがPageTitleと重なっていない（下にある）場合
+        if (cardRect.top >= pageTitleBottom) {
+          // このItemをactiveに変更
+          setActiveIndex(i);
+          break;
         }
       }
     };
@@ -87,7 +147,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       clearTimeout(initTimeout);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [isFixed]);
+  }, [isFixed, lastCheckPointLocked]); // lastCheckPointLockedを依存配列に追加
 
   // activeIndexが変更されたときに実行されるエフェクト
   useEffect(() => {
@@ -97,10 +157,21 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       checkPoints.length > 0 &&
       activeIndex === checkPoints.length - 1
     ) {
-      console.log("デバッグ: 最後のCheckPointがactiveになりました");
-      setLocked(true);
+      console.log("デバッグ: 最後のCheckPointがactiveになりました", {
+        activeIndex,
+        checkPointsLength: checkPoints.length,
+        lastCheckPointLocked: true,
+        timestamp: new Date().toISOString(),
+      });
+      setLastCheckPointLocked(true);
     } else {
-      setLocked(false);
+      console.log("デバッグ: lastCheckPointLockedをfalseに設定", {
+        activeIndex,
+        checkPointsLength: checkPoints.length,
+        lastCheckPointLocked: false,
+        timestamp: new Date().toISOString(),
+      });
+      setLastCheckPointLocked(false);
     }
   }, [activeIndex, checkPoints]);
 
