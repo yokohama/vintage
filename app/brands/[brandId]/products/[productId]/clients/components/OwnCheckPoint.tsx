@@ -26,8 +26,9 @@ const OwnCheckPoint = ({
         <button
           onClick={(e) => handleDelete(checkPoint.id, e, setCheckPoints)}
           aria-label="削除"
+          className="p-1 hover:bg-amber-100 rounded-full transition-colors"
         >
-          <Trash2 size={18} />
+          <Trash2 size={18} className="text-stone-500 hover:text-amber-800" />
         </button>
       )}
     </>

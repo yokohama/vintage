@@ -188,7 +188,7 @@ a.sns {
 }
 
 .item-cards-container {
-	@apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4;
+	@apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-4;
 }
 
 .item-card {
@@ -226,11 +226,34 @@ a.sns {
 }
 
 .checkpoint-inactive-card-description {
-	@apply text-sm text-stone-600 leading-relaxed max-w-md;
+	@apply text-sm text-stone-600 leading-relaxed max-w-md pr-8;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* アクティブなカード内の説明文は省略せずに表示 */
+.checkpoint-active-card-container .checkpoint-inactive-card-description {
+	display: block;
+	-webkit-line-clamp: unset;
+	overflow: visible;
+	text-overflow: unset;
+}
+
+/* 非アクティブなカード内のポイントを非表示 */
+.checkpoint-inactive-card-container .checkpoint-point {
+	display: none;
+}
+
+/* アクティブなカード内のポイントを表示 */
+.checkpoint-active-card-container .checkpoint-point {
+	display: block;
 }
 
 .checkpoint-active-card-container {
-	@apply p-0 transition-colors duration-300 bg-amber-500 rounded-lg shadow-lg w-full;
+	@apply p-0 transition-colors duration-300 bg-amber-50 rounded-lg shadow-lg w-full border-2 border-amber-700;
 }
 
 .checkpoint-active-card-body {
@@ -242,7 +265,7 @@ a.sns {
 }
 
 .checkpoint-active-card-image {
-	@apply object-cover sepia-[0.15] brightness-[0.98];
+	@apply object-cover sepia-[0.15] brightness-[0.98] scale-[2.0] transform-gpu;
 }
 
 .checkpoint-active-card-description {
