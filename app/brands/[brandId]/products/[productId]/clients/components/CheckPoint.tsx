@@ -9,9 +9,14 @@ import { useCheckPoint } from "../hooks/useCheckPoint";
 interface CheckPointProps {
   checkPoint: CheckPointType;
   setCheckPoints: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
+  isActive: boolean;
 }
 
-const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
+const CheckPoint = ({
+  checkPoint,
+  setCheckPoints,
+  isActive,
+}: CheckPointProps) => {
   const {
     isOwnCheckPoint,
     liked,
@@ -22,29 +27,53 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
     handleDelete,
   } = useCheckPoint(checkPoint, false);
 
-  return (
-    <div className="checkpoint-inactive-card-container">
-      <div className="checkpoint-inactive-card-body">
-        {checkPoint.imageUrl && (
-          <div
-            className="checkpoint-inactive-card-image-container"
-            style={{
-              position: "relative",
-            }}
-          >
-            <Image
-              src={checkPoint.imageUrl}
-              alt={checkPoint.point || "チェックポイント画像"}
-              fill
-              className="checkpoint-inactive-card-image"
-              priority={true}
-            />
-          </div>
-        )}
+  const containerClass = isActive
+    ? "checkpoint-active-card-container"
+    : "checkpoint-inactive-card-container";
 
-        <div className="relative w-full">
-          <h3 className="checkpoint-point">{checkPoint.point}</h3>
-          <div className="absolute top-0 right-0">
+  const bodyClass = isActive
+    ? "checkpoint-active-card-body"
+    : "checkpoint-inactive-card-body";
+
+  const imageContainerClass = isActive
+    ? "checkpoint-active-card-image-container"
+    : "checkpoint-inactive-card-image-container";
+
+  const imageClass = isActive
+    ? "checkpoint-active-card-image"
+    : "checkpoint-inactive-card-image";
+
+  const descriptionClass = isActive
+    ? "checkpoint-active-card-description"
+    : "checkpoint-inactive-card-description";
+
+  return (
+    <div className={containerClass}>
+      <div className={isActive ? "" : "flex items-start"}>
+        <div
+          className={imageContainerClass}
+          style={{
+            position: "relative",
+          }}
+        >
+          {isActive && (
+            <h3 className="checkpoint-active-card-point">{checkPoint.point}</h3>
+          )}
+          <Image
+            src={checkPoint.imageUrl}
+            alt={checkPoint.point || "チェックポイント画像"}
+            fill
+            className={imageClass}
+            priority={true}
+          />
+        </div>
+        <div className={bodyClass}>
+          <div className="relative w-full">
+            <p className={`${descriptionClass} description-container`}>
+              {checkPoint.description}
+            </p>
+          </div>
+          <div className="flex justify-end w-full">
             <OwnCheckPoint
               checkPoint={checkPoint}
               setCheckPoints={setCheckPoints}
@@ -52,22 +81,18 @@ const CheckPoint = ({ checkPoint, setCheckPoints }: CheckPointProps) => {
               handleDelete={handleDelete}
             />
           </div>
-          <p className="checkpoint-inactive-card-description description-container">
-            {/* アクティブ状態を検出するためのref要素 */}
-            {checkPoint.description}
-          </p>
         </div>
-      </div>
 
-      <div id="checkPointFooter" className="hidden">
-        <CheckPointFooter
-          checkPoint={checkPoint}
-          liked={liked}
-          likeCount={likeCount}
-          isLikeLoading={isLikeLoading}
-          handleLike={handleLike}
-          handleShare={handleShare}
-        />
+        {isActive && (
+          <CheckPointFooter
+            checkPoint={checkPoint}
+            liked={liked}
+            likeCount={likeCount}
+            isLikeLoading={isLikeLoading}
+            handleLike={handleLike}
+            handleShare={handleShare}
+          />
+        )}
       </div>
     </div>
   );

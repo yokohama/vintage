@@ -19,6 +19,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
     vintage.checkPoints || [],
   );
   const { isFixed } = usePageTitle();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchCheckPoints = async () => {
@@ -38,21 +39,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
   useEffect(() => {
     if (!isFixed) {
       // isFixedがfalseの場合、すべてのチェックポイントを非アクティブにする
-      const allCheckPointCards = document.querySelectorAll(
-        ".checkpoint-inactive-card-container, .checkpoint-active-card-container",
-      );
-
-      allCheckPointCards.forEach((card) => {
-        card.classList.remove("checkpoint-active-card-container");
-        card.classList.add("checkpoint-inactive-card-container");
-
-        // フッターを非表示
-        const footer = card.querySelector("#checkPointFooter");
-        if (footer) {
-          footer.classList.add("hidden");
-        }
-      });
-
+      setActiveIndex(null);
       return;
     }
 
@@ -65,20 +52,11 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
 
       // すべてのCheckPointを取得（active と inactive の両方）
       const allCheckPointCards = document.querySelectorAll(
-        ".checkpoint-inactive-card-container, .checkpoint-active-card-container",
+        ".checkpoint-card-container",
       );
 
       // まずすべてのカードをinactiveに戻す
-      allCheckPointCards.forEach((card) => {
-        card.classList.remove("checkpoint-active-card-container");
-        card.classList.add("checkpoint-inactive-card-container");
-
-        // フッターを非表示
-        const footer = card.querySelector("#checkPointFooter");
-        if (footer) {
-          footer.classList.add("hidden");
-        }
-      });
+      setActiveIndex(null);
 
       // PageTitleと重なっていない最初のcheckPointCardを探す
       for (let i = 0; i < allCheckPointCards.length; i++) {
@@ -87,19 +65,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         // このItemがPageTitleと重なっていない（下にある）場合
         if (cardRect.top >= pageTitleBottom) {
           // このItemをactiveに変更
-          allCheckPointCards[i].classList.remove(
-            "checkpoint-inactive-card-container",
-          );
-          allCheckPointCards[i].classList.add(
-            "checkpoint-active-card-container",
-          );
-
-          // フッターを表示
-          const footer =
-            allCheckPointCards[i].querySelector("#checkPointFooter");
-          if (footer) {
-            footer.classList.remove("hidden");
-          }
+          setActiveIndex(i);
           break;
         }
       }
@@ -154,8 +120,12 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         ) : (
           <div className="item-cards-container">
             {checkPoints.map((cp, index) => (
-              <div key={index}>
-                <CheckPoint checkPoint={cp} setCheckPoints={setCheckPoints} />
+              <div key={index} className="checkpoint-card-container">
+                <CheckPoint
+                  checkPoint={cp}
+                  setCheckPoints={setCheckPoints}
+                  isActive={activeIndex === index}
+                />
               </div>
             ))}
           </div>

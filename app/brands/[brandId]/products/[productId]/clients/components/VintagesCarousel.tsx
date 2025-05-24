@@ -12,7 +12,6 @@ import CheckPoints from "./CheckPoints";
 import { useVintagesCarousel } from "../hooks/useVintagesCarousel";
 import { VintageType, ProductType } from "@/lib/types";
 import { siteConfig } from "@/lib/config/siteConfig";
-import { usePageTitle } from "@/contexts/PageTitleContext";
 
 interface VintagesCarouselProps {
   product: ProductType;
@@ -23,7 +22,6 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
   const [selectedVintage, setSelectedVintage] = useState<VintageType>(
     product.vintages[0],
   );
-  const { isFixed } = usePageTitle();
 
   const handleVintageIndexChange = (index: number) => {
     setSelectedVintageIndex(index);
@@ -53,10 +51,7 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
           containScroll: "trimSnaps",
           skipSnaps: false,
         }}
-        className={`w-full relative mb-0 transition-all duration-700 ease-out ${isFixed
-            ? "opacity-0 max-h-0 overflow-hidden"
-            : "opacity-100 max-h-[500px]"
-          }`}
+        className="w-full relative mb-0 transition-all duration-700"
       >
         {/* カルーセルのナビゲーションインジケーター */}
         <div className="flex justify-center mt-4 gap-2">
@@ -79,7 +74,7 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
               key={vintage.id}
               className="basis-full pl-1.5 pr-1.5 pt-3 pb-0"
             >
-              <Card className="oldies-card overflow-hidden">
+              <Card className="overflow-hidden">
                 <CardContent className="p-0">
                   <div
                     className="relative h-52 w-full oldies-bg-secondary"
@@ -146,7 +141,7 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
                       </span>
                     </div>
                   </div>
-                  <h3 className="text-sm oldies-text-secondary px-2 mt-2">
+                  <h3 className="text-sm px-2 mt-2">
                     {currentVintage?.description}
                   </h3>
                 </CardContent>
