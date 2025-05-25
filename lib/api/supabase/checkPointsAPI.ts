@@ -40,6 +40,23 @@ export class checkPointsAPI {
     );
   }
 
+  static async getCheckPointsByProfileId(
+    profileId: string,
+  ): Promise<CheckPointType[]> {
+    const { data, error } = await supabase
+      .from("check_points")
+      .select("*, profiles(*)")
+      .eq("profile_id", profileId)
+      .is("deleted_at", null)
+      .order("updated_at", { ascending: false });
+
+    return processSupabaseArrayResponse<SupabaseCheckPointType, CheckPointType>(
+      data,
+      error,
+      mapCheckPoint,
+    );
+  }
+
   static async addCheckPoint(
     vintageId: number,
     point: string,

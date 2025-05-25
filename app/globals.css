@@ -207,6 +207,18 @@ a.sns {
 	@apply p-2;
 }
 
+.checkpoint-cards-container {
+	@apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-4;
+}
+
+.checkpoint-card-container {
+	@apply p-0 transition-all duration-700 border-transparent rounded-lg bg-amber-50;
+}
+
+.checkpoint-card-body {
+	@apply p-2 relative flex flex-col items-start gap-3 flex-grow;
+}
+
 .checkpoint-inactive-card-container {
 	@apply p-0 transition-all duration-700 border-transparent rounded-lg bg-amber-50;
 }

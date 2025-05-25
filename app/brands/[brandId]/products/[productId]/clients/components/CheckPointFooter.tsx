@@ -26,7 +26,7 @@ const CheckPointFooter = ({
   return (
     <div className="checkpoint-active-card-footer-container">
       <Link
-        href={`/profile/${checkPoint.profile?.id}`}
+        href={`/profiles/${checkPoint.profile?.id}`}
         onClick={(e) => e.stopPropagation()} // 親要素のクリックイベントを停止
         className="checkpoint-active-card-footer-profile-container"
       >

@@ -1,3 +1,16 @@
+export interface UserProfileType {
+  id: string;
+  displayName: string | null;
+  email: string | null;
+  avatarUrl: string | null;
+  websiteUrl?: string | null;
+  twitterUrl?: string | null;
+  instagramUrl?: string | null;
+  facebookUrl?: string | null;
+  linkedinUrl?: string | null;
+  youtubeUrl?: string | null;
+}
+
 export interface BrandType {
   id: number;
   name: string;
@@ -48,19 +61,6 @@ export interface CheckPointLikeType {
 
 export interface LikedCheckPointType extends CheckPointType {
   vintage: VintageType;
-}
-
-export interface UserProfileType {
-  id: string;
-  displayName: string | null;
-  email: string | null;
-  avatarUrl: string | null;
-  websiteUrl?: string | null;
-  twitterUrl?: string | null;
-  instagramUrl?: string | null;
-  facebookUrl?: string | null;
-  linkedinUrl?: string | null;
-  youtubeUrl?: string | null;
 }
 
 export interface ApiErrorType {

@@ -3,8 +3,8 @@ import { siteConfig } from "@/lib/config/siteConfig";
 
 type ButtonProps = {
   label: string;
-  className: string;
-  onClick: () => void;
+  className?: string;
+  onClick?: () => void;
 };
 
 export function Standerd({ label, className, onClick }: ButtonProps) {
