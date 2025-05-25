@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import { CheckPointType } from "@/lib/types";
-import CheckPointFooter from "./CheckPointFooter";
+import { CheckPointFooter } from "@/components/ui/CheckPoints";
 import OwnCheckPoint from "./OwnCheckPoint";
-import { useCheckPoint } from "../hooks/useCheckPoint";
+import { useCheckPoint } from "@/hooks/useCheckPoint";
 
 interface CheckPointProps {
   checkPoint: CheckPointType;
@@ -27,37 +27,51 @@ const CheckPoint = ({
     handleDelete,
   } = useCheckPoint(checkPoint, false);
 
-  const containerClass = isActive
-    ? "checkpoint-active-card-container"
-    : "checkpoint-inactive-card-container";
+  /*
+   * ここで、画面サイズがsm以上なら、trueにしたい
+   */
+  const isOverSm = false;
 
-  const bodyClass = isActive
-    ? "checkpoint-active-card-body"
-    : "checkpoint-inactive-card-body";
+  const containerClass = isOverSm
+    ? "checkpoint-card-container"
+    : isActive
+      ? "checkpoint-active-card-container"
+      : "checkpoint-inactive-card-container";
 
-  const imageContainerClass = isActive
-    ? "checkpoint-active-card-image-container"
-    : "checkpoint-inactive-card-image-container";
+  const bodyClass = isOverSm
+    ? "checkpoint-card-body"
+    : isActive
+      ? "checkpoint-active-card-body"
+      : "checkpoint-inactive-card-body";
 
-  const imageClass = isActive
-    ? "checkpoint-active-card-image"
-    : "checkpoint-inactive-card-image";
+  const imageContainerClass = isOverSm
+    ? "checkpoint-card-image-container"
+    : isActive
+      ? "checkpoint-active-card-image-container"
+      : "checkpoint-inactive-card-image-container";
 
-  const descriptionClass = isActive
-    ? "checkpoint-active-card-description"
-    : "checkpoint-inactive-card-description";
+  const imageClass = isOverSm
+    ? "checkpoint-card-image"
+    : isActive
+      ? "checkpoint-active-card-image"
+      : "checkpoint-inactive-card-image";
 
-  console.log(`CheckPoint rendering: ${checkPoint.id}, isActive: ${isActive}`);
+  const descriptionClass = isOverSm
+    ? "checkpoint-card-body-description"
+    : isActive
+      ? "checkpoint-active-card-description"
+      : "checkpoint-inactive-card-description";
+
   return (
     <div className={containerClass}>
-      <div className={isActive ? "" : "flex items-start"}>
+      <div className={isOverSm || isActive ? "" : "flex items-start"}>
         <div
           className={imageContainerClass}
           style={{
             position: "relative",
           }}
         >
-          {isActive && (
+          {(isOverSm || isActive) && (
             <h3 className="checkpoint-active-card-point">{checkPoint.point}</h3>
           )}
           <Image
@@ -74,7 +88,7 @@ const CheckPoint = ({
               {checkPoint.description}
             </p>
           </div>
-          {isActive && (
+          {(isOverSm || isActive) && (
             <div className="flex justify-end w-full">
               <OwnCheckPoint
                 checkPoint={checkPoint}
@@ -86,7 +100,7 @@ const CheckPoint = ({
           )}
         </div>
 
-        {isActive && (
+        {(isOverSm || isActive) && (
           <CheckPointFooter
             checkPoint={checkPoint}
             liked={liked}

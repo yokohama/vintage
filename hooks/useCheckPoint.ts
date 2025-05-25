@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { CheckPointType, UserProfileType } from "@/lib/types";
@@ -148,3 +150,5 @@ export const useCheckPoint = (
     handleDelete,
   };
 };
+
+export default useCheckPoint;

@@ -1,10 +1,17 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { CheckPointType } from "@/lib/types";
+import Image from "next/image";
 import { Heart, Share2 } from "lucide-react";
 import { siteConfig } from "@/lib/config/siteConfig";
+import { CheckPointType } from "@/lib/types";
+import { useCheckPoint } from "@/hooks/useCheckPoint";
+
+type CheckPointsProps = {
+  checkPoints: CheckPointType[];
+};
+
+type CheckPointProps = {
+  checkPoint: CheckPointType;
+};
 
 interface CheckPointFooterProps {
   checkPoint: CheckPointType;
@@ -15,7 +22,58 @@ interface CheckPointFooterProps {
   handleLike: (e: React.MouseEvent) => void;
 }
 
-const CheckPointFooter = ({
+export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
+  return (
+    <div className="checkpoint-cards-container">
+      {checkPoints.map((cp, index) => {
+        return (
+          <div key={index}>
+            <CheckPoint checkPoint={cp} />
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
+  const { liked, likeCount, isLikeLoading, handleShare, handleLike } =
+    useCheckPoint(checkPoint, false);
+
+  return (
+    <div className="checkpoint-card-container">
+      <div className="checkpoint-card-image-container">
+        {checkPoint.point && (
+          <div className="absolute top-2 right-2 z-10 bg-amber-800 text-white py-1 px-2 rounded-md text-sm font-bold shadow-sm">
+            {checkPoint.point}
+          </div>
+        )}
+        <Image
+          src={checkPoint.imageUrl}
+          alt={checkPoint.point || "チェックポイント画像"}
+          fill
+          className="checkpoint-card-image"
+          priority={true}
+        />
+      </div>
+      <div className="checkpoint-card-body-container">
+        <p className="checkpoint-card-body-description">
+          {checkPoint.description}
+        </p>
+      </div>
+      <CheckPointFooter
+        checkPoint={checkPoint}
+        liked={liked}
+        likeCount={likeCount}
+        isLikeLoading={isLikeLoading}
+        handleLike={handleLike}
+        handleShare={handleShare}
+      />
+    </div>
+  );
+};
+
+export const CheckPointFooter = ({
   checkPoint,
   liked,
   likeCount,
@@ -81,4 +139,4 @@ const CheckPointFooter = ({
   );
 };
 
-export default CheckPointFooter;
+export default CheckPoints;

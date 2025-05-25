@@ -171,7 +171,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
         {checkPoints.length === 0 ? (
           <NotFound msg="鑑定ポイントがまだありません。" />
         ) : (
-          <div className="item-cards-container">
+          <div className="checkpoint-cards-container">
             {checkPoints.map((cp, index) => (
               <div key={index} className="checkpoint-card-container">
                 <CheckPoint

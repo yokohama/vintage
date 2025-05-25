@@ -12,6 +12,7 @@ import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
 import { CheckPointType } from "@/lib/types";
 import { Standerd } from "@/components/ui/OriginalButton";
 import { siteConfig } from "@/lib/config/siteConfig";
+import CheckPoints from "./clients/components/CheckPoints";
 import {
   Globe,
   Twitter,
@@ -175,64 +176,7 @@ export default async function ProfilePage({
                 <h2 className="text-2xl font-bold text-amber-800 mb-6 border-b-2 border-amber-200 pb-2">
                   投稿したチェックポイント ({checkPoints.length})
                 </h2>
-
-                {checkPoints.length === 0 ? (
-                  <NotFound msg="チェックポイントがまだありません。" />
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-                    {checkPoints.map((cp, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="bg-amber-50 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100"
-                        >
-                          <div className="relative h-48 w-full overflow-hidden">
-                            {cp.point && (
-                              <div className="absolute top-2 right-2 z-10 bg-amber-800 text-white py-1 px-2 rounded-md text-sm font-bold shadow-sm">
-                                {cp.point}
-                              </div>
-                            )}
-                            <Image
-                              src={cp.imageUrl}
-                              alt={cp.point || "チェックポイント画像"}
-                              fill
-                              className="object-cover sepia-[0.15] brightness-[0.98] hover:scale-105 transition-transform duration-300"
-                              priority={true}
-                            />
-                          </div>
-                          <div className="p-4">
-                            <p className="text-sm text-stone-600 leading-relaxed italic">
-                              {cp.description}
-                            </p>
-
-                            {cp.vintage && (
-                              <div className="mt-4 pt-3 border-t border-amber-100">
-                                <Link
-                                  href={`/brands/${cp.vintage.product?.brand?.id}/products/${cp.vintage.product?.id}`}
-                                  className="text-xs text-amber-700 hover:text-amber-800 italic flex items-center gap-1"
-                                >
-                                  <span className="inline-block w-2 h-2 bg-amber-600 rounded-full"></span>
-                                  {cp.vintage.product?.brand?.name} -{" "}
-                                  {cp.vintage.product?.name} ({cp.vintage.name})
-                                </Link>
-                              </div>
-                            )}
-
-                            <div className="mt-3 flex justify-end">
-                              <span className="text-xs text-amber-400 italic">
-                                {cp.createdAt
-                                  ? new Date(cp.createdAt).toLocaleDateString(
-                                    "ja-JP",
-                                  )
-                                  : ""}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <CheckPoints checkPoints={checkPoints} />
               </div>
             </Suspense>
           </>
