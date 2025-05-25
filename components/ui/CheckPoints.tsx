@@ -113,7 +113,9 @@ export const CheckPointFooter = ({
             e.stopPropagation();
             handleLike(e);
           }}
-          className={`checkpoint-active-card-footer-sns-button ${liked ? "text-amber-700" : "opacity-50 cursor-wait"} ${isLikeLoading ? "" : ""}`}
+          className={`checkpoint-active-card-footer-sns-button ${
+            liked ? "text-amber-700" : ""
+          } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
           aria-label="いいね"
           disabled={isLikeLoading}
         >

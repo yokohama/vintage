@@ -210,12 +210,16 @@ export class checkPointsAPI {
     profileId: string,
   ): Promise<void> {
     try {
+      console.log("unlikeCheckPoint実行:", { checkPointId, profileId });
+
       // いいねを削除
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from("check_point_likes")
         .delete()
         .eq("check_point_id", checkPointId)
         .eq("profile_id", profileId);
+
+      console.log("unlikeCheckPoint結果:", { data, error });
 
       if (error) {
         console.error("Unlike check point error:", error);

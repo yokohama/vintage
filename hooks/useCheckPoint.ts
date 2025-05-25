@@ -85,22 +85,31 @@ export const useCheckPoint = (
     }
 
     setIsLikeLoading(true);
+    console.log("いいね処理開始:", {
+      checkPointId: checkPoint.id,
+      profileId: currentUserProfile.id,
+      currentState: liked ? "いいね済み" : "未いいね",
+    });
 
     try {
       if (liked) {
         // いいねを取り消す
+        console.log("いいね取り消し処理開始");
         await checkPointsAPI.unlikeCheckPoint(
           checkPoint.id,
           currentUserProfile.id,
         );
+        console.log("いいね取り消し処理完了");
         setLiked(false);
         setLikeCount((prev) => Math.max(0, prev - 1));
       } else {
         // いいねする
+        console.log("いいね追加処理開始");
         await checkPointsAPI.likeCheckPoint(
           checkPoint.id,
           currentUserProfile.id,
         );
+        console.log("いいね追加処理完了");
         setLiked(true);
         setLikeCount((prev) => prev + 1);
       }
@@ -109,6 +118,11 @@ export const useCheckPoint = (
       toast.error("いいね処理に失敗しました");
     } finally {
       setIsLikeLoading(false);
+      console.log("いいね処理終了:", {
+        checkPointId: checkPoint.id,
+        profileId: currentUserProfile.id,
+        newState: liked ? "いいね済み" : "未いいね",
+      });
     }
   };
 
