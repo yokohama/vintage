@@ -47,6 +47,7 @@ const CheckPoint = ({
     ? "checkpoint-active-card-description"
     : "checkpoint-inactive-card-description";
 
+  console.log(`CheckPoint rendering: ${checkPoint.id}, isActive: ${isActive}`);
   return (
     <div className={containerClass}>
       <div className={isActive ? "" : "flex items-start"}>
@@ -73,14 +74,16 @@ const CheckPoint = ({
               {checkPoint.description}
             </p>
           </div>
-          <div className="flex justify-end w-full">
-            <OwnCheckPoint
-              checkPoint={checkPoint}
-              setCheckPoints={setCheckPoints}
-              isOwnCheckPoint={isOwnCheckPoint}
-              handleDelete={handleDelete}
-            />
-          </div>
+          {isActive && (
+            <div className="flex justify-end w-full">
+              <OwnCheckPoint
+                checkPoint={checkPoint}
+                setCheckPoints={setCheckPoints}
+                isOwnCheckPoint={isOwnCheckPoint}
+                handleDelete={handleDelete}
+              />
+            </div>
+          )}
         </div>
 
         {isActive && (
