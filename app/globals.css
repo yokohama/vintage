@@ -78,7 +78,7 @@ h2 {
 }
 
 .description {
-	@apply text-sm text-stone-600 leading-relaxed max-w-md mt-3 mb-4;
+	@apply text-sm text-stone-600 leading-relaxed mt-3 mb-4;
 }
 
 .copyright {
@@ -268,7 +268,7 @@ a.sns {
 }
 
 .checkpoint-active-card-footer-profile-container {
-	@apply flex items-center gap-2 hover:text-amber-800 transition-colors;
+	@apply flex items-center gap-2.5 hover:text-amber-800 transition-colors;
 }
 
 .checkpoint-active-card-footer-profile {
@@ -276,7 +276,7 @@ a.sns {
 }
 
 .checkpoint-active-card-footer-profile-image {
-	@apply transition-colors rounded-full;
+	@apply transition-colors rounded-full w-8 h-8 border border-amber-200;
 }
 
 .checkpoint-active-card-footer-profile-name {

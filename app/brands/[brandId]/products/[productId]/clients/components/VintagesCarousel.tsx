@@ -7,7 +7,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import CheckPoints from "./CheckPoints";
 import { useVintagesCarousel } from "../hooks/useVintagesCarousel";
 import { VintageType, ProductType } from "@/lib/types";
@@ -28,23 +28,15 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
     setSelectedVintage(product.vintages[index]);
   };
 
-  const {
-    setApi,
-    currentIndex,
-    currentVintage,
-    handlePrevSlide,
-    handleNextSlide,
-  } = useVintagesCarousel({
-    vintages: product.vintages,
-    selectedVintageIndex,
-    onVintageIndexChange: handleVintageIndexChange,
-  });
+  const { setApi, currentIndex, handlePrevSlide, handleNextSlide } =
+    useVintagesCarousel({
+      vintages: product.vintages,
+      selectedVintageIndex,
+      onVintageIndexChange: handleVintageIndexChange,
+    });
 
   return (
     <div>
-      <div className="text-center font-bold text-lg text-amber-800">
-        {selectedVintage.name}
-      </div>
       <Carousel
         setApi={setApi}
         opts={{
@@ -57,28 +49,36 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
         className="w-full relative transition-all duration-700"
       >
         {/* カルーセルのナビゲーションインジケーター */}
-        <div className="flex justify-center mt-4 gap-2">
+        <div className="flex justify-center mt-4 mb-2 gap-2 z-10 relative">
           <div className="flex items-center gap-1.5 mx-2">
             {product.vintages.map((_, index) => (
               <div
                 key={index}
-                className={`w-2.5 h-2.5 rounded-full transition-colors ${index === currentIndex
-                    ? "bg-[var(--oldies-accent-primary)]"
-                    : "bg-[var(--oldies-border-primary)] hover:bg-[var(--oldies-border-secondary)]"
+                onClick={() => handleVintageIndexChange(index)}
+                className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${index === currentIndex
+                    ? "bg-amber-800"
+                    : "bg-amber-200 hover:bg-amber-400"
                   }`}
               />
             ))}
           </div>
         </div>
 
-        <CarouselContent className="-ml-2 -mr-2">
+        <CarouselContent className="-ml-2 -mr-2 mb-2">
           {product.vintages.map((vintage) => (
             <CarouselItem
               key={vintage.id}
-              className="basis-full pl-1.5 pr-1.5 pt-3 pb-0"
+              className="basis-full pl-1.5 pr-1.5 pt-0 pb-0"
             >
-              <Card className="overflow-hidden border-0 rounded-none">
-                <CardContent className="p-0">
+              <Card className="overflow-hidden border-0 rounded-none bg-gray-100">
+                <CardTitle className="w-full text-center font-bold text-xl py-3 !mb-0">
+                  <div className="text-center w-full">
+                    {selectedVintage.name}&nbsp;[&nbsp;
+                    {selectedVintage.manufacturing_start_year} -
+                    {selectedVintage.manufacturing_end_year}&nbsp;]
+                  </div>
+                </CardTitle>
+                <CardContent className="p-0 !mt-0">
                   <div
                     className="relative h-52 w-full oldies-bg-secondary"
                     style={{ position: "relative" }}
@@ -138,17 +138,12 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
                         className="object-cover sepia-[0.15] brightness-[0.98]"
                         priority={currentIndex === 0}
                       />
-                      <span className="absolute top-2 right-2 bg-[var(--oldies-bg-accent)] oldies-text-primary text-base px-3 py-1.5 rounded-full font-medium">
-                        {vintage.manufacturing_start_year}-
-                        {vintage.manufacturing_end_year}
-                      </span>
                     </div>
                   </div>
-                  <h4 className="text-sm px-2 mt-2">
-                    {currentVintage?.description}
-                  </h4>
+                  <p className="description text-center px-4 italic">
+                    {selectedVintage.description}
+                  </p>
                 </CardContent>
-                <CardFooter className=""></CardFooter>
               </Card>
             </CarouselItem>
           ))}

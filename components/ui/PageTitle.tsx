@@ -43,7 +43,7 @@ const PageTitle = ({ title }: PageTitleProps) => {
         style={{
           height: isFixed ? titleRef.current?.offsetHeight + "px" : "auto",
         }}
-        className="mb-8"
+        className="mb-4"
       >
         {/* 実際のタイトル要素 - 固定時はfixedになる */}
         <div

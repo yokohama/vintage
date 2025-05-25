@@ -22,13 +22,13 @@ const Footer = () => {
           <p className="description">{siteConfig.description}</p>
           <div className="flex space-x-6">
             <a href="#" className="sns" aria-label="Instagram">
-              <Instagram size={20} />
+              <Instagram size={30} />
             </a>
             <a href="#" className="sns" aria-label="Twitter">
-              <X size={20} />
+              <X size={30} />
             </a>
             <a href="#" className="sns" aria-label="Facebook">
-              <Facebook size={20} />
+              <Facebook size={30} />
             </a>
           </div>
         </div>
