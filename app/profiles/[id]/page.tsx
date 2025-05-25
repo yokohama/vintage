@@ -92,10 +92,10 @@ export default async function ProfilePage({
                               target="_blank"
                               title={profile.websiteUrl}
                             >
-                              <Globe size={28} className="text-amber-700" />
+                              <Globe size={28} className="text-rose-600" />
                             </Link>
                           ) : (
-                            <Globe size={28} className="text-amber-300" />
+                            <Globe size={28} className="text-rose-200" />
                           )}
 
                           {/* Twitter */}
@@ -106,10 +106,10 @@ export default async function ProfilePage({
                               target="_blank"
                               title={profile.twitterUrl}
                             >
-                              <Twitter size={28} className="text-amber-700" />
+                              <Twitter size={28} className="text-rose-600" />
                             </Link>
                           ) : (
-                            <Twitter size={28} className="text-amber-300" />
+                            <Twitter size={28} className="text-rose-200" />
                           )}
 
                           {/* Instagram */}
@@ -120,10 +120,10 @@ export default async function ProfilePage({
                               target="_blank"
                               title={profile.instagramUrl}
                             >
-                              <Instagram size={28} className="text-amber-700" />
+                              <Instagram size={28} className="text-rose-600" />
                             </Link>
                           ) : (
-                            <Instagram size={28} className="text-amber-300" />
+                            <Instagram size={28} className="text-rose-200" />
                           )}
 
                           {/* Facebook */}
@@ -134,10 +134,10 @@ export default async function ProfilePage({
                               target="_blank"
                               title={profile.facebookUrl}
                             >
-                              <Facebook size={28} className="text-amber-700" />
+                              <Facebook size={28} className="text-rose-600" />
                             </Link>
                           ) : (
-                            <Facebook size={28} className="text-amber-300" />
+                            <Facebook size={28} className="text-rose-200" />
                           )}
 
                           {/* LinkedIn */}
@@ -148,10 +148,10 @@ export default async function ProfilePage({
                               target="_blank"
                               title={profile.linkedinUrl}
                             >
-                              <Linkedin size={28} className="text-amber-700" />
+                              <Linkedin size={28} className="text-rose-600" />
                             </Link>
                           ) : (
-                            <Linkedin size={28} className="text-amber-300" />
+                            <Linkedin size={28} className="text-rose-200" />
                           )}
 
                           {/* YouTube */}
@@ -162,10 +162,10 @@ export default async function ProfilePage({
                               target="_blank"
                               title={profile.youtubeUrl}
                             >
-                              <Youtube size={28} className="text-amber-700" />
+                              <Youtube size={28} className="text-rose-700" />
                             </Link>
                           ) : (
-                            <Youtube size={28} className="text-amber-300" />
+                            <Youtube size={28} className="text-rose-200" />
                           )}
                         </div>
                       </div>
