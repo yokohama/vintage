@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import { siteUrls } from "@/lib/config/siteConfig";
 
 import Error from "@/components/ui/Error";
 import Spinner from "@/components/ui/Spinner";
@@ -48,7 +49,7 @@ function AuthCallbackContent() {
           }
 
           // 処理が完了したらホームページにリダイレクト
-          router.push("/");
+          router.push(siteUrls.brands());
         }
       } catch (err: unknown) {
         console.error("認証コールバック処理エラー:", err);

@@ -13,7 +13,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import LoginButton from "@/components/auth/LoginButton";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { siteConfig, siteUrls } from "@/lib/config/siteConfig";
+import { siteConfig } from "@/lib/config/siteConfig";
 import Image from "next/image";
 
 const Header = () => {
@@ -27,7 +27,7 @@ const Header = () => {
   return (
     <header className="oldies-header">
       <div className="oldies-header-container">
-        <Link href={siteUrls.brands()}>
+        <Link href="/">
           <h1 className="cursor-pointer">{siteConfig.name}</h1>
         </Link>
 
