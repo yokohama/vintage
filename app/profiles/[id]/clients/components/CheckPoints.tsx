@@ -13,7 +13,5 @@ export default function CheckPoints({ checkPoints }: CheckPointsProps) {
     return <NotFound msg="まだ鑑定ポイントの投稿はありません" />;
   }
 
-  console.log(checkPoints);
-
   return <CheckPointsUI checkPoints={checkPoints} />;
 }

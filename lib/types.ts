@@ -11,6 +11,8 @@ export interface UserProfileType {
   youtubeUrl?: string | null;
 }
 
+export type CheckPointsFilterType = "all" | "profile" | "vintage";
+
 export interface BrandType {
   id: number;
   name: string;

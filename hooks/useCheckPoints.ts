@@ -29,5 +29,5 @@ export const useCheckPoints = (profileId?: string) => {
     fetchCheckPoints();
   }, []);
 
-  return { checkPoints, loading, error };
+  return { checkPoints, setCheckPoints, loading, error };
 };

@@ -19,13 +19,11 @@ const CheckPoint = ({
 }: CheckPointProps) => {
   const {
     isOwnCheckPoint,
-    liked,
-    likeCount,
     isLikeLoading,
     handleShare,
     handleLike,
     handleDelete,
-  } = useCheckPoint(checkPoint, false);
+  } = useCheckPoint({ checkPoint });
 
   /*
    * ここで、画面サイズがsm以上なら、trueにしたい
@@ -103,8 +101,6 @@ const CheckPoint = ({
         {(isOverSm || isActive) && (
           <CheckPointFooter
             checkPoint={checkPoint}
-            liked={liked}
-            likeCount={likeCount}
             isLikeLoading={isLikeLoading}
             handleLike={handleLike}
             handleShare={handleShare}

@@ -5,6 +5,7 @@ import {
   processSupabaseArrayResponse,
   handleSupabaseError,
   processSupabaseResponse,
+  setIsLiked,
 } from "./utils/formatHelper";
 import { SupabaseCheckPointType } from "./utils/types";
 
@@ -12,15 +13,19 @@ export class checkPointsAPI {
   static async getCheckPoints(): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
-      .select("*, vintages(*, products(*)), profiles(*)")
+      .select(
+        "*, vintages(*, products(*)), profiles(*), check_point_likes(count)",
+      )
       .is("deleted_at", null)
       .order("updated_at", { ascending: false });
 
-    return processSupabaseArrayResponse<SupabaseCheckPointType, CheckPointType>(
-      data,
-      error,
-      mapCheckPoint,
-    );
+    const checkPoints = processSupabaseArrayResponse<
+      SupabaseCheckPointType,
+      CheckPointType
+    >(data, error, mapCheckPoint);
+
+    // isLikedをセットして返却
+    return setIsLiked(checkPoints);
   }
 
   static async getCheckPointsByVintageId(
@@ -28,16 +33,20 @@ export class checkPointsAPI {
   ): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
-      .select("*, vintages(*, products(*)), profiles(*)")
+      .select(
+        "*, vintages(*, products(*)), profiles(*), check_point_likes(count)",
+      )
       .eq("vintage_id", vintageId)
       .is("deleted_at", null)
       .order("updated_at", { ascending: false });
 
-    return processSupabaseArrayResponse<SupabaseCheckPointType, CheckPointType>(
-      data,
-      error,
-      mapCheckPoint,
-    );
+    const checkPoints = processSupabaseArrayResponse<
+      SupabaseCheckPointType,
+      CheckPointType
+    >(data, error, mapCheckPoint);
+
+    // isLikedをセットして返却
+    return setIsLiked(checkPoints);
   }
 
   static async getCheckPointsByProfileId(
@@ -45,16 +54,18 @@ export class checkPointsAPI {
   ): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
-      .select("*, profiles(*)")
+      .select("*, profiles(*), check_point_likes(count)")
       .eq("profile_id", profileId)
       .is("deleted_at", null)
       .order("updated_at", { ascending: false });
 
-    return processSupabaseArrayResponse<SupabaseCheckPointType, CheckPointType>(
-      data,
-      error,
-      mapCheckPoint,
-    );
+    const checkPoints = processSupabaseArrayResponse<
+      SupabaseCheckPointType,
+      CheckPointType
+    >(data, error, mapCheckPoint);
+
+    // isLikedをセットして返却
+    return setIsLiked(checkPoints);
   }
 
   static async addCheckPoint(
@@ -210,16 +221,12 @@ export class checkPointsAPI {
     profileId: string,
   ): Promise<void> {
     try {
-      console.log("unlikeCheckPoint実行:", { checkPointId, profileId });
-
       // いいねを削除
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("check_point_likes")
         .delete()
         .eq("check_point_id", checkPointId)
         .eq("profile_id", profileId);
-
-      console.log("unlikeCheckPoint結果:", { data, error });
 
       if (error) {
         console.error("Unlike check point error:", error);

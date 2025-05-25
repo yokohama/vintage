@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+
 import {
   BrandType,
   ProductType,
@@ -117,4 +119,36 @@ export const mapCheckPoint = (cp: SupabaseCheckPointType): CheckPointType => ({
   point: cp.point,
   description: cp.description || "",
   createdAt: cp.created_at,
+  likeCount: cp.check_point_likes?.[0]?.count ?? 0,
+  isLiked: cp.is_liked ?? false,
 });
+
+export const setIsLiked = async (
+  checkPoints: CheckPointType[],
+): CheckPointType[] => {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    // ユーザーがいいねしたチェックポイントのIDを取得
+    const { data: likedData } = await supabase
+      .from("check_point_likes")
+      .select("check_point_id")
+      .eq("profile_id", user.id)
+      .is("deleted_at", null);
+
+    if (likedData) {
+      // いいねしたチェックポイントのIDのセットを作成
+      const likedIds = new Set(likedData.map((item) => item.check_point_id));
+
+      // チェックポイントにいいね状態を設定
+      checkPoints = checkPoints.map((cp) => ({
+        ...cp,
+        isLiked: likedIds.has(cp.id),
+      }));
+    }
+  }
+
+  return checkPoints;
+};

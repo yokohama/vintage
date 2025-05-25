@@ -6,17 +6,16 @@ import { CheckPointType, UserProfileType } from "@/lib/types";
 import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
 import { useUserProfile } from "@/contexts/ProfileContext";
 
-export const useCheckPoint = (
-  checkPoint: CheckPointType,
-  likedByCurrentUser: boolean,
-) => {
+type UseCheckPointProps = {
+  checkPoint: CheckPointType;
+};
+
+export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
   const { userProfile: currentUserProfile } = useUserProfile();
   const [profile, setProfile] = useState<UserProfileType | null>(
     checkPoint.profile,
   );
   const [isOwnCheckPoint, setIsOwnCheckPoint] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
 
   useEffect(() => {
@@ -33,20 +32,7 @@ export const useCheckPoint = (
     } else {
       setIsOwnCheckPoint(false);
     }
-
-    // いいね状態の初期化
-    if (likedByCurrentUser !== undefined) {
-      setLiked(likedByCurrentUser);
-    } else if (checkPoint.isLiked !== undefined) {
-      // 代替プロパティとしてisLikedを使用
-      setLiked(checkPoint.isLiked);
-    }
-
-    // いいね数の初期化
-    if (checkPoint.likeCount !== undefined) {
-      setLikeCount(checkPoint.likeCount);
-    }
-  }, [checkPoint, currentUserProfile, profile, likedByCurrentUser]);
+  }, [checkPoint, currentUserProfile, profile]);
 
   // チェックポイントの削除処理
   const handleDelete = async (
@@ -85,14 +71,9 @@ export const useCheckPoint = (
     }
 
     setIsLikeLoading(true);
-    console.log("いいね処理開始:", {
-      checkPointId: checkPoint.id,
-      profileId: currentUserProfile.id,
-      currentState: liked ? "いいね済み" : "未いいね",
-    });
 
     try {
-      if (liked) {
+      if (checkPoint.isLiked) {
         // いいねを取り消す
         console.log("いいね取り消し処理開始");
         await checkPointsAPI.unlikeCheckPoint(
@@ -100,8 +81,6 @@ export const useCheckPoint = (
           currentUserProfile.id,
         );
         console.log("いいね取り消し処理完了");
-        setLiked(false);
-        setLikeCount((prev) => Math.max(0, prev - 1));
       } else {
         // いいねする
         console.log("いいね追加処理開始");
@@ -110,19 +89,12 @@ export const useCheckPoint = (
           currentUserProfile.id,
         );
         console.log("いいね追加処理完了");
-        setLiked(true);
-        setLikeCount((prev) => prev + 1);
       }
     } catch (error) {
       console.error("いいね処理に失敗しました:", error);
       toast.error("いいね処理に失敗しました");
     } finally {
       setIsLikeLoading(false);
-      console.log("いいね処理終了:", {
-        checkPointId: checkPoint.id,
-        profileId: currentUserProfile.id,
-        newState: liked ? "いいね済み" : "未いいね",
-      });
     }
   };
 
@@ -156,8 +128,6 @@ export const useCheckPoint = (
 
   return {
     isOwnCheckPoint,
-    liked,
-    likeCount,
     isLikeLoading,
     handleShare,
     handleLike,

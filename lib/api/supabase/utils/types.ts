@@ -70,4 +70,6 @@ export interface SupabaseCheckPointType {
   created_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;
+  check_point_likes?: { count: number }[];
+  is_liked?: boolean;
 }

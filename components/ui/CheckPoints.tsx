@@ -15,8 +15,6 @@ type CheckPointProps = {
 
 interface CheckPointFooterProps {
   checkPoint: CheckPointType;
-  liked: boolean;
-  likeCount: number;
   isLikeLoading: boolean;
   handleShare: (e: React.MouseEvent) => void;
   handleLike: (e: React.MouseEvent) => void;
@@ -37,8 +35,9 @@ export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
 };
 
 export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
-  const { liked, likeCount, isLikeLoading, handleShare, handleLike } =
-    useCheckPoint(checkPoint, false);
+  const { isLikeLoading, handleShare, handleLike } = useCheckPoint({
+    checkPoint,
+  });
 
   return (
     <div className="checkpoint-card-container">
@@ -63,8 +62,6 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
       </div>
       <CheckPointFooter
         checkPoint={checkPoint}
-        liked={liked}
-        likeCount={likeCount}
         isLikeLoading={isLikeLoading}
         handleLike={handleLike}
         handleShare={handleShare}
@@ -75,8 +72,6 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
 
 export const CheckPointFooter = ({
   checkPoint,
-  liked,
-  likeCount,
   isLikeLoading,
   handleLike,
   handleShare,
@@ -113,18 +108,19 @@ export const CheckPointFooter = ({
             e.stopPropagation();
             handleLike(e);
           }}
-          className={`checkpoint-active-card-footer-sns-button ${
-            liked ? "text-amber-700" : ""
-          } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
+          className={`checkpoint-active-card-footer-sns-button ${checkPoint.isLiked ? "text-amber-700" : ""
+            } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
           aria-label="いいね"
           disabled={isLikeLoading}
         >
           <Heart
             className={
-              liked ? "checkpoint-active-card-footer-sns-liked-heart" : ""
+              checkPoint.isLiked
+                ? "checkpoint-active-card-footer-sns-liked-heart"
+                : ""
             }
           />
-          <span className="ml-1">{likeCount}</span>
+          <span className="ml-1">{checkPoint.likeCount}</span>
         </button>
         <button
           onClick={(e) => {
