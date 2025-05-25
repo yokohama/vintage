@@ -43,6 +43,7 @@ export const siteConfig = {
 // 各種URLを生成するヘルパー関数
 export const siteUrls = {
   home: () => "/",
+  brands: () => "/brands",
   products: (brandId: number) => `/brands/${brandId}/products`,
   product: (brandId: number, productId: number) =>
     `/brands/${brandId}/products/${productId}`,

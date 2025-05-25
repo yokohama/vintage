@@ -35,10 +35,10 @@ const Footer = () => {
 
         {/* ナビゲーションリンク */}
         <div className="nav-grid">
-          <Link href="/" className="nav-link">
+          <Link href={siteUrls.brands()} className="nav-link">
             ブランド一覧
           </Link>
-          <Link href="/" className="nav-link">
+          <Link href={siteUrls.brands()} className="nav-link">
             プロダクト一覧
           </Link>
           <Link href={siteUrls.checkpoints} className="nav-link">

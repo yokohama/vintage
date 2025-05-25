@@ -90,7 +90,7 @@ h2 {
 }
 
 a.sns {
-	@apply text-amber-700 hover:text-amber-900 transition-colors;
+	@apply text-rose-600 hover:text-rose-800 transition-colors;
 }
 
 .nav-link {
