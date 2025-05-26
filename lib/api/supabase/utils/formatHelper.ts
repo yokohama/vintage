@@ -125,33 +125,46 @@ export const mapCheckPoint = (cp: SupabaseCheckPointType): CheckPointType => ({
 
 export const setIsLiked = async (
   checkPoints: CheckPointType[],
-): CheckPointType[] => {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  userId?: string,
+): Promise<CheckPointType[]> => {
+  try {
+    let user = null;
 
-  console.log(user);
-
-  if (user) {
-    // ユーザーがいいねしたチェックポイントのIDを取得
-    const { data: likedData } = await supabase
-      .from("check_point_likes")
-      .select("check_point_id")
-      .eq("profile_id", user.id)
-      .is("deleted_at", null);
-
-    if (likedData) {
-      // いいねしたチェックポイントのIDのセットを作成
-      const likedIds = new Set(likedData.map((item) => item.check_point_id));
-
-      console.log(likedIds);
-
-      // チェックポイントにいいね状態を設定
-      checkPoints = checkPoints.map((cp) => ({
-        ...cp,
-        isLiked: likedIds.has(cp.id),
-      }));
+    // ユーザーIDが渡された場合はそれを使用し、そうでない場合はgetUser()を試みる
+    if (userId) {
+      user = { id: userId };
+    } else {
+      try {
+        const { data } = await supabase.auth.getUser();
+        user = data.user;
+      } catch (error) {
+        console.error("認証情報の取得に失敗しました:", error);
+        // 認証エラーの場合は、いいねなしで返す
+        return checkPoints;
+      }
     }
+
+    if (user) {
+      // ユーザーがいいねしたチェックポイントのIDを取得
+      const { data: likedData } = await supabase
+        .from("check_point_likes")
+        .select("check_point_id")
+        .eq("profile_id", user.id)
+        .is("deleted_at", null);
+
+      if (likedData) {
+        // いいねしたチェックポイントのIDのセットを作成
+        const likedIds = new Set(likedData.map((item) => item.check_point_id));
+
+        // チェックポイントにいいね状態を設定
+        return checkPoints.map((cp) => ({
+          ...cp,
+          isLiked: likedIds.has(cp.id),
+        }));
+      }
+    }
+  } catch (error) {
+    console.error("いいね状態の設定に失敗しました:", error);
   }
 
   return checkPoints;

@@ -10,7 +10,7 @@ import {
 import { SupabaseCheckPointType } from "./utils/types";
 
 export class checkPointsAPI {
-  static async getCheckPoints(): Promise<CheckPointType[]> {
+  static async getCheckPoints(userId?: string): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
       .select(
@@ -25,11 +25,12 @@ export class checkPointsAPI {
     >(data, error, mapCheckPoint);
 
     // isLikedをセットして返却
-    return setIsLiked(checkPoints);
+    return setIsLiked(checkPoints, userId);
   }
 
   static async getCheckPointsByVintageId(
     vintageId: number,
+    userId?: string,
   ): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
@@ -46,11 +47,12 @@ export class checkPointsAPI {
     >(data, error, mapCheckPoint);
 
     // isLikedをセットして返却
-    return setIsLiked(checkPoints);
+    return setIsLiked(checkPoints, userId);
   }
 
   static async getCheckPointsByProfileId(
     profileId: string,
+    userId?: string,
   ): Promise<CheckPointType[]> {
     const { data, error } = await supabase
       .from("check_points")
@@ -65,7 +67,7 @@ export class checkPointsAPI {
     >(data, error, mapCheckPoint);
 
     // isLikedをセットして返却
-    return setIsLiked(checkPoints);
+    return setIsLiked(checkPoints, userId);
   }
 
   static async addCheckPoint(
