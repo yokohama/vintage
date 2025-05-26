@@ -24,35 +24,40 @@ const CheckPoint = ({
    */
   const isOverSm = false;
 
-  const containerClass = isOverSm
-    ? "checkpoint-card-container"
-    : isActive
-      ? "checkpoint-active-card-container"
-      : "checkpoint-inactive-card-container";
+  const containerClass = `${isOverSm
+      ? "checkpoint-card-container"
+      : isActive
+        ? "checkpoint-active-card-container"
+        : "checkpoint-inactive-card-container"
+    } transition-all duration-500`;
 
-  const bodyClass = isOverSm
-    ? "checkpoint-card-body"
-    : isActive
-      ? "checkpoint-active-card-body"
-      : "checkpoint-inactive-card-body";
+  const bodyClass = `${isOverSm
+      ? "checkpoint-card-body"
+      : isActive
+        ? "checkpoint-active-card-body"
+        : "checkpoint-inactive-card-body"
+    } transition-all duration-500`;
 
-  const imageContainerClass = isOverSm
-    ? "checkpoint-card-image-container"
-    : isActive
-      ? "checkpoint-active-card-image-container"
-      : "checkpoint-inactive-card-image-container";
+  const imageContainerClass = `${isOverSm
+      ? "checkpoint-card-image-container"
+      : isActive
+        ? "checkpoint-active-card-image-container"
+        : "checkpoint-inactive-card-image-container"
+    }`;
 
-  const imageClass = isOverSm
-    ? "checkpoint-card-image"
-    : isActive
-      ? "checkpoint-active-card-image"
-      : "checkpoint-inactive-card-image";
+  const imageClass = `${isOverSm
+      ? "checkpoint-card-image"
+      : isActive
+        ? "checkpoint-active-card-image"
+        : "checkpoint-inactive-card-image"
+    }`;
 
-  const descriptionClass = isOverSm
-    ? "checkpoint-card-body-description"
-    : isActive
-      ? "checkpoint-active-card-description"
-      : "checkpoint-inactive-card-description";
+  const descriptionClass = `${isOverSm
+      ? "checkpoint-card-body-description"
+      : isActive
+        ? "checkpoint-active-card-description"
+        : "checkpoint-inactive-card-description"
+    } transition-all duration-500`;
 
   return (
     <div className={containerClass}>
