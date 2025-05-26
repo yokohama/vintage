@@ -15,9 +15,6 @@ type CheckPointProps = {
 
 interface CheckPointFooterProps {
   checkPoint: CheckPointType;
-  isLikeLoading: boolean;
-  handleShare: (e: React.MouseEvent) => void;
-  handleLike: (e: React.MouseEvent) => void;
 }
 
 export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
@@ -35,10 +32,6 @@ export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
 };
 
 export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
-  const { isLikeLoading, handleShare, handleLike } = useCheckPoint({
-    checkPoint,
-  });
-
   return (
     <div className="checkpoint-card-container">
       <div className="checkpoint-card-image-container">
@@ -60,22 +53,17 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
           {checkPoint.description}
         </p>
       </div>
-      <CheckPointFooter
-        checkPoint={checkPoint}
-        isLikeLoading={isLikeLoading}
-        handleLike={handleLike}
-        handleShare={handleShare}
-      />
+      <CheckPointFooter checkPoint={checkPoint} />
     </div>
   );
 };
 
-export const CheckPointFooter = ({
-  checkPoint,
-  isLikeLoading,
-  handleLike,
-  handleShare,
-}: CheckPointFooterProps) => {
+export const CheckPointFooter = ({ checkPoint }: CheckPointFooterProps) => {
+  const { isLikeLoading, handleShare, handleLike, isLiked, likeCount } =
+    useCheckPoint({
+      checkPoint,
+    });
+
   return (
     <div className="checkpoint-active-card-footer-container">
       <Link
@@ -103,24 +91,24 @@ export const CheckPointFooter = ({
 
       {/* SNS */}
       <div className="checkpoint-active-card-footer-sns-container">
+        {isLiked}
         <button
           onClick={(e) => {
             e.stopPropagation();
             handleLike(e);
           }}
-          className={`checkpoint-active-card-footer-sns-button ${checkPoint.isLiked ? "text-amber-700" : ""
-            } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
+          className={`checkpoint-active-card-footer-sns-button ${
+            isLiked ? "text-amber-700" : ""
+          } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
           aria-label="いいね"
           disabled={isLikeLoading}
         >
           <Heart
             className={
-              checkPoint.isLiked
-                ? "checkpoint-active-card-footer-sns-liked-heart"
-                : ""
+              isLiked ? "checkpoint-active-card-footer-sns-liked-heart" : ""
             }
           />
-          <span className="ml-1">{checkPoint.likeCount}</span>
+          <span className="ml-1">{likeCount}</span>
         </button>
         <button
           onClick={(e) => {

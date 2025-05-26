@@ -8,8 +8,6 @@ import Error from "@/components/ui/Error";
 import NotFound from "@/components/ui/NotFound";
 import Spinner from "@/components/ui/Spinner";
 import { profilesParams } from "../utils/profilesParams";
-import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
-import { CheckPointType } from "@/lib/types";
 import { Standerd } from "@/components/ui/OriginalButton";
 import { siteConfig } from "@/lib/config/siteConfig";
 import CheckPoints from "./clients/components/CheckPoints";
@@ -32,11 +30,6 @@ export default async function ProfilePage({
   params: { id: string };
 }) {
   const { profile, error } = await profilesParams(params);
-  let checkPoints: CheckPointType[] = [];
-
-  if (profile) {
-    checkPoints = await checkPointsAPI.getCheckPointsByProfileId(profile.id);
-  }
 
   return (
     <main>
@@ -173,10 +166,7 @@ export default async function ProfilePage({
                   </div>
                 </div>
 
-                <h2 className="text-2xl font-bold text-amber-800 mb-6 border-b-2 border-amber-200 pb-2">
-                  投稿したチェックポイント ({checkPoints.length})
-                </h2>
-                <CheckPoints checkPoints={checkPoints} />
+                <CheckPoints profileId={profile.id} />
               </div>
             </Suspense>
           </>

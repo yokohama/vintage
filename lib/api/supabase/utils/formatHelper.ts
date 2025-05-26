@@ -130,6 +130,8 @@ export const setIsLiked = async (
     data: { user },
   } = await supabase.auth.getUser();
 
+  console.log(user);
+
   if (user) {
     // ユーザーがいいねしたチェックポイントのIDを取得
     const { data: likedData } = await supabase
@@ -141,6 +143,8 @@ export const setIsLiked = async (
     if (likedData) {
       // いいねしたチェックポイントのIDのセットを作成
       const likedIds = new Set(likedData.map((item) => item.check_point_id));
+
+      console.log(likedIds);
 
       // チェックポイントにいいね状態を設定
       checkPoints = checkPoints.map((cp) => ({

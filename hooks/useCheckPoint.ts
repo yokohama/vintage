@@ -17,6 +17,8 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
   );
   const [isOwnCheckPoint, setIsOwnCheckPoint] = useState(false);
   const [isLikeLoading, setIsLikeLoading] = useState(false);
+  const [isLiked, setIsLiked] = useState(checkPoint.isLiked);
+  const [likeCount, setLikeCount] = useState(checkPoint.likeCount || 0);
 
   useEffect(() => {
     if (!checkPoint) return;
@@ -73,22 +75,22 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
     setIsLikeLoading(true);
 
     try {
-      if (checkPoint.isLiked) {
+      if (isLiked) {
         // いいねを取り消す
-        console.log("いいね取り消し処理開始");
         await checkPointsAPI.unlikeCheckPoint(
           checkPoint.id,
           currentUserProfile.id,
         );
-        console.log("いいね取り消し処理完了");
+        setIsLiked(false);
+        setLikeCount((prev) => Math.max(0, prev - 1)); // いいね数を減らす（0未満にならないよう制限）
       } else {
         // いいねする
-        console.log("いいね追加処理開始");
         await checkPointsAPI.likeCheckPoint(
           checkPoint.id,
           currentUserProfile.id,
         );
-        console.log("いいね追加処理完了");
+        setIsLiked(true);
+        setLikeCount((prev) => prev + 1); // いいね数を増やす
       }
     } catch (error) {
       console.error("いいね処理に失敗しました:", error);
@@ -132,6 +134,9 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
     handleShare,
     handleLike,
     handleDelete,
+    isLiked,
+    setIsLiked,
+    likeCount,
   };
 };
 
