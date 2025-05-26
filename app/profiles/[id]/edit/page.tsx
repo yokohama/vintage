@@ -7,7 +7,7 @@ import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import PageTitle from "@/components/ui/PageTitle";
 import Spinner from "@/components/ui/Spinner";
-import { siteConfig } from "@/lib/config/siteConfig";
+import { siteConfig, siteUrls } from "@/lib/config/siteConfig";
 import { userProfilesAPI } from "@/lib/api/supabase/userProfilesAPI";
 import { UserProfileType } from "@/lib/types";
 import {
@@ -28,7 +28,6 @@ export default function ProfileEditPage({
   const [profile, setProfile] = useState<UserProfileType | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 
@@ -63,9 +62,9 @@ export default function ProfileEditPage({
             data.avatarUrl || siteConfig.images.defaultProfileAvatar,
           );
         }
-      } catch (err) {
-        console.error("プロフィールの取得に失敗しました:", err);
-        setError("プロフィールの取得に失敗しました");
+      } catch {
+        router.push(`/profiles/${params.id}?t=${Date.now()}&error=true`);
+        router.refresh();
       } finally {
         setLoading(false);
       }
@@ -81,6 +80,11 @@ export default function ProfileEditPage({
       ...prev,
       [name]: value,
     }));
+  };
+
+  const errorRedirect = () => {
+    router.push(`${siteUrls.profile(params.id)}?t=${Date.now()}&error=true`);
+    router.refresh();
   };
 
   // 画像アップロードハンドラ
@@ -111,7 +115,9 @@ export default function ProfileEditPage({
         const { data: uploadData, error: uploadError } =
           await userProfilesAPI.uploadAvatar(params.id, imageFile);
 
-        if (uploadError) throw new Error(uploadError.message);
+        if (uploadError) {
+          errorRedirect();
+        }
         if (uploadData) {
           avatarUrl = uploadData.avatarUrl;
         }
@@ -126,15 +132,17 @@ export default function ProfileEditPage({
         },
       );
 
-      if (updateError) throw new Error(updateError.message);
+      if (updateError) {
+        errorRedirect();
+      }
 
-      // 更新成功後、プロフィールページにリダイレクト
-      // 新しいクエリパラメータを追加してキャッシュを回避
-      router.push(`/profiles/${params.id}?t=${Date.now()}`);
+      // 成功時はクエリパラメータを付けてリダイレクト
+      router.push(
+        `${siteUrls.profile(params.id)}?t=${Date.now()}&success=true`,
+      );
       router.refresh();
-    } catch (err) {
-      console.error("プロフィールの更新に失敗しました:", err);
-      setError("プロフィールの更新に失敗しました");
+    } catch {
+      errorRedirect();
     } finally {
       setSaving(false);
     }
@@ -157,12 +165,6 @@ export default function ProfileEditPage({
       <PageTitle title="プロフィール編集" />
 
       <div className="container mx-auto px-4 py-8">
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
-        )}
-
         <form
           onSubmit={handleSubmit}
           className="bg-amber-50 rounded-lg shadow-md p-6 mb-8 border border-amber-100"

@@ -20,7 +20,7 @@ interface UseCheckPointFormReturn {
     e: React.FormEvent,
     productVintateId: number,
     onSuccess: (newCheckPoint: CheckPointType) => void,
-    onClose: () => void,
+    onClose?: () => void,
   ) => Promise<void>;
 }
 
@@ -67,10 +67,9 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
       setUploadProgress(100);
       toast.success("鑑定ポイントを追加しました");
       return { success: true, checkPoint: newCheckPoint };
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "エラーが発生しました",
-      );
+    } catch {
+      // エラーメッセージを明示的に表示
+      toast.error("鑑定ポイントの追加でエラーが発生しました。");
       return { success: false };
     } finally {
       setIsSubmitting(false);
@@ -114,11 +113,17 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
     e: React.FormEvent,
     productVintageId: number,
     onSuccess: (newCheckPoint: CheckPointType) => void,
+    onClose?: () => void,
   ) => {
     e.preventDefault();
 
     if (!point.trim()) {
       toast.error("鑑定ポイントを入力してください");
+      return;
+    }
+
+    if (!description.trim()) {
+      toast.error("説明を入力してください");
       return;
     }
 
@@ -141,6 +146,11 @@ export function useCheckPointForm(): UseCheckPointFormReturn {
       setSelectedFile(null);
       setPreviewUrl(null);
       onSuccess(result.checkPoint);
+
+      // フォーム送信後にモーダルを閉じる処理を追加
+      if (onClose) {
+        onClose();
+      }
     }
   };
 

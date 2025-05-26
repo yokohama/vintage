@@ -11,6 +11,7 @@ import { profilesParams } from "../utils/profilesParams";
 import { Standerd } from "@/components/ui/OriginalButton";
 import { siteConfig } from "@/lib/config/siteConfig";
 import CheckPoints from "./clients/components/CheckPoints";
+import ToastHandler from "@/components/ui/ToastHandler";
 import {
   Globe,
   Twitter,
@@ -35,6 +36,10 @@ export default async function ProfilePage({
     <main>
       <div>
         <Header />
+        <ToastHandler
+          successMsg="プロフィールを更新しました。"
+          errorMsg="プロフィールの更新に失敗しました。"
+        />
         {error ? (
           <Error />
         ) : !profile ? (

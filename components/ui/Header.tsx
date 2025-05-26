@@ -13,7 +13,7 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
 import LoginButton from "@/components/auth/LoginButton";
 import LogoutButton from "@/components/auth/LogoutButton";
-import { siteConfig } from "@/lib/config/siteConfig";
+import { siteConfig, siteUrls } from "@/lib/config/siteConfig";
 import Image from "next/image";
 
 const Header = () => {
@@ -67,7 +67,7 @@ const Header = () => {
                   <>
                     <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium">
                       <Link
-                        href="/profile"
+                        href={siteUrls.profile(user.id)}
                         className="dropdown-profile-menu-item-with-icon"
                       >
                         <User className="dropdown-profile-menu-item-icon" />
@@ -76,7 +76,7 @@ const Header = () => {
                     </DropdownMenu.Item>
                     <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium">
                       <Link
-                        href={`/profile/${user.id}`}
+                        href={siteUrls.profile(user.id)}
                         className="dropdown-profile-menu-item-with-icon"
                       >
                         <UserCircle className="dropdown-profile-menu-item-icon" />
