@@ -38,6 +38,20 @@ h3 {
 		@apply scale-105 transition-transform duration-200;
 	}
 
+	/* リンクを含む見出しのスタイル */
+	& a,
+	& [role="link"] {
+		@apply transition-all duration-200;
+
+		/* タップ時のスタイル（モバイル向け） */
+		@media (max-width: 768px) {
+			&:active {
+				@apply scale-110 text-amber-600 transition-all duration-150;
+				transform-origin: left center;
+			}
+		}
+	}
+
 	&.title {
 		@apply relative;
 
@@ -69,7 +83,7 @@ h2 {
 	}
 }
 
-h2 {
+h3 {
 	@apply text-2xl;
 
 	@media (max-width: 768px) {
@@ -171,12 +185,20 @@ a.sns {
 }
 
 .page-title-fixed {
-	@apply fixed top-0 left-0 right-0 py-4 shadow-md bg-amber-100 z-30;
+	@apply fixed top-0 left-0 right-0 py-4 shadow-md bg-amber-700 z-30 text-white;
 }
 
-/* エラーページスタイル */
-.error-page-container {
-	@apply text-center py-10 border-2 border-dashed border-[#d3c7a7] rounded-md max-w-3xl mx-auto my-8;
+/* page-title-fixed内のh2要素のスタイルを上書き */
+.page-title-fixed h2 {
+	@apply text-amber-100;
+}
+
+.page-title-fixed h2:hover {
+	@apply text-red-100;
+}
+
+.page-title-fixed h2.title:hover::after {
+	@apply bg-red-100;
 }
 
 .error-page-message {
@@ -192,7 +214,7 @@ a.sns {
 }
 
 .item-card {
-	@apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100;
+	@apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100 hover:scale-105;
 }
 
 .item-card-image-container {
