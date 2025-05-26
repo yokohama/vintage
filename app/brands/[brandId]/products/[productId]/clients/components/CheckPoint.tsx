@@ -68,8 +68,9 @@ const CheckPoint = ({
           )}
           <Image
             src={checkPoint.imageUrl}
-            alt={checkPoint.point || "チェックポイント画像"}
+            alt={checkPoint.point || "鑑定ポイント画像"}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
             className={imageClass}
             priority={true}
           />

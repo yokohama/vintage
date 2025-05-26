@@ -39,6 +39,7 @@ export default function Brands({ brands, error }: BrandsProps) {
                         src={brand.imageUrl}
                         alt={`${brand.name} | ${siteConfig.name}`}
                         fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                         className="item-card-image"
                         priority={true}
                       />

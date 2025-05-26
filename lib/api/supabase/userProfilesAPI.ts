@@ -100,17 +100,18 @@ export class userProfilesAPI {
 
       // Storageにアップロード
       const { error: uploadError } = await supabase.storage
-        .from("profiles")
+        .from("images")
         .upload(filePath, file);
 
       if (uploadError) {
+        console.log(uploadError);
         return { data: null, error: uploadError };
       }
 
       // 公開URLを取得
       const {
         data: { publicUrl },
-      } = supabase.storage.from("profiles").getPublicUrl(filePath);
+      } = supabase.storage.from("images").getPublicUrl(filePath);
 
       // プロフィールのavatar_urlを更新
       const { error: updateError } = await supabase

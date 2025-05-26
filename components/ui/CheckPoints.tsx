@@ -44,6 +44,7 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
           src={checkPoint.imageUrl}
           alt={checkPoint.point || "チェックポイント画像"}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
           className="checkpoint-card-image"
           priority={true}
         />
@@ -97,9 +98,8 @@ export const CheckPointFooter = ({ checkPoint }: CheckPointFooterProps) => {
             e.stopPropagation();
             handleLike(e);
           }}
-          className={`checkpoint-active-card-footer-sns-button ${
-            isLiked ? "text-amber-700" : ""
-          } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
+          className={`checkpoint-active-card-footer-sns-button ${isLiked ? "text-amber-700" : ""
+            } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
           aria-label="いいね"
           disabled={isLikeLoading}
         >

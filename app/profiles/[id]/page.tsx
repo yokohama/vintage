@@ -68,6 +68,7 @@ export default async function ProfilePage({
                         }
                         alt={profile.displayName || "プロフィール画像"}
                         fill
+                        sizes="(max-width: 640px) 100vw, 33vw"
                         className="object-cover"
                         unoptimized={
                           profile.avatarUrl?.includes("api.dicebear.com") ||

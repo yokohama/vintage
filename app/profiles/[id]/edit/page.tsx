@@ -176,6 +176,7 @@ export default function ProfileEditPage({
                 src={previewImage || siteConfig.images.defaultProfileAvatar}
                 alt="プロフィール画像"
                 fill
+                sizes="(max-width: 640px) 100vw, 33vw"
                 className="object-cover"
                 unoptimized={
                   previewImage?.includes("api.dicebear.com") || false
