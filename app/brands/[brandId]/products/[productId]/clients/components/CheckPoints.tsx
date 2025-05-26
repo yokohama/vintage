@@ -60,7 +60,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
     };
 
     fetchCheckPoints();
-  }, [vintage.id, setHasMore]);
+  }, [vintage.id, setHasMore, ITEMS_PER_PAGE]);
 
   const loadMoreCheckPoints = useCallback(async () => {
     try {
@@ -83,7 +83,7 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       console.error("追加のチェックポイント取得に失敗しました:", err);
       setHasMore(false);
     }
-  }, [page, vintage.id, setHasMore]);
+  }, [page, vintage.id, setHasMore, ITEMS_PER_PAGE]);
 
   useEffect(() => {
     if (!isFixed) {

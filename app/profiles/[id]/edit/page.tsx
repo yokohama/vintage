@@ -71,7 +71,7 @@ export default function ProfileEditPage({
     };
 
     fetchProfile();
-  }, [params.id]);
+  }, [params.id, router]);
 
   // 入力フィールドの変更ハンドラ
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
