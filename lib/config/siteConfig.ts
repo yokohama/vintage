@@ -38,6 +38,13 @@ export const siteConfig = {
       defaultSeed: "anonymous",
     },
   },
+
+  // ページネーション設定
+  pagination: {
+    checkPoints: {
+      itemsPerPage: 10,
+    },
+  },
 };
 
 // 各種URLを生成するヘルパー関数

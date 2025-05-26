@@ -4,22 +4,36 @@ import Error from "@/components/ui/Error";
 import NotFound from "@/components/ui/NotFound";
 import Spinner from "@/components/ui/Spinner";
 import CheckPointsUI from "@/components/ui/CheckPoints";
-import { useCheckPoints } from "@/hooks/useCheckPoints";
+import { useInfiniteCheckPoints } from "@/hooks/useInfiniteCheckPoints";
+import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
+import InfiniteScroll from "@/components/ui/InfiniteScroll";
+import { useCallback } from "react";
+import { siteConfig } from "@/lib/config/siteConfig";
 
 export default function CheckPoints() {
-  const { checkPoints, loading, error } = useCheckPoints();
+  const ITEMS_PER_PAGE = siteConfig.pagination.checkPoints.itemsPerPage;
 
-  if (loading) {
-    return <Spinner />;
-  }
+  // useCallbackを使用して関数参照を安定させる
+  const fetchCheckPoints = useCallback(async (page: number, limit: number) => {
+    return await checkPointsAPI.getCheckPoints(undefined, page, limit);
+  }, []);
 
-  if (error) {
-    return <Error />;
-  }
+  const { checkPoints, loading, error, loadMoreCheckPoints } =
+    useInfiniteCheckPoints(fetchCheckPoints, ITEMS_PER_PAGE);
 
-  if (checkPoints?.length === 0 || !checkPoints) {
-    return <NotFound msg="鑑定ポイントが見つかりませんでした。" />;
-  }
-
-  return <CheckPointsUI checkPoints={checkPoints} />;
+  return (
+    <>
+      {error ? (
+        <Error />
+      ) : loading && checkPoints.length === 0 ? (
+        <Spinner />
+      ) : checkPoints.length === 0 ? (
+        <NotFound msg="鑑定ポイントが見つかりませんでした。" />
+      ) : (
+        <InfiniteScroll onLoadMore={loadMoreCheckPoints}>
+          <CheckPointsUI checkPoints={checkPoints} />
+        </InfiniteScroll>
+      )}
+    </>
+  );
 }

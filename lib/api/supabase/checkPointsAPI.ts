@@ -10,14 +10,22 @@ import {
 import { SupabaseCheckPointType } from "./utils/types";
 
 export class checkPointsAPI {
-  static async getCheckPoints(userId?: string): Promise<CheckPointType[]> {
+  static async getCheckPoints(
+    userId?: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<CheckPointType[]> {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
     const { data, error } = await supabase
       .from("check_points")
       .select(
         "*, vintages(*, products(*)), profiles(*), check_point_likes(count)",
       )
       .is("deleted_at", null)
-      .order("updated_at", { ascending: false });
+      .order("updated_at", { ascending: false })
+      .range(from, to);
 
     const checkPoints = processSupabaseArrayResponse<
       SupabaseCheckPointType,
@@ -31,7 +39,12 @@ export class checkPointsAPI {
   static async getCheckPointsByVintageId(
     vintageId: number,
     userId?: string,
+    page: number = 1,
+    limit: number = 10,
   ): Promise<CheckPointType[]> {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
     const { data, error } = await supabase
       .from("check_points")
       .select(
@@ -39,7 +52,8 @@ export class checkPointsAPI {
       )
       .eq("vintage_id", vintageId)
       .is("deleted_at", null)
-      .order("updated_at", { ascending: false });
+      .order("updated_at", { ascending: false })
+      .range(from, to);
 
     const checkPoints = processSupabaseArrayResponse<
       SupabaseCheckPointType,
