@@ -20,6 +20,31 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
   const [isLiked, setIsLiked] = useState(checkPoint.isLiked);
   const [likeCount, setLikeCount] = useState(checkPoint.likeCount || 0);
 
+  /*
+   * 画面サイズがsm以上ならtrueにする
+   */
+  const [isOverSm, setIsOverSm] = useState(false);
+
+  // コンポーネントがマウントされた時に画面サイズをチェックし、
+  // リサイズイベントでも更新する
+  useEffect(() => {
+    const checkScreenSize = () => {
+      // Tailwindのsmブレークポイントは640px
+      setIsOverSm(window.innerWidth >= 640);
+    };
+
+    // 初期チェック
+    checkScreenSize();
+
+    // リサイズイベントリスナーを追加
+    window.addEventListener("resize", checkScreenSize);
+
+    // クリーンアップ関数
+    return () => {
+      window.removeEventListener("resize", checkScreenSize);
+    };
+  }, []);
+
   useEffect(() => {
     if (!checkPoint) return;
 
@@ -129,6 +154,7 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
   };
 
   return {
+    isOverSm,
     isOwnCheckPoint,
     isLikeLoading,
     handleShare,

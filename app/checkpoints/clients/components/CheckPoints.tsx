@@ -13,7 +13,6 @@ import { siteConfig } from "@/lib/config/siteConfig";
 export default function CheckPoints() {
   const ITEMS_PER_PAGE = siteConfig.pagination.checkPoints.itemsPerPage;
 
-  // useCallbackを使用して関数参照を安定させる
   const fetchCheckPoints = useCallback(async (page: number, limit: number) => {
     return await checkPointsAPI.getCheckPoints(undefined, page, limit);
   }, []);

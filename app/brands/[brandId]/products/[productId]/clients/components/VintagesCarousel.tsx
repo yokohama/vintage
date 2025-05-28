@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import {
   Carousel,
@@ -10,7 +9,7 @@ import {
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import CheckPoints from "./CheckPoints";
 import { useVintagesCarousel } from "../hooks/useVintagesCarousel";
-import { VintageType, ProductType } from "@/lib/types";
+import { ProductType } from "@/lib/types";
 import { siteConfig } from "@/lib/config/siteConfig";
 
 interface VintagesCarouselProps {
@@ -18,22 +17,16 @@ interface VintagesCarouselProps {
 }
 
 const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
-  const [selectedVintageIndex, setSelectedVintageIndex] = useState(0);
-  const [selectedVintage, setSelectedVintage] = useState<VintageType>(
-    product.vintages[0],
-  );
-
-  const handleVintageIndexChange = (index: number) => {
-    setSelectedVintageIndex(index);
-    setSelectedVintage(product.vintages[index]);
-  };
-
-  const { setApi, currentIndex, handlePrevSlide, handleNextSlide } =
-    useVintagesCarousel({
-      vintages: product.vintages,
-      selectedVintageIndex,
-      onVintageIndexChange: handleVintageIndexChange,
-    });
+  const {
+    setApi,
+    currentIndex,
+    handlePrevSlide,
+    handleNextSlide,
+    selectedVintage,
+  } = useVintagesCarousel({
+    product: product,
+    vintages: product.vintages,
+  });
 
   return (
     <div>
@@ -54,11 +47,11 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
             {product.vintages.map((_, index) => (
               <div
                 key={index}
-                onClick={() => handleVintageIndexChange(index)}
-                className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${index === currentIndex
+                className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
+                  index === currentIndex
                     ? "bg-amber-800"
                     : "bg-amber-200 hover:bg-amber-400"
-                  }`}
+                }`}
               />
             ))}
           </div>
