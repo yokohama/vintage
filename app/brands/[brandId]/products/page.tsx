@@ -27,7 +27,7 @@ export default async function ProductsPage({
           <NotFound msg="製品が見つかりませんでした。" />
         ) : (
           <>
-            <PageTitle title={`${brand.name}の製品一覧`} />
+            <PageTitle title={brand.name} />
             <Suspense fallback={<Spinner />}>
               <div className="item-cards-container">
                 {products.map((product) => (
