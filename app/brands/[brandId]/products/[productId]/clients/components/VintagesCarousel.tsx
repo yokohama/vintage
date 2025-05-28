@@ -63,9 +63,9 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
               key={vintage.id}
               className="basis-full pl-1.5 pr-1.5 pt-0 pb-0"
             >
-              <Card className="overflow-hidden border-0 rounded-none bg-gray-100">
-                <CardTitle className="w-full text-center font-bold text-xl py-3 !mb-0">
-                  <div className="text-center w-full">
+              <Card className="overflow-hidden border-0 rounded-none bg-white rounded-lg">
+                <CardTitle className="w-full text-center font-bold text-xl py-0 !mb-0">
+                  <div className="text-center w-full bg-red-700 py-2 text-white">
                     {selectedVintage.name}&nbsp;[&nbsp;
                     {selectedVintage.manufacturing_start_year} -
                     {selectedVintage.manufacturing_end_year}&nbsp;]
