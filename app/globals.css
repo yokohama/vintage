@@ -134,6 +134,10 @@ a.sns {
 	@apply w-12 h-12 rounded-full overflow-hidden border-2 border-amber-200 shadow-sm hover:border-amber-300 hover:scale-110 transition-all duration-200 bg-amber-50 focus:outline-none;
 }
 
+.dropdown-profile-menu-trigger-avatar-fixed {
+	@apply w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm hover:border-amber-300 hover:scale-110 transition-all duration-200 bg-amber-50 focus:outline-none;
+}
+
 .dropdown-profile-menu-trigger-icon {
 	@apply w-10 h-10 rounded-full flex items-center justify-center bg-amber-50 border border-amber-200 hover:bg-amber-100 transition-colors focus:outline-none;
 }
@@ -185,7 +189,7 @@ a.sns {
 }
 
 .page-title-fixed {
-	@apply fixed top-0 left-0 right-0 py-4 shadow-md bg-red-700 z-30 text-white min-h-[60px] flex items-center;
+	@apply fixed top-0 left-0 right-0 pt-2 shadow-md bg-red-700 z-30 text-white min-h-[60px] flex items-center;
 }
 
 /* page-title-fixed内のh2要素のスタイルを上書き */
@@ -290,7 +294,7 @@ a.sns {
 }
 
 .checkpoint-active-card-container {
-	@apply p-0 transition-all duration-700 bg-amber-100 rounded-lg shadow-lg w-full border-4 border-red-700;
+	@apply p-0 transition-all duration-700 bg-white rounded-lg shadow-lg w-full border-4 border-red-700;
 }
 
 .checkpoint-active-card-body {

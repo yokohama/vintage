@@ -36,9 +36,7 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
     <div className="checkpoint-card-container">
       <div className="checkpoint-card-image-container">
         {checkPoint.point && (
-          <div className="absolute top-2 right-2 z-10 bg-amber-800 text-white py-1 px-2 rounded-md text-sm font-bold shadow-sm">
-            {checkPoint.point}
-          </div>
+          <div className="checkpoint-active-card-point">{checkPoint.point}</div>
         )}
         <Image
           src={checkPoint.imageUrl}
@@ -98,8 +96,9 @@ export const CheckPointFooter = ({ checkPoint }: CheckPointFooterProps) => {
             e.stopPropagation();
             handleLike(e);
           }}
-          className={`checkpoint-active-card-footer-sns-button ${isLiked ? "text-amber-700" : ""
-            } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
+          className={`checkpoint-active-card-footer-sns-button ${
+            isLiked ? "text-amber-700" : ""
+          } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
           aria-label="いいね"
           disabled={isLikeLoading}
         >

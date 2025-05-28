@@ -49,8 +49,8 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
                 key={index}
                 className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
                   index === currentIndex
-                    ? "bg-amber-800"
-                    : "bg-amber-200 hover:bg-amber-400"
+                    ? "bg-red-700"
+                    : "bg-amber-200 hover:bg-red-400"
                 }`}
               />
             ))}
