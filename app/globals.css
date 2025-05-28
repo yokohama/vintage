@@ -238,7 +238,7 @@ a.sns {
 }
 
 .checkpoint-card-container {
-	@apply p-0 mb-2 transition-all duration-700 border-transparent rounded-lg bg-amber-50 shadow-lg;
+	@apply p-0 mb-2 transition-all duration-700 border-transparent rounded-t-lg bg-white shadow-lg;
 }
 
 .checkpoint-card-image-container {
@@ -246,7 +246,7 @@ a.sns {
 }
 
 .checkpoint-card-image {
-	@apply object-cover sepia-[0.15] brightness-[0.98] hover:scale-105 transition-transform duration-300 rounded-lg;
+	@apply object-cover sepia-[0.15] brightness-[0.98] hover:scale-105 transition-transform duration-300 rounded-t-lg;
 }
 
 .checkpoint-card-body-container {
