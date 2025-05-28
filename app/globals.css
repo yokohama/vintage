@@ -185,7 +185,7 @@ a.sns {
 }
 
 .page-title-fixed {
-	@apply fixed top-0 left-0 right-0 py-4 shadow-md bg-red-700 z-30 text-white;
+	@apply fixed top-0 left-0 right-0 py-4 shadow-md bg-red-700 z-30 text-white min-h-[60px] flex items-center;
 }
 
 /* page-title-fixed内のh2要素のスタイルを上書き */

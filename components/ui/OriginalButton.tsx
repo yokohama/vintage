@@ -7,7 +7,7 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-export function Standerd({ label, className, onClick }: ButtonProps) {
+export function AddButton({ label, className, onClick }: ButtonProps) {
   return (
     <Button variant="default" size="sm" className={className} onClick={onClick}>
       <svg

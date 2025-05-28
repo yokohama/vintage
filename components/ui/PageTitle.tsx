@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { usePageTitle } from "@/contexts/PageTitleContext";
+import { AddButton } from "./OriginalButton";
+import { siteUrls } from "@/lib/config/siteConfig";
 
 interface PageTitleProps {
   title: string;
@@ -11,6 +14,7 @@ const PageTitle = ({ title }: PageTitleProps) => {
   const { isFixed, setIsFixed } = usePageTitle();
   const titleRef = useRef<HTMLDivElement>(null);
   const placeholderRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -50,16 +54,30 @@ const PageTitle = ({ title }: PageTitleProps) => {
           ref={titleRef}
           className={`page-title-container ${isFixed ? "page-title-fixed" : ""}`}
         >
-          <h2
-            className={`title ${isFixed ? "cursor-pointer" : ""}`}
-            onClick={
-              isFixed
-                ? () => window.scrollTo({ top: 0, behavior: "smooth" })
-                : undefined
-            }
-          >
-            {title}
-          </h2>
+          <div className="flex items-center w-full min-h-[60px] py-2">
+            <div className="w-full text-center">
+              <h2
+                className={`title ${isFixed ? "cursor-pointer" : ""}`}
+                onClick={
+                  isFixed
+                    ? () => window.scrollTo({ top: 0, behavior: "smooth" })
+                    : undefined
+                }
+              >
+                {title}
+              </h2>
+            </div>
+            {!isFixed &&
+              (pathname.startsWith(siteUrls.home() || siteUrls.brands()) ||
+                pathname.includes("/products/")) && (
+                <div className="absolute right-2 z-10">
+                  <AddButton
+                    label=""
+                    className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm mb-4"
+                  />
+                </div>
+              )}
+          </div>
         </div>
       </div>
     </>

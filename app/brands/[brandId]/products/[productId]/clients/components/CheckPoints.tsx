@@ -6,7 +6,7 @@ import { useCheckPoints } from "../hooks/useCheckPoints";
 import NotFound from "@/components/ui/NotFound";
 import { useState, useCallback } from "react";
 import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
-import { Standerd } from "@/components/ui/OriginalButton";
+import { AddButton } from "@/components/ui/OriginalButton";
 import CheckPoint from "./CheckPoint";
 import Spinner from "@/components/ui/Spinner";
 import Error from "@/components/ui/Error";
@@ -74,8 +74,8 @@ const CheckPoints = ({ vintage }: CheckPointsProps) => {
       />
 
       <div className="flex justify-end mr-4">
-        <Standerd
-          label="追加"
+        <AddButton
+          label="鑑定ポイント"
           className="bg-amber-600 hover:bg-amber-700 text-white text-xs"
           onClick={handleAddButtonClick}
         />

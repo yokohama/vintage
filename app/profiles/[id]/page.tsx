@@ -8,7 +8,7 @@ import Error from "@/components/ui/Error";
 import NotFound from "@/components/ui/NotFound";
 import Spinner from "@/components/ui/Spinner";
 import { profilesParams } from "../utils/profilesParams";
-import { Standerd } from "@/components/ui/OriginalButton";
+import { AddButton } from "@/components/ui/OriginalButton";
 import { siteConfig } from "@/lib/config/siteConfig";
 import CheckPoints from "./clients/components/CheckPoints";
 import ToastHandler from "@/components/ui/ToastHandler";
@@ -51,7 +51,7 @@ export default async function ProfilePage({
               <div className="container mx-auto px-4 py-8">
                 <div className="flex justify-end mb-6">
                   <Link href={`/profiles/${profile.id}/edit`}>
-                    <Standerd
+                    <AddButton
                       label="プロフィール編集"
                       className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm"
                     />
