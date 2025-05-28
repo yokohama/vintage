@@ -84,7 +84,7 @@ const PageTitle = ({ title }: PageTitleProps) => {
                   <div className="mr-2 z-10">
                     <AddButton
                       label=""
-                      className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm"
+                      className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm mb-2"
                     />
                   </div>
                 )}

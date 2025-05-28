@@ -15,9 +15,7 @@ const Footer = () => {
         {/* ブランド情報とソーシャルリンク */}
         <div className="footer-content">
           <Link href="/">
-            <h2 className="cursor-pointer">
-              <span>{siteConfig.name}</span>
-            </h2>
+            <h2 className="cursor-pointer">{siteConfig.name}</h2>
           </Link>
           <p className="description">{siteConfig.description}</p>
           <div className="flex space-x-6">

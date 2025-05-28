@@ -57,7 +57,7 @@ const VintagesCarousel = ({ product }: VintagesCarouselProps) => {
           </div>
         </div>
 
-        <CarouselContent className="-ml-2 -mr-2 mb-2">
+        <CarouselContent className="-ml-2 -mr-2 mb-4">
           {product.vintages.map((vintage) => (
             <CarouselItem
               key={vintage.id}
