@@ -81,6 +81,7 @@ export const mapProfile = (profile: SupabaseProfileType): UserProfileType => ({
   facebookUrl: profile.facebook_url,
   linkedinUrl: profile.linkedin_url,
   youtubeUrl: profile.youtube_url,
+  description: profile.description,
 });
 
 export const mapBrand = (brand: SupabaseBrandType): BrandType => ({

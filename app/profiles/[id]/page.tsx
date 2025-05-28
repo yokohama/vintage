@@ -46,7 +46,7 @@ export default async function ProfilePage({
           <NotFound msg="プロフィールが見つかりませんでした。" />
         ) : (
           <>
-            <PageTitle title={`${profile.displayName}のプロフィール`} />
+            <PageTitle title={profile.displayName!} />
             <Suspense fallback={<Spinner />}>
               <div className="container mx-auto px-4 py-8">
                 <div className="flex justify-end mb-6">
@@ -76,9 +76,7 @@ export default async function ProfilePage({
                         }
                       />
                     </div>
-                    <h2 className="text-2xl font-bold text-amber-800">
-                      {profile.displayName}
-                    </h2>
+                    <div className="description">{profile.description}</div>
 
                     <div className="flex-1">
                       <div className="">

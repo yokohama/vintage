@@ -9,6 +9,7 @@ export interface UserProfileType {
   facebookUrl?: string | null;
   linkedinUrl?: string | null;
   youtubeUrl?: string | null;
+  description: string | null;
 }
 
 export type CheckPointsFilterType = "all" | "profile" | "vintage";

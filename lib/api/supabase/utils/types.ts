@@ -18,6 +18,7 @@ export interface SupabaseProfileType {
   facebook_url: string | null;
   linkedin_url: string | null;
   youtube_url: string | null;
+  description: string | null;
   created_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;

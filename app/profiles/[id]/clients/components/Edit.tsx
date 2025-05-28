@@ -67,7 +67,6 @@ export default function Edit({ profileId }: EditProps) {
               </label>
             </div>
 
-            {/* 表示名 */}
             <div className="mb-6">
               <label className="block text-amber-800 font-medium mb-2">
                 表示名 <span className="text-red-500">*</span>
@@ -82,7 +81,20 @@ export default function Edit({ profileId }: EditProps) {
               />
             </div>
 
-            {/* SNSリンク */}
+            <div className="mb-6">
+              <label className="block text-amber-800 font-medium mb-2">
+                プロフィール <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                required
+                rows={4}
+                className="w-full px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+              />
+            </div>
+
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-amber-800 border-b border-amber-200 pb-2 mb-4">
                 SNSリンク

@@ -30,9 +30,7 @@ export default function CheckPoints({ profileId }: { profileId: string }) {
 
   return (
     <>
-      <h2 className="text-2xl font-bold text-amber-800 mb-6 border-b-2 border-amber-200 pb-2">
-        投稿したチェックポイント ({checkPoints.length})
-      </h2>
+      <h3 className="title">投稿したチェックポイント ({checkPoints.length})</h3>
       {error ? (
         <Error />
       ) : loading && checkPoints.length === 0 ? (

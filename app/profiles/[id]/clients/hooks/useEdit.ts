@@ -19,6 +19,7 @@ export const useEdit = ({ profileId }: useEditProps) => {
   // フォームの状態
   const [formData, setFormData] = useState({
     displayName: "",
+    description: "",
     websiteUrl: "",
     twitterUrl: "",
     instagramUrl: "",
@@ -36,6 +37,7 @@ export const useEdit = ({ profileId }: useEditProps) => {
           setProfile(data);
           setFormData({
             displayName: data.displayName || "",
+            description: data.description || "",
             websiteUrl: data.websiteUrl || "",
             twitterUrl: data.twitterUrl || "",
             instagramUrl: data.instagramUrl || "",
@@ -59,7 +61,9 @@ export const useEdit = ({ profileId }: useEditProps) => {
   }, [profileId, router]);
 
   // 入力フィールドの変更ハンドラ
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,

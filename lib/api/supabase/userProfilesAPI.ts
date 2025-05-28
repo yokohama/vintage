@@ -10,6 +10,7 @@ const mapUserProfile = (data: SupabaseProfileType): UserProfileType => {
   return {
     id: data.id,
     displayName: data.display_name,
+    description: data.description,
     email: data.email,
     avatarUrl: data.avatar_url,
     websiteUrl: data.website_url,
@@ -68,6 +69,7 @@ export class userProfilesAPI {
       // スネークケースに変換
       const updateData = {
         display_name: profileData.displayName,
+        description: profileData.description,
         avatar_url: profileData.avatarUrl,
         website_url: profileData.websiteUrl,
         twitter_url: profileData.twitterUrl,
