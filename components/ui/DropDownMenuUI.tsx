@@ -88,7 +88,7 @@ export const DropDownMenuUI = ({ isFixed = false }: DropDownMenuUIProps) => {
                 </DropdownMenu.Item>
                 <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium active-feedback">
                   <Link
-                    href="/favorites"
+                    href="/likes"
                     className="dropdown-profile-menu-item-with-icon"
                   >
                     <Heart className="dropdown-profile-menu-item-icon" />

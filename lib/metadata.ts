@@ -178,10 +178,12 @@ export function generateProfileMetadata(profile: UserProfileType): Metadata {
 }
 
 // お気に入りページのメタデータ
-export const favoritesMetadata: Metadata = {
-  title: "お気に入り",
-  description: `あなたがお気に入りに登録した${siteConfig.name}の鑑定ポイント`,
-  alternates: {
-    canonical: siteUrls.favorites(),
-  },
-};
+export function generateLikesMetadata(): Metadata {
+  return {
+    title: "お気に入り",
+    description: `あなたがお気に入りに登録した${siteConfig.name}の鑑定ポイント`,
+    alternates: {
+      canonical: siteUrls.likes(),
+    },
+  };
+}

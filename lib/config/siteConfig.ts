@@ -59,7 +59,7 @@ export const siteUrls = {
   checkpoints: "/checkpoints",
   checkpoint: (id: number) => `/checkpoints/${id}`,
   profile: (profileId: string) => `/profiles/${profileId}`,
-  favorites: () => "/favorites",
+  likes: () => "/likes",
 };
 
 // アバターURLを生成するヘルパー関数
