@@ -15,6 +15,7 @@ type CheckPointProps = {
 
 interface CheckPointFooterProps {
   checkPoint: CheckPointType;
+  setCheckPoints?: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
 }
 
 export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
@@ -57,10 +58,14 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
   );
 };
 
-export const CheckPointFooter = ({ checkPoint }: CheckPointFooterProps) => {
+export const CheckPointFooter = ({
+  checkPoint,
+  setCheckPoints,
+}: CheckPointFooterProps) => {
   const { isLikeLoading, handleShare, handleLike, isLiked, likeCount } =
     useCheckPoint({
       checkPoint,
+      setCheckPoints,
     });
 
   return (

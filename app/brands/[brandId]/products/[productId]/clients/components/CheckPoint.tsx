@@ -116,7 +116,10 @@ const CheckPoint = ({
           </div>
 
           {(isOverSm || isActive) && (
-            <CheckPointFooter checkPoint={checkPoint} />
+            <CheckPointFooter
+              checkPoint={checkPoint}
+              setCheckPoints={setCheckPoints}
+            />
           )}
         </div>
       </div>

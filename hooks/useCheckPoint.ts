@@ -8,9 +8,13 @@ import { useUserProfile } from "@/contexts/ProfileContext";
 
 type UseCheckPointProps = {
   checkPoint: CheckPointType;
+  setCheckPoints?: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
 };
 
-export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
+export const useCheckPoint = ({
+  checkPoint,
+  setCheckPoints,
+}: UseCheckPointProps) => {
   const { userProfile: currentUserProfile } = useUserProfile();
   const [profile, setProfile] = useState<UserProfileType | null>(
     checkPoint.profile,
@@ -108,6 +112,21 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
         );
         setIsLiked(false);
         setLikeCount((prev) => Math.max(0, prev - 1)); // いいね数を減らす（0未満にならないよう制限）
+
+        // 親コンポーネントの状態も更新
+        if (setCheckPoints) {
+          setCheckPoints((prev) =>
+            prev.map((cp) =>
+              cp.id === checkPoint.id
+                ? {
+                    ...cp,
+                    isLiked: false,
+                    likeCount: Math.max(0, (cp.likeCount || 0) - 1),
+                  }
+                : cp,
+            ),
+          );
+        }
       } else {
         // いいねする
         await checkPointsAPI.likeCheckPoint(
@@ -116,6 +135,21 @@ export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
         );
         setIsLiked(true);
         setLikeCount((prev) => prev + 1); // いいね数を増やす
+
+        // 親コンポーネントの状態も更新
+        if (setCheckPoints) {
+          setCheckPoints((prev) =>
+            prev.map((cp) =>
+              cp.id === checkPoint.id
+                ? {
+                    ...cp,
+                    isLiked: true,
+                    likeCount: (cp.likeCount || 0) + 1,
+                  }
+                : cp,
+            ),
+          );
+        }
       }
     } catch (error) {
       console.error("いいね処理に失敗しました:", error);
