@@ -23,6 +23,7 @@ const LikeCheckPoint = ({
   checkPoint: CheckPointType;
   onUnlike: (checkPointId: string) => void;
 }) => {
+  // 各チェックポイントごとに独自のキーを使用して状態を分離
   const { isLikeLoading, handleShare, handleLike, isLiked, likeCount } =
     useCheckPoint({
       checkPoint,
@@ -31,19 +32,25 @@ const LikeCheckPoint = ({
   // いいねボタンのカスタムハンドラー
   const handleLikeWithRemove = async (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation(); // イベントの伝播を確実に停止
 
     // いいね操作前の状態を確認
     const wasLiked = isLiked;
-    console.log("いいね操作前:", wasLiked, checkPoint.id);
+    const currentCheckPointId = checkPoint.id;
+    console.log("いいね操作前:", wasLiked, currentCheckPointId);
 
-    // いいね操作を実行
-    await handleLike(e);
+    try {
+      // いいね操作を実行
+      await handleLike(e);
 
-    // いいねが解除された場合のみ処理
-    if (wasLiked) {
-      console.log("いいね解除処理:", checkPoint.id);
-      // 直接onUnlikeを呼び出す
-      onUnlike(String(checkPoint.id));
+      // いいねが解除された場合のみ処理
+      if (wasLiked) {
+        console.log("いいね解除処理:", currentCheckPointId);
+        // 特定のチェックポイントIDを指定して削除
+        onUnlike(String(currentCheckPointId));
+      }
+    } catch (error) {
+      console.error("いいね処理中にエラーが発生しました:", error);
     }
   };
 
@@ -138,8 +145,9 @@ const LikeCheckPoints = ({
 }) => {
   return (
     <div className="checkpoint-cards-container">
-      {checkPoints.map((cp, index) => (
-        <div key={index}>
+      {checkPoints.map((cp) => (
+        // インデックスではなく、一意のIDをキーとして使用
+        <div key={`checkpoint-${cp.id}`}>
           <LikeCheckPoint checkPoint={cp} onUnlike={onUnlike} />
         </div>
       ))}
@@ -178,9 +186,11 @@ export default function Likes() {
   // いいね解除時にチェックポイントを一覧から削除する関数
   const handleUnlike = useCallback((checkPointId: string) => {
     console.log("削除対象ID:", checkPointId, typeof checkPointId);
+    // 数値に変換
     const checkPointIdNum = parseInt(checkPointId, 10);
     console.log("変換後ID:", checkPointIdNum, typeof checkPointIdNum);
 
+    // 状態更新を確実に行うため、関数形式で更新
     setCheckPoints((prev) => {
       // 削除前のチェックポイント一覧をログ出力
       console.log(
@@ -188,10 +198,11 @@ export default function Likes() {
         JSON.stringify(prev.map((cp) => ({ id: cp.id, type: typeof cp.id }))),
       );
 
-      // フィルタリング処理
+      // フィルタリング処理 - 特定のIDのみを削除
       const filtered = prev.filter((cp) => {
         // 型変換を確実に行う
         const cpId = Number(cp.id);
+        const result = cpId !== checkPointIdNum;
         console.log(
           "比較:",
           cpId,
@@ -200,9 +211,9 @@ export default function Likes() {
           checkPointIdNum,
           typeof checkPointIdNum,
           "結果:",
-          cpId !== checkPointIdNum,
+          result,
         );
-        return cpId !== checkPointIdNum;
+        return result;
       });
 
       console.log(
@@ -214,7 +225,8 @@ export default function Likes() {
         prev.length !== filtered.length,
       );
 
-      return filtered;
+      // 新しい配列を返す
+      return [...filtered];
     });
   }, []);
 
