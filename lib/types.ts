@@ -10,6 +10,7 @@ export interface UserProfileType {
   linkedinUrl?: string | null;
   youtubeUrl?: string | null;
   description: string | null;
+  checkPointLikes: CheckPointType[];
 }
 
 export type CheckPointsFilterType = "all" | "profile" | "vintage";

@@ -4,6 +4,7 @@ import { SupabaseProfileType } from "./utils/types";
 import {
   handleSupabaseError,
   processSupabaseResponse,
+  mapCheckPointLike,
 } from "./utils/formatHelper";
 
 const mapUserProfile = (data: SupabaseProfileType): UserProfileType => {
@@ -19,6 +20,7 @@ const mapUserProfile = (data: SupabaseProfileType): UserProfileType => {
     facebookUrl: data.facebook_url,
     linkedinUrl: data.linkedin_url,
     youtubeUrl: data.youtube_url,
+    checkPointLikes: data.check_point_likes?.map(mapCheckPointLike) || [],
   };
 };
 
@@ -40,7 +42,9 @@ export class userProfilesAPI {
 
     const { data, error } = await supabase
       .from("profiles")
-      .select("*")
+      .select(
+        "*, check_point_likes(*, check_points(*, profiles(*), check_point_likes(count)))",
+      )
       .eq("id", userId)
       .single();
 
@@ -50,7 +54,9 @@ export class userProfilesAPI {
   static async getUserProfile(id: string): Promise<UserProfileType> {
     const { data, error } = await supabase
       .from("profiles")
-      .select("*")
+      .select(
+        "*, check_point_likes(*, check_points(*, profiles(*), check_point_likes(count)))",
+      )
       .eq("id", id)
       .single();
 
@@ -58,7 +64,7 @@ export class userProfilesAPI {
       throw error;
     }
 
-    return mapUserProfile(data);
+    return processSupabaseResponse(data, error, mapUserProfile, "プロフィール");
   }
 
   static async updateProfile(

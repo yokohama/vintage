@@ -15,6 +15,7 @@ import {
   SupabaseVintageType,
   SupabaseCheckPointType,
   SupabaseProfileType,
+  SupabaseCheckPointLikeType,
   SupabaseErrorType,
 } from "./types";
 
@@ -82,6 +83,7 @@ export const mapProfile = (profile: SupabaseProfileType): UserProfileType => ({
   linkedinUrl: profile.linkedin_url,
   youtubeUrl: profile.youtube_url,
   description: profile.description,
+  checkPointLikes: profile.check_point_likes?.map(mapCheckPointLike) || [],
 });
 
 export const mapBrand = (brand: SupabaseBrandType): BrandType => ({
@@ -122,6 +124,22 @@ export const mapCheckPoint = (cp: SupabaseCheckPointType): CheckPointType => ({
   createdAt: cp.created_at,
   likeCount: cp.check_point_likes?.[0]?.count ?? 0,
   isLiked: cp.is_liked ?? false,
+});
+
+export const mapCheckPointLike = (
+  cpLike: SupabaseCheckPointLikeType,
+): CheckPointType => ({
+  id: cpLike.check_points.id,
+  profile: cpLike.check_points.profiles
+    ? mapProfile(cpLike.check_points.profiles)
+    : null,
+  vintage: {} as VintageType, // 循環参照を避けるため一時的に空オブジェクトを設定
+  imageUrl: cpLike.check_points.image_url,
+  point: cpLike.check_points.point,
+  description: cpLike.check_points.description || "",
+  createdAt: cpLike.check_points.created_at,
+  likeCount: cpLike.check_points.check_point_likes?.[0]?.count ?? 0,
+  isLiked: true, // いいねしたチェックポイントなので常にtrue
 });
 
 export const setIsLiked = async (

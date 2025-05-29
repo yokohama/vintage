@@ -7,6 +7,16 @@ export interface SupabaseErrorType {
   status?: number;
 }
 
+export interface SupabaseCheckPointLikeType {
+  id: number;
+  profile_id: string;
+  check_point_id: number;
+  check_points: SupabaseCheckPointType;
+  created_at?: string | null;
+  updated_at?: string | null;
+  deleted_at?: string | null;
+}
+
 export interface SupabaseProfileType {
   id: string;
   display_name: string | null;
@@ -22,6 +32,7 @@ export interface SupabaseProfileType {
   created_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;
+  check_point_likes?: SupabaseCheckPointLikeType[];
 }
 
 // Supabaseから返されるデータの型定義
