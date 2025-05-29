@@ -68,7 +68,7 @@ export const DropDownMenuUI = ({ isFixed = false }: DropDownMenuUIProps) => {
               </DropdownMenu.Item>
             ) : (
               <>
-                <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium">
+                <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium active-feedback">
                   <Link
                     href={siteUrls.profile(user.id)}
                     className="dropdown-profile-menu-item-with-icon"
@@ -77,7 +77,7 @@ export const DropDownMenuUI = ({ isFixed = false }: DropDownMenuUIProps) => {
                     マイページ
                   </Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium">
+                <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium active-feedback">
                   <Link
                     href={siteUrls.profile(user.id)}
                     className="dropdown-profile-menu-item-with-icon"
@@ -86,7 +86,7 @@ export const DropDownMenuUI = ({ isFixed = false }: DropDownMenuUIProps) => {
                     プロフィール
                   </Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium">
+                <DropdownMenu.Item className="dropdown-profile-menu-item dropdown-profile-menu-item-font-medium active-feedback">
                   <Link
                     href="/favorites"
                     className="dropdown-profile-menu-item-with-icon"

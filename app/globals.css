@@ -64,6 +64,13 @@ h3 {
 			@apply bg-amber-800;
 		}
 	}
+
+	/* タイトル文字のタップフィードバック（モバイル向け） */
+	@media (max-width: 768px) {
+		&:active {
+			@apply scale-[1.02] text-amber-700 transition-all duration-150;
+		}
+	}
 }
 
 /* 見出しのサイズ設定 */
@@ -168,6 +175,21 @@ a.sns {
 
 .dropdown-profile-menu-item-font-medium {
 	@apply font-medium;
+}
+
+/* タップ時のフィードバック用スタイル */
+.active-feedback {
+	@apply relative;
+}
+
+@media (max-width: 768px) {
+	.active-feedback:active {
+		@apply bg-amber-200 text-amber-800 scale-[1.02] transition-all duration-150;
+	}
+
+	.active-feedback:active .dropdown-profile-menu-item-icon {
+		@apply text-amber-800 scale-110 transition-all duration-150;
+	}
 }
 
 /* フッタースタイル */
