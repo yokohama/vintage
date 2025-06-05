@@ -21,7 +21,7 @@ export class checkPointsAPI {
     const { data, error } = await supabase
       .from("check_points")
       .select(
-        "*, vintages(*, products(*)), profiles(*), check_point_likes(count)",
+        "*, vintage:vintage_id(*, product:product_id(*)), profiles(*), check_point_likes(count)",
       )
       .is("deleted_at", null)
       .order("updated_at", { ascending: false })
@@ -48,7 +48,7 @@ export class checkPointsAPI {
     const { data, error } = await supabase
       .from("check_points")
       .select(
-        "*, vintages(*, products(*)), profiles(*), check_point_likes(count)",
+        "*, vintage:vintage_id(*, product:product_id(*)), profiles(*), check_point_likes(count)",
       )
       .eq("vintage_id", vintageId)
       .is("deleted_at", null)
@@ -107,7 +107,9 @@ export class checkPointsAPI {
           description: description || null,
           profile_id: userId, // user_idではなくprofile_idを使用
         })
-        .select("*, vintages(*, products(*, brands(*))), profiles(*)")
+        .select(
+          "*, vintage:vintage_id(*, product:product_id(*, brand:brand_id(*))), profiles(*)",
+        )
         .single();
 
       if (error !== null) {

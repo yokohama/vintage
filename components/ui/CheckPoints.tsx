@@ -1,30 +1,50 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Heart, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { siteConfig } from "@/lib/config/siteConfig";
 import { CheckPointType } from "@/lib/types";
 import { useCheckPoint } from "@/hooks/useCheckPoint";
 
+import { LikeButton } from "@/components/ui/like/LikeButton";
+
 type CheckPointsProps = {
   checkPoints: CheckPointType[];
+  onLikeChange?: (
+    checkPointId: number,
+    isLiked: boolean,
+    likeCount: number,
+  ) => void;
 };
 
 type CheckPointProps = {
   checkPoint: CheckPointType;
+  onLikeChange?: (
+    checkPointId: number,
+    isLiked: boolean,
+    likeCount: number,
+  ) => void;
 };
 
 interface CheckPointFooterProps {
   checkPoint: CheckPointType;
   setCheckPoints?: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
+  onLikeChange?: (
+    checkPointId: number,
+    isLiked: boolean,
+    likeCount: number,
+  ) => void;
 }
 
-export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
+export const CheckPoints = ({
+  checkPoints,
+  onLikeChange,
+}: CheckPointsProps) => {
   return (
     <div className="checkpoint-cards-container">
       {checkPoints.map((cp, index) => {
         return (
           <div key={index}>
-            <CheckPoint checkPoint={cp} />
+            <CheckPoint checkPoint={cp} onLikeChange={onLikeChange} />
           </div>
         );
       })}
@@ -32,7 +52,7 @@ export const CheckPoints = ({ checkPoints }: CheckPointsProps) => {
   );
 };
 
-export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
+export const CheckPoint = ({ checkPoint, onLikeChange }: CheckPointProps) => {
   return (
     <div className="checkpoint-card-container">
       <div className="checkpoint-card-image-container">
@@ -53,20 +73,19 @@ export const CheckPoint = ({ checkPoint }: CheckPointProps) => {
           {checkPoint.description}
         </p>
       </div>
-      <CheckPointFooter checkPoint={checkPoint} />
+      <CheckPointFooter checkPoint={checkPoint} onLikeChange={onLikeChange} />
     </div>
   );
 };
-
 export const CheckPointFooter = ({
   checkPoint,
   setCheckPoints,
+  onLikeChange,
 }: CheckPointFooterProps) => {
-  const { isLikeLoading, handleShare, handleLike, isLiked, likeCount } =
-    useCheckPoint({
-      checkPoint,
-      setCheckPoints,
-    });
+  const { handleShare, isLiked, likeCount, setIsLiked } = useCheckPoint({
+    checkPoint,
+    setCheckPoints,
+  });
 
   return (
     <div className="checkpoint-active-card-footer-container">
@@ -95,25 +114,36 @@ export const CheckPointFooter = ({
 
       {/* SNS */}
       <div className="checkpoint-active-card-footer-sns-container">
-        {isLiked}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            handleLike(e);
-          }}
-          className={`checkpoint-active-card-footer-sns-button ${
-            isLiked ? "text-amber-700" : ""
-          } ${isLikeLoading ? "opacity-50 cursor-wait" : ""}`}
-          aria-label="いいね"
-          disabled={isLikeLoading}
-        >
-          <Heart
-            className={
-              isLiked ? "checkpoint-active-card-footer-sns-liked-heart" : ""
+        {/* LikeButtonコンポーネントを使用 */}
+        <LikeButton
+          checkPointId={checkPoint.id}
+          isLiked={isLiked || false}
+          likeCount={likeCount}
+          onLikeChange={(newIsLiked, newLikeCount) => {
+            // useCheckPointフックの状態を更新
+            setIsLiked(newIsLiked);
+
+            // 親コンポーネントの状態も更新
+            if (setCheckPoints) {
+              setCheckPoints((prev) =>
+                prev.map((cp) =>
+                  cp.id === checkPoint.id
+                    ? {
+                        ...cp,
+                        isLiked: newIsLiked,
+                        likeCount: newLikeCount,
+                      }
+                    : cp,
+                ),
+              );
             }
-          />
-          <span className="ml-1">{likeCount}</span>
-        </button>
+
+            // 外部から渡されたonLikeChangeコールバックも呼び出す
+            if (onLikeChange) {
+              onLikeChange(checkPoint.id, newIsLiked, newLikeCount);
+            }
+          }}
+        />
         <button
           onClick={(e) => {
             e.stopPropagation();

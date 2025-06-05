@@ -4,6 +4,7 @@ import { SupabaseProductType } from "./utils/types";
 
 import {
   mapProduct,
+  mapVintage,
   processSupabaseResponse,
   processSupabaseArrayResponse,
 } from "./utils/formatHelper";
@@ -16,7 +17,7 @@ export class productsAPI {
       .select(
         `
         *,
-        brands:brand_id (
+        brand:brand_id (
           id,
           name,
           image_url,
@@ -48,14 +49,28 @@ export class productsAPI {
     const formattedData: ProductType = processSupabaseResponse(
       data,
       error,
-      (item) => mapProduct(item as SupabaseProductType),
+      (item) => {
+        // まずProductをマッピング
+        const product = mapProduct(item as SupabaseProductType);
+
+        // vintagesが存在する場合、それらをマッピングして製品に追加
+        if (item.vintages && Array.isArray(item.vintages)) {
+          product.vintages = item.vintages.map((vintage) =>
+            mapVintage(vintage),
+          );
+        }
+
+        return product;
+      },
       "製品",
     );
 
     // vintagesを製造開始年の昇順（古い順）でソート
-    formattedData.vintages.sort(
-      (a, b) => a.manufacturing_start_year - b.manufacturing_start_year,
-    );
+    if (formattedData.vintages && formattedData.vintages.length > 0) {
+      formattedData.vintages.sort(
+        (a, b) => a.manufacturing_start_year - b.manufacturing_start_year,
+      );
+    }
 
     return formattedData;
   }
@@ -66,7 +81,7 @@ export class productsAPI {
       .select(
         `
         *,
-        brands:brand_id (
+        brand:brand_id (
           id,
           name,
           image_url,

@@ -49,7 +49,7 @@ export interface SupabaseBrandType {
 export interface SupabaseProductType {
   id: number;
   brand_id?: number;
-  brands: SupabaseBrandType;
+  brand?: SupabaseBrandType;
   name: string;
   image_url: string;
   description: string | null;
@@ -61,12 +61,14 @@ export interface SupabaseProductType {
 
 export interface SupabaseVintageType {
   id: number;
+  product_id?: number;
+  product?: SupabaseProductType;
   name: string | null;
   manufacturing_start_year: number;
   manufacturing_end_year: number;
   image_url: string;
   description: string | null;
-  checkpoints: SupabaseCheckPointType[];
+  checkpoints?: SupabaseCheckPointType[]; // オプショナルに変更
   created_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;
@@ -75,6 +77,8 @@ export interface SupabaseVintageType {
 export interface SupabaseCheckPointType {
   id: number;
   profile_id: string | null;
+  vintage_id?: number;
+  vintage?: SupabaseVintageType; // オプショナルに変更
   image_url: string;
   point: string;
   description: string | null;

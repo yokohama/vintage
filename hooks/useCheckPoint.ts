@@ -20,7 +20,6 @@ export const useCheckPoint = ({
     checkPoint.profile,
   );
   const [isOwnCheckPoint, setIsOwnCheckPoint] = useState(false);
-  const [isLikeLoading, setIsLikeLoading] = useState(false);
   const [isLiked, setIsLiked] = useState(checkPoint.isLiked);
   const [likeCount, setLikeCount] = useState(checkPoint.likeCount || 0);
 
@@ -66,11 +65,7 @@ export const useCheckPoint = ({
   }, [checkPoint, currentUserProfile, profile]);
 
   // チェックポイントの削除処理
-  const handleDelete = async (
-    checkPointId: number,
-    e: React.MouseEvent,
-    setCheckPoints: React.Dispatch<React.SetStateAction<CheckPointType[]>>,
-  ) => {
+  const handleDelete = async (checkPointId: number, e: React.MouseEvent) => {
     e.stopPropagation();
 
     if (!confirm("このチェックポイントを削除してもよろしいですか？")) {
@@ -81,9 +76,11 @@ export const useCheckPoint = ({
       await checkPointsAPI.deleteCheckPoint(checkPointId);
 
       // 状態を更新して削除したチェックポイントを除外
-      setCheckPoints((prevCheckPoints) =>
-        prevCheckPoints.filter((cp) => cp.id !== Number(checkPointId)),
-      );
+      if (setCheckPoints) {
+        setCheckPoints((prevCheckPoints) =>
+          prevCheckPoints.filter((cp) => cp.id !== Number(checkPointId)),
+        );
+      }
 
       toast.success("チェックポイントを削除しました");
     } catch (error) {
@@ -92,75 +89,8 @@ export const useCheckPoint = ({
     }
   };
 
-  // いいね処理
-  const handleLike = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (!currentUserProfile || !checkPoint) {
-      toast.error("ログインが必要です");
-      return;
-    }
-
-    setIsLikeLoading(true);
-
-    try {
-      if (isLiked) {
-        // いいねを取り消す
-        await checkPointsAPI.unlikeCheckPoint(
-          checkPoint.id,
-          currentUserProfile.id,
-        );
-        setIsLiked(false);
-        setLikeCount((prev) => Math.max(0, prev - 1)); // いいね数を減らす（0未満にならないよう制限）
-
-        // 親コンポーネントの状態も更新
-        if (setCheckPoints) {
-          setCheckPoints((prev) =>
-            prev.map((cp) =>
-              cp.id === checkPoint.id
-                ? {
-                    ...cp,
-                    isLiked: false,
-                    likeCount: Math.max(0, (cp.likeCount || 0) - 1),
-                  }
-                : cp,
-            ),
-          );
-        }
-      } else {
-        // いいねする
-        await checkPointsAPI.likeCheckPoint(
-          checkPoint.id,
-          currentUserProfile.id,
-        );
-        setIsLiked(true);
-        setLikeCount((prev) => prev + 1); // いいね数を増やす
-
-        // 親コンポーネントの状態も更新
-        if (setCheckPoints) {
-          setCheckPoints((prev) =>
-            prev.map((cp) =>
-              cp.id === checkPoint.id
-                ? {
-                    ...cp,
-                    isLiked: true,
-                    likeCount: (cp.likeCount || 0) + 1,
-                  }
-                : cp,
-            ),
-          );
-        }
-      }
-    } catch (error) {
-      console.error("いいね処理に失敗しました:", error);
-      toast.error("いいね処理に失敗しました");
-    } finally {
-      setIsLikeLoading(false);
-    }
-  };
-
   // シェア処理
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     if (!checkPoint) return;
@@ -187,17 +117,20 @@ export const useCheckPoint = ({
     }
   };
 
+  // いいねの状態を更新する関数
+  const updateLikeState = (newIsLiked: boolean, newLikeCount: number) => {
+    setIsLiked(newIsLiked);
+    setLikeCount(newLikeCount);
+  };
+
   return {
     isOverSm,
     isOwnCheckPoint,
-    isLikeLoading,
     handleShare,
-    handleLike,
     handleDelete,
     isLiked,
     setIsLiked,
     likeCount,
+    updateLikeState,
   };
 };
-
-export default useCheckPoint;

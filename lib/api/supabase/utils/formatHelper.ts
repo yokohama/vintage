@@ -96,28 +96,53 @@ export const mapBrand = (brand: SupabaseBrandType): BrandType => ({
 
 export const mapProduct = (product: SupabaseProductType): ProductType => ({
   id: product.id,
-  brand: mapBrand(product.brands),
+  brand: product.brand ? mapBrand(product.brand) : ({} as BrandType),
   name: product.name,
   imageUrl: product.image_url,
   description: product.description || "",
-  vintages: product.vintages?.map(mapVintage) || [],
+  vintages: [], // 循環参照を避けるため空配列を設定
 });
 
-export const mapVintage = (vintage: SupabaseVintageType): VintageType => ({
-  id: vintage.id,
-  name: vintage.name || "",
-  product: {} as ProductType, // 循環参照を避けるため一時的に空オブジェクトを設定
-  manufacturing_start_year: vintage.manufacturing_start_year,
-  manufacturing_end_year: vintage.manufacturing_end_year,
-  imageUrl: vintage.image_url,
-  description: vintage.description || "",
-  checkPoints: vintage.checkpoints?.map(mapCheckPoint) || [],
-});
+export const mapVintage = (vintage: SupabaseVintageType): VintageType => {
+  if (!vintage) {
+    console.error("mapVintage: vintage is undefined or null");
+    return {
+      id: 0,
+      name: "",
+      product: {} as ProductType,
+      manufacturing_start_year: 0,
+      manufacturing_end_year: 0,
+      imageUrl: "",
+      description: "",
+      checkPoints: [],
+    };
+  }
+
+  return {
+    id: vintage.id,
+    name: vintage.name || "",
+    product: vintage.product
+      ? mapProduct(vintage.product)
+      : ({} as ProductType),
+    manufacturing_start_year: vintage.manufacturing_start_year,
+    manufacturing_end_year: vintage.manufacturing_end_year,
+    imageUrl: vintage.image_url,
+    description: vintage.description || "",
+    checkPoints: vintage.checkpoints
+      ? vintage.checkpoints.map((cp) =>
+          mapCheckPoint({
+            ...cp,
+            vintage: undefined, // 循環参照を避けるためvintageを除外
+          }),
+        )
+      : [],
+  };
+};
 
 export const mapCheckPoint = (cp: SupabaseCheckPointType): CheckPointType => ({
   id: cp.id,
   profile: cp.profiles ? mapProfile(cp.profiles) : null,
-  vintage: {} as VintageType, // 循環参照を避けるため一時的に空オブジェクトを設定
+  vintage: cp.vintage ? mapVintage(cp.vintage) : ({} as VintageType),
   imageUrl: cp.image_url,
   point: cp.point,
   description: cp.description || "",
@@ -133,7 +158,9 @@ export const mapCheckPointLike = (
   profile: cpLike.check_points.profiles
     ? mapProfile(cpLike.check_points.profiles)
     : null,
-  vintage: {} as VintageType, // 循環参照を避けるため一時的に空オブジェクトを設定
+  vintage: cpLike.check_points.vintage
+    ? mapVintage(cpLike.check_points.vintage)
+    : ({} as VintageType),
   imageUrl: cpLike.check_points.image_url,
   point: cpLike.check_points.point,
   description: cpLike.check_points.description || "",
