@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import { Upload, X } from "lucide-react";
-import { useCheckPointForm } from "../hooks/useCheckPointForm";
+import { useCheckPointForm } from "@/hooks/useCheckPointForm";
 import { CheckPointType } from "@/lib/types";
 
 interface AddCheckPointModalProps {

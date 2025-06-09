@@ -27,7 +27,7 @@ export default async function ProductPage({
           <>
             <PageTitle title={product.name} />
             <Suspense fallback={<Spinner />}>
-              <VintagesCarousel product={product} />
+              <VintagesCarousel productId={product.id} />
             </Suspense>
           </>
         )}

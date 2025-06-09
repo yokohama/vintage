@@ -4,7 +4,7 @@ import { SupabaseVintageType } from "./utils/types";
 
 import { mapVintage, processSupabaseResponse } from "./utils/formatHelper";
 
-export class vintageAPI {
+export class vintagesAPI {
   static async getVintage(vintageId: number): Promise<VintageType> {
     const { data, error } = await supabase
       .from("vintages")

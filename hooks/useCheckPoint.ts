@@ -3,25 +3,18 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { CheckPointType, UserProfileType } from "@/lib/types";
-import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
 import { useUserProfile } from "@/contexts/ProfileContext";
 
 type UseCheckPointProps = {
   checkPoint: CheckPointType;
-  setCheckPoints?: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
 };
 
-export const useCheckPoint = ({
-  checkPoint,
-  setCheckPoints,
-}: UseCheckPointProps) => {
+export const useCheckPoint = ({ checkPoint }: UseCheckPointProps) => {
   const { userProfile: currentUserProfile } = useUserProfile();
   const [profile, setProfile] = useState<UserProfileType | null>(
     checkPoint.profile,
   );
   const [isOwnCheckPoint, setIsOwnCheckPoint] = useState(false);
-  const [isLiked, setIsLiked] = useState(checkPoint.isLiked);
-  const [likeCount, setLikeCount] = useState(checkPoint.likeCount || 0);
 
   /*
    * 画面サイズがsm以上ならtrueにする
@@ -64,31 +57,6 @@ export const useCheckPoint = ({
     }
   }, [checkPoint, currentUserProfile, profile]);
 
-  // チェックポイントの削除処理
-  const handleDelete = async (checkPointId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    if (!confirm("このチェックポイントを削除してもよろしいですか？")) {
-      return;
-    }
-
-    try {
-      await checkPointsAPI.deleteCheckPoint(checkPointId);
-
-      // 状態を更新して削除したチェックポイントを除外
-      if (setCheckPoints) {
-        setCheckPoints((prevCheckPoints) =>
-          prevCheckPoints.filter((cp) => cp.id !== Number(checkPointId)),
-        );
-      }
-
-      toast.success("チェックポイントを削除しました");
-    } catch (error) {
-      console.error("チェックポイントの削除に失敗しました:", error);
-      toast.error("チェックポイントの削除に失敗しました");
-    }
-  };
-
   // シェア処理
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -117,20 +85,9 @@ export const useCheckPoint = ({
     }
   };
 
-  // いいねの状態を更新する関数
-  const updateLikeState = (newIsLiked: boolean, newLikeCount: number) => {
-    setIsLiked(newIsLiked);
-    setLikeCount(newLikeCount);
-  };
-
   return {
     isOverSm,
     isOwnCheckPoint,
     handleShare,
-    handleDelete,
-    isLiked,
-    setIsLiked,
-    likeCount,
-    updateLikeState,
   };
 };

@@ -3,7 +3,7 @@ import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import PageTitle from "@/components/ui/PageTitle";
 import Spinner from "@/components/ui/Spinner";
-import CheckPoints from "./clients/components/CheckPoints";
+import List from "@/components/ui/checkpoint/List";
 
 export default function CheckPointsPage() {
   return (
@@ -12,7 +12,7 @@ export default function CheckPointsPage() {
         <Header />
         <PageTitle title={"鑑定ポイント一覧"} />
         <Suspense fallback={<Spinner />}>
-          <CheckPoints />
+          <List />
         </Suspense>
         <Footer />
       </div>

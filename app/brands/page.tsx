@@ -3,14 +3,19 @@ import { ApiErrorType, BrandType } from "@/lib/types";
 import Brands from "./components/Brands";
 
 export default async function BrandsPage() {
-  let brands: BrandType[] = [];
-  let error = null;
+  let initialBrands: BrandType[] = [];
+  let initialError = null;
 
   try {
-    brands = await brandsAPI.getBrands();
+    initialBrands = await brandsAPI.getBrands(1, 10);
   } catch (err) {
-    error = err;
+    initialError = err;
   }
 
-  return <Brands brands={brands} error={error as ApiErrorType} />;
+  return (
+    <Brands
+      initialBrands={initialBrands}
+      initialError={initialError as ApiErrorType}
+    />
+  );
 }

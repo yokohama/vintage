@@ -1,44 +1,25 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 import { Share2 } from "lucide-react";
-import { siteConfig } from "@/lib/config/siteConfig";
 import { CheckPointType } from "@/lib/types";
 import { useCheckPoint } from "@/hooks/useCheckPoint";
-import LikeButton from "./like/LikeButton";
+import LikeButton from "@/components/ui/like/LikeButton";
+import { siteConfig } from "@/lib/config/siteConfig";
 
 interface CheckPointFooterProps {
   checkPoint: CheckPointType;
-  setCheckPoints?: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
+  onLikeSuccess?: () => void;
 }
 
-export const CheckPointFooter = ({
+const CheckPointFooter = ({
   checkPoint,
-  setCheckPoints,
+  onLikeSuccess,
 }: CheckPointFooterProps) => {
-  const { isLikeLoading, handleShare, handleLike, isLiked, likeCount } =
-    useCheckPoint({
-      checkPoint,
-      setCheckPoints,
-    });
-
-  const handleLikeChange = (isLiked: boolean, likeCount: number) => {
-    // 親コンポーネントの状態も更新
-    if (setCheckPoints) {
-      setCheckPoints((prev) =>
-        prev.map((cp) =>
-          cp.id === checkPoint.id
-            ? {
-                ...cp,
-                isLiked,
-                likeCount,
-              }
-            : cp,
-        ),
-      );
-    }
-  };
+  const { handleShare } = useCheckPoint({
+    checkPoint,
+  });
 
   return (
     <div className="checkpoint-active-card-footer-container">
@@ -69,10 +50,9 @@ export const CheckPointFooter = ({
       <div className="checkpoint-active-card-footer-sns-container">
         <LikeButton
           checkPointId={checkPoint.id}
-          isLiked={isLiked || false}
-          likeCount={likeCount}
-          onLikeChange={handleLikeChange}
-          disabled={isLikeLoading}
+          isLiked={checkPoint.isLiked || false}
+          likeCount={checkPoint.likeCount || 0}
+          onSuccess={onLikeSuccess}
         />
         <button
           onClick={(e) => {

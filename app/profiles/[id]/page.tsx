@@ -10,7 +10,7 @@ import Spinner from "@/components/ui/Spinner";
 import { profilesParams } from "../utils/profilesParams";
 import { AddButton } from "@/components/ui/OriginalButton";
 import { siteConfig } from "@/lib/config/siteConfig";
-import CheckPoints from "./clients/components/CheckPoints";
+import List from "@/components/ui/checkpoint/List";
 import ToastHandler from "@/components/ui/ToastHandler";
 import {
   Globe,
@@ -170,7 +170,7 @@ export default async function ProfilePage({
                   </div>
                 </div>
 
-                <CheckPoints profileId={profile.id} />
+                <List profileId={profile.id} />
               </div>
             </Suspense>
           </>

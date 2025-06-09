@@ -16,19 +16,55 @@ const InfiniteScroll = ({
 }: InfiniteScrollProps) => {
   const { isLoading, hasMore, loadMore } = useInfiniteScroll();
   const observerRef = useRef<HTMLDivElement>(null);
+  const onLoadMoreRef = useRef(onLoadMore);
+  const loadMoreRef = useRef(loadMore);
+  const isLoadingRef = useRef(isLoading);
+  const hasMoreRef = useRef(hasMore);
+
+  // onLoadMoreの参照を更新
+  useEffect(() => {
+    onLoadMoreRef.current = onLoadMore;
+  }, [onLoadMore]);
+
+  // loadMoreの参照を更新
+  useEffect(() => {
+    loadMoreRef.current = loadMore;
+  }, [loadMore]);
+
+  // isLoadingの参照を更新
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  // hasMoreの参照を更新
+  useEffect(() => {
+    hasMoreRef.current = hasMore;
+  }, [hasMore]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const [entry] = entries;
-        if (entry.isIntersecting && hasMore && !isLoading) {
-          loadMore(onLoadMore);
+    let isMounted = true;
+
+    const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+      const [entry] = entries;
+      if (
+        entry.isIntersecting &&
+        hasMoreRef.current &&
+        !isLoadingRef.current &&
+        isMounted
+      ) {
+        // 一度だけ実行されるようにする
+        const currentLoadMore = loadMoreRef.current;
+        const currentOnLoadMore = onLoadMoreRef.current;
+
+        if (currentLoadMore && currentOnLoadMore) {
+          currentLoadMore(currentOnLoadMore);
         }
-      },
-      {
-        rootMargin: `0px 0px ${threshold}px 0px`,
-      },
-    );
+      }
+    };
+
+    const observer = new IntersectionObserver(handleIntersection, {
+      rootMargin: `0px 0px ${threshold}px 0px`,
+    });
 
     const currentObserver = observerRef.current;
     if (currentObserver) {
@@ -36,11 +72,13 @@ const InfiniteScroll = ({
     }
 
     return () => {
+      isMounted = false;
       if (currentObserver) {
         observer.unobserve(currentObserver);
       }
+      observer.disconnect();
     };
-  }, [onLoadMore, hasMore, isLoading, loadMore, threshold]);
+  }, [threshold]);
 
   return (
     <>

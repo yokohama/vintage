@@ -10,7 +10,32 @@ import {
 } from "./utils/formatHelper";
 
 export class productsAPI {
-  static async getProduct(productId: number): Promise<ProductType> {
+  static async getSimpleProduct(productId: number): Promise<ProductType> {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", productId)
+      .is("deleted_at", null)
+      .order("updated_at", { ascending: false })
+      .single();
+
+    const formattedData: ProductType = processSupabaseResponse(
+      data,
+      error,
+      (item) => {
+        const product = mapProduct(item as SupabaseProductType);
+        return product;
+      },
+      "製品",
+    );
+
+    return formattedData;
+  }
+
+  static async getProduct(
+    productId: number,
+    userId?: string,
+  ): Promise<ProductType> {
     // 製品情報、ブランド情報、ヴィンテージ情報、チェックポイント情報を一度に取得
     const { data, error } = await supabase
       .from("products")
@@ -36,7 +61,9 @@ export class productsAPI {
             image_url,
             description,
             profile_id,
-            created_at
+            created_at,
+            profiles (*),
+            check_point_likes (count)
           )
         )
       `,
@@ -55,9 +82,10 @@ export class productsAPI {
 
         // vintagesが存在する場合、それらをマッピングして製品に追加
         if (item.vintages && Array.isArray(item.vintages)) {
-          product.vintages = item.vintages.map((vintage) =>
-            mapVintage(vintage),
-          );
+          product.vintages = item.vintages.map((vintage) => {
+            const mappedVintage = mapVintage(vintage);
+            return mappedVintage;
+          });
         }
 
         return product;

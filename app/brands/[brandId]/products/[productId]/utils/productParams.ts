@@ -1,11 +1,6 @@
 import { productsAPI } from "@/lib/api/supabase/productsAPI";
 import { ProductType, ApiErrorType } from "@/lib/types";
 
-/**
- * ブランドIDパラメータから製品情報を取得する関数
- * @param params ルートパラメータ（productIdを含むオブジェクト）
- * @returns 製品、エラー
- */
 export async function productParams(params: { productId: string }): Promise<{
   product: ProductType | null;
   error: string | null;
@@ -20,7 +15,7 @@ export async function productParams(params: { productId: string }): Promise<{
   }
 
   try {
-    product = await productsAPI.getProduct(productId);
+    product = await productsAPI.getSimpleProduct(productId);
   } catch (err) {
     const apiError = err as Error | ApiErrorType;
     error =

@@ -58,6 +58,8 @@ export const siteUrls = {
     `/brands/${brandId}/products/${productId}/eras/${eraId}`,
   checkpoints: "/checkpoints",
   checkpoint: (id: number) => `/checkpoints/${id}`,
+  newCheckPoint: (vintageId: number) =>
+    `/vintages/${vintageId}/checkpoints/new`,
   profile: (profileId: string) => `/profiles/${profileId}`,
   likes: () => "/likes",
 };

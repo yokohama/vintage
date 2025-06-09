@@ -1,28 +1,31 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import { CheckPointType } from "@/lib/types";
-import { CheckPointFooter } from "@/components/ui/CheckPoints";
-import OwnCheckPoint from "./OwnCheckPoint";
 import { useCheckPoint } from "@/hooks/useCheckPoint";
+import { useModal } from "@/hooks/useModal";
 import ImageModal from "@/components/ui/ImageModal";
+import CheckPointFooter from "@/components/ui/checkpoint/CheckPointFooter";
+import DeleteButton from "@/components/ui/delete/DeleteButton";
 
 interface CheckPointProps {
   checkPoint: CheckPointType;
-  setCheckPoints: React.Dispatch<React.SetStateAction<CheckPointType[]>>;
-  isActive: boolean;
+  isActive?: boolean;
+  onLikeSuccess?: () => void;
+  onDeleteSuccess?: () => void;
 }
 
 const CheckPoint = ({
   checkPoint,
-  setCheckPoints,
   isActive,
+  onLikeSuccess,
+  onDeleteSuccess,
 }: CheckPointProps) => {
-  const { isOwnCheckPoint, handleDelete, isOverSm } = useCheckPoint({
+  const { isOverSm, isOwnCheckPoint } = useCheckPoint({
     checkPoint,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { isModalOpen, handleOpenModal, handleCloseModal } = useModal();
 
   const containerClass = `${
     isOverSm
@@ -64,9 +67,10 @@ const CheckPoint = ({
         : "checkpoint-inactive-card-description"
   } transition-all duration-100`;
 
-  const handleImageClick = () => {
+  // カード全体のクリックハンドラ
+  const handleCardClick = () => {
     if (isActive) {
-      setIsModalOpen(true);
+      handleOpenModal();
     }
   };
 
@@ -74,7 +78,7 @@ const CheckPoint = ({
     <>
       <div
         className={`${containerClass} ${isActive ? "cursor-pointer" : ""}`}
-        onClick={isActive ? handleImageClick : undefined}
+        onClick={isActive ? handleCardClick : undefined}
       >
         <div className={isOverSm || isActive ? "" : "flex items-start"}>
           <div
@@ -103,13 +107,11 @@ const CheckPoint = ({
                 {checkPoint.description}
               </p>
             </div>
-            {(isOverSm || isActive) && (
+            {(isOverSm || isActive) && isOwnCheckPoint && (
               <div className="flex justify-end w-full">
-                <OwnCheckPoint
-                  checkPoint={checkPoint}
-                  setCheckPoints={setCheckPoints}
-                  isOwnCheckPoint={isOwnCheckPoint}
-                  handleDelete={handleDelete}
+                <DeleteButton
+                  checkPointId={checkPoint.id}
+                  onSuccess={onDeleteSuccess}
                 />
               </div>
             )}
@@ -118,7 +120,7 @@ const CheckPoint = ({
           {(isOverSm || isActive) && (
             <CheckPointFooter
               checkPoint={checkPoint}
-              setCheckPoints={setCheckPoints}
+              onLikeSuccess={onLikeSuccess}
             />
           )}
         </div>
@@ -129,7 +131,7 @@ const CheckPoint = ({
         imageUrl={checkPoint.imageUrl}
         alt={checkPoint.point || "鑑定ポイント画像"}
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        onClose={handleCloseModal}
       />
     </>
   );

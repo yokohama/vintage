@@ -5,7 +5,7 @@ import {
   processSupabaseArrayResponse,
   handleSupabaseError,
   processSupabaseResponse,
-  setIsLiked,
+  mapIsLiked,
 } from "./utils/formatHelper";
 import { SupabaseCheckPointType } from "./utils/types";
 
@@ -32,8 +32,12 @@ export class checkPointsAPI {
       CheckPointType
     >(data, error, mapCheckPoint);
 
-    // isLikedをセットして返却
-    return setIsLiked(checkPoints, userId);
+    // ユーザーIDが提供されている場合、いいね状態を別クエリで取得
+    if (userId && checkPoints.length > 0) {
+      return await mapIsLiked(checkPoints, userId);
+    }
+
+    return checkPoints;
   }
 
   static async getCheckPointsByVintageId(
@@ -60,8 +64,16 @@ export class checkPointsAPI {
       CheckPointType
     >(data, error, mapCheckPoint);
 
-    // isLikedをセットして返却
-    return setIsLiked(checkPoints, userId);
+    // ユーザーIDが提供されている場合、いいね状態を別クエリで取得
+    if (userId && checkPoints.length > 0) {
+      return await mapIsLiked(checkPoints, userId);
+    }
+
+    // ユーザーIDがない場合はいいね状態をfalseに設定
+    return checkPoints.map((cp) => ({
+      ...cp,
+      isLiked: false,
+    }));
   }
 
   static async getCheckPointsByProfileId(
@@ -86,8 +98,12 @@ export class checkPointsAPI {
       CheckPointType
     >(data, error, mapCheckPoint);
 
-    // isLikedをセットして返却
-    return setIsLiked(checkPoints, userId);
+    // ユーザーIDが提供されている場合、いいね状態を別クエリで取得
+    if (userId && checkPoints.length > 0) {
+      return await mapIsLiked(checkPoints, userId);
+    }
+
+    return checkPoints;
   }
 
   static async addCheckPoint(
