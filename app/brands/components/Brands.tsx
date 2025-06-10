@@ -33,6 +33,7 @@ export default function Brands({ initialBrands, initialError }: BrandsProps) {
     initialError,
     fetchFunction: brandsAPI.getBrands,
     pageSize: 10,
+    itemStatusChangeCount: 0,
   });
 
   return (

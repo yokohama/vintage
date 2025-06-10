@@ -32,10 +32,7 @@ export class productsAPI {
     return formattedData;
   }
 
-  static async getProduct(
-    productId: number,
-    userId?: string,
-  ): Promise<ProductType> {
+  static async getProduct(productId: number): Promise<ProductType> {
     // 製品情報、ブランド情報、ヴィンテージ情報、チェックポイント情報を一度に取得
     const { data, error } = await supabase
       .from("products")
