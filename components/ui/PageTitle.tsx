@@ -9,9 +9,11 @@ import { DropDownMenuUI } from "./DropDownMenuUI";
 
 interface PageTitleProps {
   title: string;
+  brandId?: number;
+  productId?: number;
 }
 
-const PageTitle = ({ title }: PageTitleProps) => {
+const PageTitle = ({ title, brandId, productId }: PageTitleProps) => {
   const { isFixed, setIsFixed } = usePageTitle();
   const titleRef = useRef<HTMLDivElement>(null);
   const placeholderRef = useRef<HTMLDivElement>(null);
@@ -80,7 +82,10 @@ const PageTitle = ({ title }: PageTitleProps) => {
               {!isFixed &&
                 (pathname === siteUrls.home() ||
                   pathname === siteUrls.brands() ||
-                  pathname.includes("/products/")) && (
+                  (brandId && pathname === siteUrls.products(brandId)) ||
+                  (brandId &&
+                    productId &&
+                    pathname === siteUrls.product(brandId, productId))) && (
                   <div className="mr-2 z-10">
                     <AddButton
                       label=""

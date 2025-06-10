@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { useNewCheckPoint } from "@/hooks/useNewCheckPoint";
+import { useNewBrand } from "@/hooks/useNewBrand";
 import { Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,14 +13,14 @@ import PageTitle from "@/components/ui/PageTitle";
 import { CheckPointType } from "@/lib/types";
 
 type NewProps = {
-  vintageId: number;
+  brandId: number;
   onSuccess: (newCheckPoint: CheckPointType) => void;
 };
 
-export const New = ({ vintageId }: NewProps) => {
+export const New = ({ brandId }: NewProps) => {
   const {
-    point,
-    setPoint,
+    name,
+    setName,
     description,
     setDescription,
     previewUrl,
@@ -31,26 +31,26 @@ export const New = ({ vintageId }: NewProps) => {
     handleRemoveFile,
     handleSubmit,
     handleCancel,
-  } = useNewCheckPoint();
+  } = useNewBrand();
 
   return (
     <main>
       <div>
         <Header />
-        <PageTitle title="観点ポイントの追加" />
+        <PageTitle title="ブランドの追加" />
         <div className="form-container">
-          <form onSubmit={(e) => handleSubmit(e, vintageId)} className="form">
+          <form onSubmit={(e) => handleSubmit(e, brandId)} className="form">
             <div className="grid gap-4 py-4">
               <div className="form-field">
                 <label className="form-label">
-                  ポイント <span className="form-required">*</span>
+                  ブランド名<span className="form-required">*</span>
                 </label>
                 <Input
-                  id="point"
-                  value={point}
-                  onChange={(e) => setPoint(e.target.value)}
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="form-input"
-                  placeholder="ポイント"
+                  placeholder="ブランド名"
                   required
                 />
               </div>

@@ -11,9 +11,14 @@ import VintagesCarousel from "./clients/components/VintagesCarousel";
 export default async function ProductPage({
   params,
 }: {
-  params: { productId: string };
+  params: {
+    brandId: string;
+    productId: string;
+  };
 }) {
   const { product, error } = await productParams(params);
+  const brandId = parseInt(params.brandId, 10);
+  const productId = parseInt(params.productId, 10);
 
   return (
     <main>
@@ -25,7 +30,11 @@ export default async function ProductPage({
           <NotFound msg="プロダクトが見つかりませんでした。" />
         ) : (
           <>
-            <PageTitle title={product.name} />
+            <PageTitle
+              title={product.name}
+              brandId={brandId}
+              productId={productId}
+            />
             <Suspense fallback={<Spinner />}>
               <VintagesCarousel productId={product.id} />
             </Suspense>

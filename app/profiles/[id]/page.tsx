@@ -59,7 +59,7 @@ export default async function ProfilePage({
                 </div>
 
                 <div className="bg-amber-50 rounded-lg shadow-md p-6 mb-8 border border-amber-100">
-                  <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                  <div className="flex flex-col items-center gap-8">
                     <div className="w-32 h-32 relative rounded-full overflow-hidden border-4 border-amber-200 shadow-md">
                       <Image
                         src={
@@ -76,9 +76,11 @@ export default async function ProfilePage({
                         }
                       />
                     </div>
-                    <div className="description">{profile.description}</div>
+                    <div className="description w-full max-w-2xl text-center">
+                      {profile.description}
+                    </div>
 
-                    <div className="flex-1">
+                    <div className="w-full">
                       <div className="">
                         <div className="flex flex-wrap gap-4 justify-center">
                           {/* ウェブサイト */}

@@ -372,5 +372,72 @@ a.sns {
 }
 
 .form-container {
-	@apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-4;
+	@apply container mx-auto px-4 py-8;
+}
+
+.form {
+	@apply bg-amber-50 rounded-lg shadow-md p-6 mb-8 border border-amber-100;
+}
+
+/* フォーム要素の共通スタイル */
+.form-field {
+	@apply mb-6;
+}
+
+.form-label {
+	@apply block text-amber-800 font-medium mb-2;
+}
+
+.form-required {
+	@apply text-red-500;
+}
+
+.form-input {
+	@apply w-full px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500;
+}
+
+.form-textarea {
+	@apply w-full px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500;
+}
+
+.form-image-upload {
+	@apply border border-amber-300 border-dashed rounded-md p-6 flex flex-col items-center justify-center cursor-pointer hover:bg-amber-100 transition-colors bg-white shadow-sm;
+}
+
+.form-image-preview {
+	@apply relative aspect-video w-full overflow-hidden rounded-md border border-amber-300 bg-white shadow-sm;
+}
+
+.form-button-container {
+	@apply mt-8 flex justify-between;
+}
+
+.form-button-cancel {
+	@apply bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md shadow-sm;
+}
+
+.form-button-submit {
+	@apply bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-md shadow-sm flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed;
+}
+
+.form-loading-spinner {
+	@apply animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full;
+}
+
+/* SNSリンクセクション */
+.form-sns-section-title {
+	@apply text-lg font-semibold text-amber-800 border-b border-amber-200 pb-2 mb-4;
+}
+
+/* プロフィール画像アップロード */
+.form-profile-image-container {
+	@apply mb-6 flex flex-col items-center;
+}
+
+.form-profile-image {
+	@apply w-32 h-32 relative rounded-full overflow-hidden border-4 border-amber-200 shadow-md mb-4;
+}
+
+.form-profile-image-upload-button {
+	@apply bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm cursor-pointer;
 }

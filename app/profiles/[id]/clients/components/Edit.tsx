@@ -36,14 +36,11 @@ export default function Edit({ profileId }: EditProps) {
       {loading ? (
         <Spinner />
       ) : (
-        <div className="container mx-auto px-4 py-8">
-          <form
-            onSubmit={handleSubmit}
-            className="bg-amber-50 rounded-lg shadow-md p-6 mb-8 border border-amber-100"
-          >
+        <div className="form-container">
+          <form onSubmit={handleSubmit} className="form">
             {/* プロフィール画像 */}
-            <div className="mb-6 flex flex-col items-center">
-              <div className="w-32 h-32 relative rounded-full overflow-hidden border-4 border-amber-200 shadow-md mb-4">
+            <div className="form-profile-image-container">
+              <div className="form-profile-image">
                 <Image
                   src={previewImage || siteConfig.images.defaultProfileAvatar}
                   alt="プロフィール画像"
@@ -56,7 +53,7 @@ export default function Edit({ profileId }: EditProps) {
                 />
               </div>
 
-              <label className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm cursor-pointer">
+              <label className="form-profile-image-upload-button">
                 画像を変更
                 <input
                   type="file"
@@ -67,9 +64,9 @@ export default function Edit({ profileId }: EditProps) {
               </label>
             </div>
 
-            <div className="mb-6">
-              <label className="block text-amber-800 font-medium mb-2">
-                表示名 <span className="text-red-500">*</span>
+            <div className="form-field">
+              <label className="form-label">
+                表示名 <span className="form-required">*</span>
               </label>
               <input
                 type="text"
@@ -77,13 +74,13 @@ export default function Edit({ profileId }: EditProps) {
                 value={formData.displayName}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="form-input"
               />
             </div>
 
-            <div className="mb-6">
-              <label className="block text-amber-800 font-medium mb-2">
-                プロフィール <span className="text-red-500">*</span>
+            <div className="form-field">
+              <label className="form-label">
+                プロフィール <span className="form-required">*</span>
               </label>
               <textarea
                 name="description"
@@ -91,14 +88,12 @@ export default function Edit({ profileId }: EditProps) {
                 onChange={handleChange}
                 required
                 rows={4}
-                className="w-full px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
+                className="form-textarea"
               />
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-amber-800 border-b border-amber-200 pb-2 mb-4">
-                SNSリンク
-              </h3>
+              <h3 className="form-sns-section-title">SNSリンク</h3>
 
               <Sns
                 snsService={globe}
@@ -132,11 +127,11 @@ export default function Edit({ profileId }: EditProps) {
               />
 
               {/* ボタン */}
-              <div className="mt-8 flex justify-between">
+              <div className="form-button-container">
                 <button
                   type="button"
                   onClick={() => router.back()}
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-6 py-2 rounded-md shadow-sm"
+                  className="form-button-cancel"
                 >
                   キャンセル
                 </button>
@@ -144,11 +139,11 @@ export default function Edit({ profileId }: EditProps) {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-md shadow-sm flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="form-button-submit"
                 >
                   {saving ? (
                     <>
-                      <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"></span>
+                      <span className="form-loading-spinner"></span>
                       保存中...
                     </>
                   ) : (

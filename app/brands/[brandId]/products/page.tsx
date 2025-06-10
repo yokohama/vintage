@@ -16,6 +16,7 @@ export default async function ProductsPage({
   params: { brandId: string };
 }) {
   const { brand, products, error } = await productsParams(params);
+  const brandId = parseInt(params.brandId, 10);
 
   return (
     <main>
@@ -27,7 +28,7 @@ export default async function ProductsPage({
           <NotFound msg="製品が見つかりませんでした。" />
         ) : (
           <>
-            <PageTitle title={brand.name} />
+            <PageTitle title={brand.name} brandId={brandId} />
             <Suspense fallback={<Spinner />}>
               <div className="item-cards-container">
                 {products.map((product) => (
