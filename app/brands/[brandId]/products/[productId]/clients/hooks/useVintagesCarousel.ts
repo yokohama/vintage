@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { ApiErrorType, ProductType, VintageType } from "@/lib/types";
 import { type CarouselApi } from "@/components/ui/carousel";
 import { productsAPI } from "@/lib/api/supabase/productsAPI";
-import { useAuth } from "@/contexts/AuthContext";
 
 interface UseVintagesCarouselProps {
   productId: number;

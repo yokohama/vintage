@@ -29,17 +29,19 @@ type ListProps = {
   vintageName?: string;
   profileId?: string;
   profileName?: string;
+  likedUserId?: string;
 };
 
 export const List = ({
   brandId,
-  profileId,
-  vintageId,
-  productId,
   brandName,
+  productId,
   productName,
+  vintageId,
   vintageName,
+  profileId,
   profileName,
+  likedUserId,
 }: ListProps) => {
   const {
     pageTitle,
@@ -59,12 +61,13 @@ export const List = ({
     productName: productName || "",
     vintageName: vintageName || "",
     profileName: profileName || "",
+    likedUserId: likedUserId || null,
   });
 
   const {
     data: checkPoints,
     error,
-    loadMoreData: loadMoreCheckPoints,
+    loadMoreData,
   } = useInfiniteData<CheckPointType, []>({
     initialData: initialCheckPoints,
     initialError,
@@ -107,7 +110,7 @@ export const List = ({
                 }
               />
             ) : (
-              <InfiniteScroll onLoadMore={loadMoreCheckPoints}>
+              <InfiniteScroll onLoadMore={loadMoreData}>
                 <div className="checkpoint-cards-container">
                   {checkPoints.map((cp, index) => (
                     <div key={index} className="checkpoint-card-container">

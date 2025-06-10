@@ -106,6 +106,63 @@ export class checkPointsAPI {
     return checkPoints;
   }
 
+  // 自分がいいねしているものを取得なので、userIDは必須
+  static async getCheckPointsByLied(
+    userId: string,
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<CheckPointType[]> {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    // ユーザーがいいねした鑑定ポイントのIDを取得
+    const { data: likedCheckPointsData, error: likedError } = await supabase
+      .from("check_point_likes")
+      .select("check_point_id")
+      .eq("profile_id", userId)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .range(from, to);
+
+    if (likedError) {
+      handleSupabaseError(
+        likedError,
+        "いいねした鑑定ポイントの取得に失敗しました",
+      );
+    }
+
+    // いいねした鑑定ポイントがない場合は空配列を返す
+    if (!likedCheckPointsData || likedCheckPointsData.length === 0) {
+      return [];
+    }
+
+    // いいねした鑑定ポイントのIDを抽出
+    const checkPointIds = likedCheckPointsData.map(
+      (like) => like.check_point_id,
+    );
+
+    // 鑑定ポイントの詳細情報を取得
+    const { data, error } = await supabase
+      .from("check_points")
+      .select(
+        "*, vintage:vintage_id(*, product:product_id(*)), profiles(*), check_point_likes(count)",
+      )
+      .in("id", checkPointIds)
+      .is("deleted_at", null)
+      .order("updated_at", { ascending: false });
+
+    const checkPoints = processSupabaseArrayResponse<
+      SupabaseCheckPointType,
+      CheckPointType
+    >(data, error, mapCheckPoint);
+
+    // いいね状態を設定（自分がいいねしたものなので全てtrue）
+    return checkPoints.map((cp) => ({
+      ...cp,
+      isLiked: true,
+    }));
+  }
+
   static async addCheckPoint(
     vintageId: number,
     point: string,

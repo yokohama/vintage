@@ -9,22 +9,24 @@ import { CheckPointType } from "@/lib/types";
 
 type CheckPointListProps = {
   brandId: number | null;
-  productId: number | null;
-  vintageId: number | null;
-  profileId: string | null;
   brandName: string;
+  productId: number | null;
   productName: string;
+  vintageId: number | null;
   vintageName: string;
+  profileId: string | null;
   profileName: string;
+  likedUserId?: string | null;
 };
 
 export const useCheckPointList = ({
   brandId,
   productId,
   vintageId,
-  profileId,
   vintageName,
+  profileId,
   profileName,
+  likedUserId,
 }: CheckPointListProps) => {
   const { user } = useAuth();
 
@@ -42,6 +44,14 @@ export const useCheckPointList = ({
     (page: number, pageSize: number) =>
       checkPointsAPI.getCheckPoints(user?.id, page, pageSize),
     [user?.id],
+  );
+
+  // 自分がいいねしているものの取得
+  // likedUserIdがセットされていない場合は空文字をいれて検索に引っかからないようにする。
+  const fetchCheckPointsByLikedUserId = useCallback(
+    (page: number, pageSize: number) =>
+      checkPointsAPI.getCheckPointsByLied(likedUserId || "", page, pageSize),
+    [likedUserId],
   );
 
   // vintageId 指定時の取得関数
@@ -80,13 +90,18 @@ export const useCheckPointList = ({
     if (vintageId) {
       return fetchCheckPointsByVintageId;
     }
+    if (likedUserId) {
+      return fetchCheckPointsByLikedUserId;
+    }
     return fetchCheckPoints;
   }, [
     profileId,
     vintageId,
+    likedUserId,
     fetchCheckPoints,
     fetchCheckPointsByVintageId,
     fetchCheckPointsByProfileId,
+    fetchCheckPointsByLikedUserId,
   ]);
 
   // タイトル更新
