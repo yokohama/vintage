@@ -38,6 +38,7 @@ export const useCheckPointList = ({
   >([]);
   const [initialError, setInitialError] = useState<unknown | null>(null);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [isLastCardActive, setIsLastCardActive] = useState<boolean>(false);
 
   // 基本の取得関数
   const fetchCheckPoints = useCallback(
@@ -137,10 +138,36 @@ export const useCheckPointList = ({
       if (!pageTitleEl) return;
       const bottom = pageTitleEl.getBoundingClientRect().bottom;
       const cards = document.querySelectorAll(".checkpoint-card-container");
+
+      // 最後のカードのインデックス
+      const lastCardIndex = cards.length - 1;
+
+      // 最後のカードの場合の特別処理
+      if (isLastCardActive) {
+        // 最後から2番目のカードの位置をチェック
+        if (lastCardIndex > 0) {
+          const secondLastCard = cards[lastCardIndex - 1];
+          // 1つ前のカードが表示領域に入ったら、最後のカードのアクティブ状態を解除
+          if (secondLastCard.getBoundingClientRect().top >= bottom) {
+            setActiveIndex(lastCardIndex - 1);
+            setIsLastCardActive(false);
+            return;
+          }
+        }
+        // それ以外の場合は最後のカードをアクティブに保持
+        return;
+      }
+
+      // 通常の処理（最後のカードがアクティブでない場合）
       setActiveIndex(null);
       for (let i = 0; i < cards.length; i++) {
+        const isLastCard = i === lastCardIndex;
         if (cards[i].getBoundingClientRect().top >= bottom) {
           setActiveIndex(i);
+          // 最後のカードがアクティブになった場合、フラグを設定
+          if (isLastCard) {
+            setIsLastCardActive(true);
+          }
           break;
         }
       }
@@ -152,7 +179,7 @@ export const useCheckPointList = ({
       clearTimeout(initTimeout);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [brandId, productId, vintageId]);
+  }, [brandId, productId, vintageId, activeIndex, isLastCardActive]);
 
   // 状態更新後に再フェッチトリガー
   const onStateChangeSuccess = () => {

@@ -192,11 +192,6 @@ export function useInfiniteData<T, P extends unknown[]>({
     }
   };
 
-  // setDataによりこの中のロジックが実行される
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
-
   return {
     data,
     error,
