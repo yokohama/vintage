@@ -10,13 +10,22 @@ import {
 import { SupabaseCheckPointType } from "./utils/types";
 
 export class checkPointsAPI {
+  static useLimit = (page: number, limit: number) => {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+
+    return {
+      from,
+      to,
+    };
+  };
+
   static async getCheckPoints(
     userId?: string,
     page: number = 1,
     limit: number = 10,
   ): Promise<CheckPointType[]> {
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const { from, to } = checkPointsAPI.useLimit(page, limit);
 
     const { data, error } = await supabase
       .from("check_points")
@@ -46,8 +55,7 @@ export class checkPointsAPI {
     page: number = 1,
     limit: number = 10,
   ): Promise<CheckPointType[]> {
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const { from, to } = checkPointsAPI.useLimit(page, limit);
 
     const { data, error } = await supabase
       .from("check_points")
@@ -82,8 +90,7 @@ export class checkPointsAPI {
     page: number = 1,
     limit: number = 10,
   ): Promise<CheckPointType[]> {
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const { from, to } = checkPointsAPI.useLimit(page, limit);
 
     const { data, error } = await supabase
       .from("check_points")
@@ -112,8 +119,7 @@ export class checkPointsAPI {
     page: number = 1,
     limit: number = 10,
   ): Promise<CheckPointType[]> {
-    const from = (page - 1) * limit;
-    const to = from + limit - 1;
+    const { from, to } = checkPointsAPI.useLimit(page, limit);
 
     // ユーザーがいいねした鑑定ポイントのIDを取得
     const { data: likedCheckPointsData, error: likedError } = await supabase

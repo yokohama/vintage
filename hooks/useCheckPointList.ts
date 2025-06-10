@@ -9,24 +9,28 @@ import { CheckPointType } from "@/lib/types";
 
 type CheckPointListProps = {
   brandId: number | null;
-  brandName: string;
+  brandName: string | null;
   productId: number | null;
-  productName: string;
+  productName: string | null;
   vintageId: number | null;
-  vintageName: string;
+  vintageName: string | null;
   profileId: string | null;
-  profileName: string;
-  likedUserId?: string | null;
+  profileName: string | null;
+  likedUserId: string | null;
+  likedUserName: string | null;
 };
 
 export const useCheckPointList = ({
   brandId,
+  brandName,
   productId,
+  productName,
   vintageId,
   vintageName,
   profileId,
   profileName,
   likedUserId,
+  likedUserName,
 }: CheckPointListProps) => {
   const { user } = useAuth();
 
@@ -107,10 +111,35 @@ export const useCheckPointList = ({
 
   // タイトル更新
   useEffect(() => {
-    setPageTitle(
-      profileName ? profileName : vintageName ? vintageName : "全て",
-    );
-  }, [profileName, vintageName]);
+    if (profileName) {
+      setPageTitle(`${profileName}さんの鑑定ポイント一覧`);
+    } else if (likedUserId) {
+      setPageTitle(`お気に入り鑑定ポイント一覧`);
+    } else {
+      let title = "全て";
+      if (brandName) {
+        title = title + brandName;
+      }
+      if (productName) {
+        title = `${title} / ${productName}`;
+      }
+      if (vintageName) {
+        title = `${title} / ${vintageName}`;
+      }
+      if (title === "") {
+        title = "全て";
+      }
+      const fixedTitle = title.replace(/^\s\/\s/, "");
+      setPageTitle(`${fixedTitle}の鑑定ポイント一覧`);
+    }
+  }, [
+    brandName,
+    productName,
+    vintageName,
+    profileName,
+    likedUserId,
+    likedUserName,
+  ]);
 
   // 初期データ取得
   useEffect(() => {

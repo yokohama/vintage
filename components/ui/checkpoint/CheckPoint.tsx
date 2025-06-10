@@ -29,7 +29,7 @@ const CheckPoint = ({
 
   const containerClass = `${
     isOverSm
-      ? "checkpoint-card-container"
+      ? ""
       : isActive
         ? "checkpoint-active-card-container"
         : "checkpoint-inactive-card-container"
@@ -77,10 +77,12 @@ const CheckPoint = ({
   return (
     <>
       <div
-        className={`${containerClass} ${isActive ? "cursor-pointer" : ""}`}
+        className={`${containerClass} ${isActive ? "cursor-pointer" : ""} h-full flex flex-col`}
         onClick={isActive ? handleCardClick : undefined}
       >
-        <div className={isOverSm || isActive ? "" : "flex items-start"}>
+        <div
+          className={`${isOverSm || isActive ? "flex flex-col h-full" : "flex items-start"}`}
+        >
           <div
             className={imageContainerClass}
             style={{

@@ -2,6 +2,8 @@ import { brandsAPI } from "@/lib/api/supabase/brandsAPI";
 import { ApiErrorType, BrandType } from "@/lib/types";
 import Brands from "./brands/components/Brands";
 
+export const revalidate = 0;
+
 export default async function Home() {
   let initialBrands: BrandType[] = [];
   let initialError = null;

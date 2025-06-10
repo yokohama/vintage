@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { useCheckPointForm } from "@/hooks/useCheckPointForm";
+import { useNewCheckPoint } from "@/hooks/useNewCheckPoint";
 import { Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -17,7 +17,7 @@ type NewProps = {
   onSuccess: (newCheckPoint: CheckPointType) => void;
 };
 
-export const New = ({ vintageId, onSuccess }: NewProps) => {
+export const New = ({ vintageId }: NewProps) => {
   const {
     point,
     setPoint,
@@ -30,9 +30,8 @@ export const New = ({ vintageId, onSuccess }: NewProps) => {
     handleFileChange,
     handleRemoveFile,
     handleSubmit,
-  } = useCheckPointForm();
-
-  const onClose = () => {};
+    handleCancel,
+  } = useNewCheckPoint();
 
   return (
     <main>
@@ -40,9 +39,7 @@ export const New = ({ vintageId, onSuccess }: NewProps) => {
         <Header />
         <PageTitle title="観点ポイントの追加" />
         <div className="form-container">
-          <form
-            onSubmit={(e) => handleSubmit(e, vintageId, onSuccess, onClose)}
-          >
+          <form onSubmit={(e) => handleSubmit(e, vintageId)}>
             <div className="grid gap-4 py-4">
               <div className="items-center">
                 <label className="block text-amber-800 font-medium mb-2">
@@ -146,8 +143,8 @@ export const New = ({ vintageId, onSuccess }: NewProps) => {
               <Button
                 type="button"
                 variant="ghost"
-                onClick={onClose}
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-md shadow-sm border-0 w-full sm:w-auto"
+                onClick={() => handleCancel()}
               >
                 キャンセル
               </Button>

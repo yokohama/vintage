@@ -170,7 +170,10 @@ export default async function ProfilePage({
                   </div>
                 </div>
 
-                <List profileId={profile.id} />
+                <List
+                  profileId={profile.id}
+                  profileName={profile.displayName ? profile.displayName : ""}
+                />
               </div>
             </Suspense>
           </>

@@ -30,6 +30,7 @@ type ListProps = {
   profileId?: string;
   profileName?: string;
   likedUserId?: string;
+  likedUserName?: string;
 };
 
 export const List = ({
@@ -42,6 +43,7 @@ export const List = ({
   profileId,
   profileName,
   likedUserId,
+  likedUserName,
 }: ListProps) => {
   const {
     pageTitle,
@@ -54,14 +56,15 @@ export const List = ({
     initialError,
   } = useCheckPointList({
     brandId: brandId || null,
+    brandName: brandName || null,
     productId: productId || null,
+    productName: productName || null,
     vintageId: vintageId || null,
+    vintageName: vintageName || null,
     profileId: profileId || null,
-    brandName: brandName || "",
-    productName: productName || "",
-    vintageName: vintageName || "",
     profileName: profileName || "",
     likedUserId: likedUserId || null,
+    likedUserName: likedUserName || null,
   });
 
   const {
@@ -80,19 +83,20 @@ export const List = ({
 
   return (
     <div>
-      {vintageId && (
-        <div className="flex justify-end mr-4">
-          <AddButton
-            label="鑑定ポイント"
-            className="bg-amber-600 hover:bg-amber-700 text-white text-xs"
-            onClick={() => router.push(siteUrls.newCheckPoint(vintageId))}
-          />
-        </div>
-      )}
-
-      <h3 className="title">
-        {`${pageTitle}の鑑定ポイント`} ({checkPoints.length})
-      </h3>
+      <div className="flex justify-between items-center px-4 mb-2">
+        <h3 className="my-auto flex items-center m-0">
+          {`${pageTitle}`} ({checkPoints.length})
+        </h3>
+        {vintageId && (
+          <div className="flex items-center">
+            <AddButton
+              label="鑑定ポイント"
+              className="bg-amber-600 hover:bg-amber-700 text-white text-xs"
+              onClick={() => router.push(siteUrls.newCheckPoint(vintageId))}
+            />
+          </div>
+        )}
+      </div>
 
       <Suspense fallback={<Spinner />}>
         <InfiniteScrollProvider>
