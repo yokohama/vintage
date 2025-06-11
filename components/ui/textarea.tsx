@@ -1,33 +1,25 @@
-type TextareaProps = {
-  label: string;
-  name: string;
-  value: string;
-  handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
-  rows?: number;
-};
+import * as React from "react";
 
-export const Textarea = ({
-  label,
-  name,
-  value,
-  handleChange,
-  rows = 4,
-}: TextareaProps) => {
-  return (
-    <div className="form-field">
-      <label className="form-label">
-        {label} <span className="form-required">*</span>
-      </label>
-      <textarea
-        name={name}
-        value={value}
-        onChange={handleChange}
-        required
-        rows={rows}
-        className="form-textarea"
-      />
-    </div>
-  );
-};
+interface TextareaProps
+  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  label?: string;
+}
+
+export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ label, ...props }, ref) => {
+    return (
+      <div className="form-field">
+        <label className="form-label">
+          {label} {props.required && <span className="form-required">*</span>}
+        </label>
+        <textarea
+          ref={ref}
+          rows={props.rows || 4}
+          className="form-textarea"
+          {...props}
+        />
+      </div>
+    );
+  },
+);
+Textarea.displayName = "Textarea";

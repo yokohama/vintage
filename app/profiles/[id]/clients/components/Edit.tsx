@@ -1,8 +1,5 @@
 "use client";
 
-import Image from "next/image";
-import { siteConfig } from "@/lib/config/siteConfig";
-
 import { useEdit } from "../hooks/useEdit";
 import Spinner from "@/components/ui/Spinner";
 import {
@@ -17,6 +14,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { ProfileImageUpload } from "@/components/ui/fileUpload";
 
 type EditProps = {
   profileId: string;
@@ -41,44 +39,25 @@ export default function Edit({ profileId }: EditProps) {
       ) : (
         <div className="form-container">
           <form onSubmit={handleSubmit} className="form">
-            {/* プロフィール画像 */}
-            <div className="form-profile-image-container">
-              <div className="form-profile-image">
-                <Image
-                  src={previewImage || siteConfig.images.defaultProfileAvatar}
-                  alt="プロフィール画像"
-                  fill
-                  sizes="(max-width: 640px) 100vw, 33vw"
-                  className="object-cover"
-                  unoptimized={
-                    previewImage?.includes("api.dicebear.com") || false
-                  }
-                />
-              </div>
-
-              <label className="form-profile-image-upload-button">
-                画像を変更
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="hidden"
-                />
-              </label>
-            </div>
+            <ProfileImageUpload
+              previewImage={previewImage}
+              handleImageChange={handleImageChange}
+            />
 
             <Input
               label="表示名"
               name="displayName"
               value={formData.displayName}
-              handleChange={handleChange}
+              onChange={handleChange}
+              required
             />
 
             <Textarea
               label="プロフィール"
               name="description"
               value={formData.description}
-              handleChange={handleChange}
+              onChange={handleChange}
+              required
             />
 
             <div className="space-y-4">

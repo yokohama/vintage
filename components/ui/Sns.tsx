@@ -7,6 +7,8 @@ import {
   Youtube,
 } from "lucide-react";
 
+import { Input } from "@/components/ui/input";
+
 type SnsServiceType = {
   name: "Globe" | "Twitter" | "Instagram" | "Facebook" | "Linkedin" | "Youtube";
   inputName: string;
@@ -74,13 +76,12 @@ export const Sns = ({ snsService, handleChange, value = "" }: SnsProps) => {
       ) : snsService.name === "Youtube" ? (
         <Youtube size={iconSize} className={iconClassName} />
       ) : null}
-      <input
+      <Input
         type="url"
         name={snsService.inputName}
         value={value}
         onChange={handleChange}
         placeholder={snsService.placeholder}
-        className="w-full px-4 py-2 border border-amber-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
       />
     </div>
   );
