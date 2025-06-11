@@ -41,6 +41,7 @@ export const New = ({ vintageId }: NewProps) => {
         <div className="form-container">
           <form onSubmit={(e) => handleSubmit(e, vintageId)} className="form">
             <div className="grid gap-4 py-4">
+              {/*
               <div className="form-field">
                 <label className="form-label">
                   ポイント <span className="form-required">*</span>
@@ -54,6 +55,15 @@ export const New = ({ vintageId }: NewProps) => {
                   required
                 />
               </div>
+                  */}
+
+              <Input
+                label="ポイント"
+                name="point"
+                value={point}
+                handleChange={(e) => setPoint(e.target.value)}
+              />
+
               <div className="form-field">
                 <label className="form-label">
                   画像 <span className="form-required">*</span>
@@ -121,20 +131,12 @@ export const New = ({ vintageId }: NewProps) => {
                   )}
                 </div>
               </div>
-              <div className="form-field">
-                <label className="form-label">
-                  説明 <span className="form-required">*</span>
-                </label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="form-textarea"
-                  rows={4}
-                  placeholder="説明"
-                  required
-                />
-              </div>
+              <Textarea
+                label="説明"
+                name="description"
+                value={description}
+                handleChange={(e) => setDescription(e.target.value)}
+              />
             </div>
             <div className="form-button-container">
               <Button

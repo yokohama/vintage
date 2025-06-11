@@ -15,6 +15,9 @@ import {
   youtube,
 } from "@/components/ui/Sns";
 
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 type EditProps = {
   profileId: string;
 };
@@ -64,33 +67,19 @@ export default function Edit({ profileId }: EditProps) {
               </label>
             </div>
 
-            <div className="form-field">
-              <label className="form-label">
-                表示名 <span className="form-required">*</span>
-              </label>
-              <input
-                type="text"
-                name="displayName"
-                value={formData.displayName}
-                onChange={handleChange}
-                required
-                className="form-input"
-              />
-            </div>
+            <Input
+              label="表示名"
+              name="displayName"
+              value={formData.displayName}
+              handleChange={handleChange}
+            />
 
-            <div className="form-field">
-              <label className="form-label">
-                プロフィール <span className="form-required">*</span>
-              </label>
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                required
-                rows={4}
-                className="form-textarea"
-              />
-            </div>
+            <Textarea
+              label="プロフィール"
+              name="description"
+              value={formData.description}
+              handleChange={handleChange}
+            />
 
             <div className="space-y-4">
               <h3 className="form-sns-section-title">SNSリンク</h3>

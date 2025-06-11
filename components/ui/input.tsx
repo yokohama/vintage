@@ -1,5 +1,4 @@
-"use client";
-
+/*
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -24,3 +23,32 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 Input.displayName = "Input";
 
 export { Input };
+*/
+
+type InputProps = {
+  label: string;
+  name: string;
+  value: string;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => void;
+  rows?: number;
+};
+
+export const Input = ({ label, name, value, handleChange }: InputProps) => {
+  return (
+    <div className="form-field">
+      <label className="form-label">
+        {label} <span className="form-required">*</span>
+      </label>
+      <input
+        type="text"
+        name={name}
+        value={value}
+        onChange={handleChange}
+        required
+        className="form-input"
+      />
+    </div>
+  );
+};
