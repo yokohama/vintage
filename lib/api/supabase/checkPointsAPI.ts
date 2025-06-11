@@ -184,7 +184,7 @@ export class checkPointsAPI {
           point: point,
           image_url: imageUrl,
           description: description || null,
-          profile_id: userId, // user_idではなくprofile_idを使用
+          profile_id: userId,
         })
         .select(
           "*, vintage:vintage_id(*, product:product_id(*, brand:brand_id(*))), profiles(*)",
@@ -203,6 +203,7 @@ export class checkPointsAPI {
         "チェックポイント",
       );
     } catch (error: unknown) {
+      // ここをhelperに切り出して汎用化する。
       console.error("Supabase error:", error);
       // 未知のエラーの場合
       const apiError = {
@@ -219,6 +220,8 @@ export class checkPointsAPI {
     }
   }
 
+  // ここを切り出して汎用化する
+  // 画像をwebp形式に変換するのもここで
   static async uploadImage(
     file: File,
     userId: string,

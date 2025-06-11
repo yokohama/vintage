@@ -99,6 +99,7 @@ export class userProfilesAPI {
     }
   }
 
+  // これも、切り出して汎用化する。checkPiontsAPIの画像アップとまとめる
   static async uploadAvatar(id: string, file: File) {
     try {
       // ファイル名を生成（ユニークにするためにタイムスタンプを追加）
