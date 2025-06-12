@@ -1,19 +1,17 @@
 "use client";
 
-import { Suspense } from "react";
-
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect } from "react";
+import { useRouter, notFound } from "next/navigation";
 
 import { siteConfig, siteUrls } from "@/lib/config/siteConfig";
+import { throwError } from "@/lib/error";
 import { InfiniteScrollProvider } from "@/contexts/InfiniteScrollContext";
 import InfiniteScroll from "../InfiniteScroll";
 
 import { useInfiniteData } from "@/contexts/InfiniteScrollContext";
 import { useCheckPointList } from "@/hooks/useCheckPointList";
 
-import Error from "@/components/ui/Error";
 import Spinner from "@/components/ui/Spinner";
-import NotFound from "@/components/ui/NotFound";
 
 import CheckPoint from "./CheckPoint";
 import { CheckPointType } from "@/lib/types";
@@ -67,6 +65,16 @@ export const List = ({
     likedUserName: likedUserName || null,
   });
 
+  useEffect(() => {
+    if (!initialLoading && !initialError && initialCheckPoints.length === 0) {
+      notFound();
+    }
+  }, [initialLoading, initialError, initialCheckPoints]);
+
+  if (initialError) {
+    throwError(initialError, "鑑定ポイントの取得でエラーが発生しました");
+  }
+
   const {
     data: checkPoints,
     error,
@@ -78,6 +86,10 @@ export const List = ({
     pageSize: siteConfig.pagination.checkPoints.itemsPerPage,
     itemStatusChangeCount: cpStatusChangeCount,
   });
+
+  if (error) {
+    throwError(error, "鑑定ポイントの読み込み中にエラーが発生しました");
+  }
 
   const router = useRouter();
 
@@ -101,18 +113,8 @@ export const List = ({
       <Suspense fallback={<Spinner />}>
         <InfiniteScrollProvider>
           <div className="">
-            {error ? (
-              <Error />
-            ) : initialLoading ? (
+            {initialLoading ? (
               <Spinner />
-            ) : checkPoints.length === 0 ? (
-              <NotFound
-                msg={
-                  profileId
-                    ? "まだ鑑定ポイントの投稿はありません"
-                    : "鑑定ポイントがまだありません。"
-                }
-              />
             ) : (
               <InfiniteScroll onLoadMore={loadMoreData}>
                 <div className="checkpoint-cards-container">
