@@ -55,6 +55,7 @@ export interface Database {
           name: string;
           image_url: string;
           description: string | null;
+          profile_id: string | null;
           created_at: string | null;
           updated_at: string | null;
           deleted_at: string | null;
@@ -77,7 +78,14 @@ export interface Database {
           updated_at?: string | null;
           deleted_at?: string | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "brands_profile_id_fkey";
+            columns: ["profile_id"];
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       products: {
         Row: {

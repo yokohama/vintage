@@ -4,6 +4,7 @@ import {
   mapCheckPoint,
   processSupabaseArrayResponse,
   handleSupabaseError,
+  handleSupabaseUnknownError,
   processSupabaseResponse,
   mapIsLiked,
 } from "./utils/formatHelper";
@@ -196,6 +197,8 @@ export class checkPointsAPI {
         handleSupabaseError(error, "チェックポイントの追加に失敗しました");
       }
 
+      console.log(data);
+
       return processSupabaseResponse<SupabaseCheckPointType, CheckPointType>(
         data,
         null,
@@ -203,55 +206,14 @@ export class checkPointsAPI {
         "チェックポイント",
       );
     } catch (error: unknown) {
-      // ここをhelperに切り出して汎用化する。
-      console.error("Supabase error:", error);
-      // 未知のエラーの場合
-      const apiError = {
-        message:
-          error instanceof Error
-            ? error.message
-            : "チェックポイントの追加に失敗しました",
-        code:
-          typeof error === "object" && error !== null && "code" in error
-            ? (error.code as string)
-            : "unknown",
-      };
-      throw apiError;
-    }
-  }
-
-  // ここを切り出して汎用化する
-  // 画像をwebp形式に変換するのもここで
-  static async uploadImage(
-    file: File,
-    userId: string,
-    folder: string = "check_points",
-  ): Promise<string> {
-    // ファイル名の一意性を確保するためにタイムスタンプとランダム文字列を追加
-    const fileExt = file.name.split(".").pop();
-    const timestamp = Date.now();
-    const randomString = Math.random().toString(36).substring(2, 15);
-    const fileName = `${userId}_${timestamp}_${randomString}.${fileExt}`;
-    const filePath = `${folder}/${fileName}`;
-
-    // Supabaseにアップロード
-    const { error } = await supabase.storage
-      .from("images")
-      .upload(filePath, file, {
-        cacheControl: "3600",
-        upsert: false,
+      handleSupabaseUnknownError({
+        msg: "チェックポイントの追加に失敗しました。",
+        error,
       });
-
-    if (error !== null) {
-      console.error("Storage upload error:", error);
-      handleSupabaseError(error, `画像のアップロードに失敗しました`);
     }
 
-    // 公開URLを取得
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from("images").getPublicUrl(filePath);
-    return publicUrl;
+    // 明示的にneverを返すことを示す
+    throw new Error("This code will never be executed");
   }
 
   // チェックポイントを削除する
@@ -267,19 +229,10 @@ export class checkPointsAPI {
         handleSupabaseError(error, "チェックポイントの削除に失敗しました");
       }
     } catch (error: unknown) {
-      console.error("Delete check point error:", error);
-      // 未知のエラーの場合
-      const apiError = {
-        message:
-          error instanceof Error
-            ? error.message
-            : "チェックポイントの削除に失敗しました",
-        code:
-          typeof error === "object" && error !== null && "code" in error
-            ? (error.code as string)
-            : "unknown",
-      };
-      throw apiError;
+      handleSupabaseUnknownError({
+        msg: "チェックポイントの削除に失敗しました。",
+        error,
+      });
     }
   }
 
@@ -307,17 +260,10 @@ export class checkPointsAPI {
         handleSupabaseError(error, "いいねの追加に失敗しました");
       }
     } catch (error: unknown) {
-      console.error("Like check point error:", error);
-      // 未知のエラーの場合
-      const apiError = {
-        message:
-          error instanceof Error ? error.message : "いいねの追加に失敗しました",
-        code:
-          typeof error === "object" && error !== null && "code" in error
-            ? (error.code as string)
-            : "unknown",
-      };
-      throw apiError;
+      handleSupabaseUnknownError({
+        msg: "いいねの追加に失敗しました。",
+        error,
+      });
     }
   }
 
@@ -339,19 +285,10 @@ export class checkPointsAPI {
         handleSupabaseError(error, "いいねの取り消しに失敗しました");
       }
     } catch (error: unknown) {
-      console.error("Unlike check point error:", error);
-      // 未知のエラーの場合
-      const apiError = {
-        message:
-          error instanceof Error
-            ? error.message
-            : "いいねの取り消しに失敗しました",
-        code:
-          typeof error === "object" && error !== null && "code" in error
-            ? (error.code as string)
-            : "unknown",
-      };
-      throw apiError;
+      handleSupabaseUnknownError({
+        msg: "いいねの取り消しに失敗しました。",
+        error,
+      });
     }
   }
 }

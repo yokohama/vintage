@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig, siteUrls } from "@/lib/config/siteConfig";
 import { userProfilesAPI } from "@/lib/api/supabase/userProfilesAPI";
+import { storageAPI } from "@/lib/api/supabase/storageAPI";
 import { UserProfileType } from "@/lib/types";
 
 type useEditProps = {
@@ -96,45 +97,43 @@ export const useEdit = ({ profileId }: useEditProps) => {
     e.preventDefault();
     setSaving(true);
 
+    let avatarUrl = profile?.avatarUrl || "";
+
     try {
-      let avatarUrl = profile?.avatarUrl || "";
-
-      // 画像がアップロードされた場合
       if (imageFile) {
-        const { data: uploadData, error: uploadError } =
-          await userProfilesAPI.uploadAvatar(profileId, imageFile);
+        const { publicUrl } = await storageAPI.uploadImage({
+          file: imageFile,
+          userId: profileId,
+          folderName: "avatar",
+        });
 
-        if (uploadError) {
-          errorRedirect();
-        }
-        if (uploadData) {
-          avatarUrl = uploadData.avatarUrl;
-        }
+        avatarUrl = publicUrl;
       }
-
-      // プロフィール情報の更新
-      const { error: updateError } = await userProfilesAPI.updateProfile(
-        profileId,
-        {
-          ...formData,
-          avatarUrl,
-        },
-      );
-
-      if (updateError) {
-        errorRedirect();
-      }
-
-      // 成功時はクエリパラメータを付けてリダイレクト
-      router.push(
-        `${siteUrls.profile(profileId)}?t=${Date.now()}&success=true`,
-      );
-      router.refresh();
-    } catch {
+    } catch (err) {
+      console.error(err);
       errorRedirect();
     } finally {
       setSaving(false);
     }
+
+    // プロフィール情報の更新
+    const { error: updateError } = await userProfilesAPI.updateProfile(
+      profileId,
+      {
+        ...formData,
+        avatarUrl,
+      },
+    );
+
+    if (updateError) {
+      console.error(updateError);
+      errorRedirect();
+      setSaving(false);
+    }
+
+    // 成功時はクエリパラメータを付けてリダイレクト
+    router.push(`${siteUrls.profile(profileId)}?t=${Date.now()}&success=true`);
+    router.refresh();
   };
 
   return {

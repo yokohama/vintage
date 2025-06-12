@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { usePageTitle } from "@/contexts/PageTitleContext";
 import { AddButton } from "./OriginalButton";
@@ -14,6 +15,8 @@ interface PageTitleProps {
 }
 
 const PageTitle = ({ title, brandId, productId }: PageTitleProps) => {
+  const router = useRouter();
+
   const { isFixed, setIsFixed } = usePageTitle();
   const titleRef = useRef<HTMLDivElement>(null);
   const placeholderRef = useRef<HTMLDivElement>(null);
@@ -90,6 +93,7 @@ const PageTitle = ({ title, brandId, productId }: PageTitleProps) => {
                     <AddButton
                       label=""
                       className="bg-amber-600 hover:bg-amber-700 text-white text-sm px-4 py-2 rounded-md shadow-sm mb-2"
+                      onClick={() => router.push(siteUrls.newBrand())}
                     />
                   </div>
                 )}

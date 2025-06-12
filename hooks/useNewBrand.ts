@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { CheckPointType } from "@/lib/types";
-import { checkPointsAPI } from "@/lib/api/supabase/checkPointsAPI";
+import { BrandType } from "@/lib/types";
+import { brandsAPI } from "@/lib/api/supabase/brandsAPI";
 import { userProfilesAPI } from "@/lib/api/supabase/userProfilesAPI";
 import { storageAPI } from "@/lib/api/supabase/storageAPI";
 import { useNew } from "./useNew";
 
-interface UseNewCheckPointReturn {
-  point: string;
-  setPoint: (value: string) => void;
+interface UseNewBrandReturn {
+  name: string;
+  setName: (value: string) => void;
   description: string;
   setDescription: (value: string) => void;
   selectedFile: File | null;
@@ -23,10 +23,10 @@ interface UseNewCheckPointReturn {
   handleCancel: () => void;
 }
 
-export function useNewCheckPoint(): UseNewCheckPointReturn {
+export function useNewBrand(): UseNewBrandReturn {
   const router = useRouter();
 
-  const [point, setPoint] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
   const {
@@ -45,11 +45,10 @@ export function useNewCheckPoint(): UseNewCheckPointReturn {
   } = useNew();
 
   const handleAdd = async (
-    productVintageId: number,
-    point: string,
+    name: string,
     file: File,
     description: string | null,
-  ): Promise<{ success: boolean; checkPoint?: CheckPointType }> => {
+  ): Promise<{ success: boolean; brand?: BrandType }> => {
     setIsSubmitting(true);
     setUploadProgress(0);
 
@@ -68,10 +67,9 @@ export function useNewCheckPoint(): UseNewCheckPointReturn {
 
       setUploadProgress(70);
 
-      // 鑑定ポイントの追加
-      const newCheckPoint = await checkPointsAPI.addCheckPoint(
-        productVintageId,
-        point,
+      // ブランドの追加
+      const newBrand = await brandsAPI.addBrand(
+        name,
         publicUrl,
         description,
         userProfile.id,
@@ -79,21 +77,21 @@ export function useNewCheckPoint(): UseNewCheckPointReturn {
 
       setUploadProgress(100);
 
-      toast.success("鑑定ポイントを追加しました");
-      return { success: true, checkPoint: newCheckPoint };
+      toast.success("ブランドを追加しました");
+      return { success: true, brand: newBrand };
     } catch {
-      toast.error("鑑定ポイントの追加でエラーが発生しました。");
+      toast.error("ブランドの追加でエラーが発生しました。");
       return { success: false };
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent, productVintageId: number) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!point.trim()) {
-      toast.error("鑑定ポイントを入力してください");
+    if (!name.trim()) {
+      toast.error("ブランドを入力してください");
       return;
     }
 
@@ -107,15 +105,10 @@ export function useNewCheckPoint(): UseNewCheckPointReturn {
       return;
     }
 
-    const result = await handleAdd(
-      productVintageId,
-      point,
-      selectedFile,
-      description || null,
-    );
+    const result = await handleAdd(name, selectedFile, description || null);
 
-    if (result.success && result.checkPoint) {
-      setPoint("");
+    if (result.success && result.brand) {
+      setName("");
       setDescription("");
       setSelectedFile(null);
       setPreviewUrl(null);
@@ -124,8 +117,8 @@ export function useNewCheckPoint(): UseNewCheckPointReturn {
   };
 
   return {
-    point,
-    setPoint,
+    name,
+    setName,
     description,
     setDescription,
     selectedFile,

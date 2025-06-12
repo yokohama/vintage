@@ -72,7 +72,6 @@ export class userProfilesAPI {
     profileData: Partial<UserProfileType>,
   ) {
     try {
-      // スネークケースに変換
       const updateData = {
         display_name: profileData.displayName,
         description: profileData.description,
@@ -95,52 +94,6 @@ export class userProfilesAPI {
       console.error("プロフィール更新エラー:", error);
       return {
         error: { message: "プロフィールの更新に失敗しました" },
-      };
-    }
-  }
-
-  // これも、切り出して汎用化する。checkPiontsAPIの画像アップとまとめる
-  static async uploadAvatar(id: string, file: File) {
-    try {
-      // ファイル名を生成（ユニークにするためにタイムスタンプを追加）
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${id}-${Date.now()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
-
-      // Storageにアップロード
-      const { error: uploadError } = await supabase.storage
-        .from("images")
-        .upload(filePath, file);
-
-      if (uploadError) {
-        console.log(uploadError);
-        return { data: null, error: uploadError };
-      }
-
-      // 公開URLを取得
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("images").getPublicUrl(filePath);
-
-      // プロフィールのavatar_urlを更新
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ avatar_url: publicUrl })
-        .eq("id", id);
-
-      if (updateError) {
-        return { data: null, error: updateError };
-      }
-
-      return {
-        data: { avatarUrl: publicUrl },
-        error: null,
-      };
-    } catch (error) {
-      console.error("アバターアップロードエラー:", error);
-      return {
-        data: null,
-        error: { message: "プロフィール画像のアップロードに失敗しました" },
       };
     }
   }

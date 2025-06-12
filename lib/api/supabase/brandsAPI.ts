@@ -1,7 +1,13 @@
 import { supabase } from "@/lib/supabase";
 import { BrandType } from "@/lib/types";
 import { SupabaseBrandType } from "./utils/types";
-import { mapBrand, processSupabaseArrayResponse } from "./utils/formatHelper";
+import {
+  mapBrand,
+  processSupabaseArrayResponse,
+  handleSupabaseError,
+  processSupabaseResponse,
+  handleSupabaseUnknownError,
+} from "./utils/formatHelper";
 
 export class brandsAPI {
   static async getBrands(
@@ -13,16 +19,54 @@ export class brandsAPI {
 
     const { data, error } = await supabase
       .from("brands")
-      .select("*")
+      .select("*, profile:profiles(*)")
       .is("deleted_at", null)
       .order("updated_at", { ascending: true })
       .range(from, to);
 
-    // 共通の配列レスポンス処理関数を使用
     return processSupabaseArrayResponse<SupabaseBrandType, BrandType>(
       data,
       error,
       mapBrand,
     );
+  }
+
+  static async addBrand(
+    name: string,
+    imageUrl: string,
+    description: string | null,
+    userId: string,
+  ): Promise<BrandType> {
+    try {
+      const { data, error } = await supabase
+        .from("brands")
+        .insert({
+          name: name,
+          image_url: imageUrl,
+          description: description || null,
+          profile_id: userId,
+        })
+        .select("*, profile:profiles(*)")
+        .single();
+
+      if (error !== null) {
+        console.error("Supabase error:", error);
+        handleSupabaseError(error, "ブランドの追加に失敗しました");
+      }
+
+      return processSupabaseResponse<SupabaseBrandType, BrandType>(
+        data,
+        null,
+        mapBrand,
+        "ブランド",
+      );
+    } catch (error: unknown) {
+      handleSupabaseUnknownError({
+        msg: "ブランドの追加に失敗しました。",
+        error,
+      });
+    }
+    // 明示的にneverを返すことを示す
+    throw new Error("This code will never be executed");
   }
 }

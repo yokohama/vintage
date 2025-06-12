@@ -41,6 +41,8 @@ export interface SupabaseBrandType {
   name: string;
   image_url: string;
   description: string | null;
+  profile_id?: string | null;
+  profile?: SupabaseProfileType | null;
   created_at?: string | null;
   updated_at?: string | null;
   deleted_at?: string | null;

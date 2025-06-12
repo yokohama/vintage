@@ -240,7 +240,7 @@ a.sns {
 }
 
 .item-card {
-	@apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100 hover:scale-105;
+	@apply bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 border border-amber-100 hover:scale-105 flex flex-col;
 }
 
 .item-card-image-container {
@@ -252,7 +252,23 @@ a.sns {
 }
 
 .item-card-text {
-	@apply p-2;
+	@apply p-2 flex-grow;
+}
+
+.item-card-footer-container {
+	@apply border border-amber-200 bg-amber-200 p-3 rounded-b-sm flex justify-between items-center mt-auto w-full;
+}
+
+.item-card-footer-profile-container {
+	@apply flex items-center gap-2.5 hover:text-amber-800 transition-colors;
+}
+
+.item-card-footer-profile-image {
+	@apply transition-colors rounded-full w-8 h-8 border border-amber-200;
+}
+
+.item-card-footer-profile-name {
+	@apply italic text-amber-700 hover:text-amber-800 transition-colors rounded-full;
 }
 
 .checkpoint-cards-container {

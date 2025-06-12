@@ -17,6 +17,7 @@ import {
   useInfiniteData,
 } from "@/contexts/InfiniteScrollContext";
 import InfiniteScroll from "@/components/ui/InfiniteScroll";
+import BrandFooter from "@/components/ui/brand/BrandFooter";
 
 type BrandsProps = {
   initialBrands: BrandType[];
@@ -71,6 +72,7 @@ export default function Brands({ initialBrands, initialError }: BrandsProps) {
                           <div className="description">{brand.description}</div>
                         </div>
                       </Link>
+                      <BrandFooter brand={brand} />
                     </div>
                   ))}
                 </div>

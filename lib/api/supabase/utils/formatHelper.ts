@@ -31,6 +31,24 @@ export const handleSupabaseError = (
   throw apiError;
 };
 
+export const handleSupabaseUnknownError = ({
+  msg,
+  error,
+}: {
+  msg: string;
+  error: Error | SupabaseErrorType | unknown;
+}) => {
+  console.error("Unlike check point error:", error);
+  const apiError = {
+    message: error instanceof Error ? msg : "未知のエラーが発生しました。",
+    code:
+      typeof error === "object" && error !== null && "code" in error
+        ? (error.code as string)
+        : "unknown",
+  };
+  throw apiError;
+};
+
 // データが存在しない場合のエラーハンドリング
 export const handleNotFoundError = (entityName: string = "データ"): never => {
   const notFound: ApiErrorType = {
@@ -91,6 +109,7 @@ export const mapBrand = (brand: SupabaseBrandType): BrandType => ({
   name: brand.name,
   imageUrl: brand.image_url,
   description: brand.description || "",
+  profile: brand.profile ? mapProfile(brand.profile) : null,
   products: [], // 循環参照を避けるため空配列を設定
 });
 

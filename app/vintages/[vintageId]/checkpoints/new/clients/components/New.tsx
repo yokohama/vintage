@@ -3,7 +3,6 @@
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import PageTitle from "@/components/ui/PageTitle";
-import { CheckPointType } from "@/lib/types";
 
 import { useNewCheckPoint } from "@/hooks/useNewCheckPoint";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,6 @@ import { FileUpload } from "@/components/ui/fileUpload";
 
 type NewProps = {
   vintageId: number;
-  onSuccess: (newCheckPoint: CheckPointType) => void;
 };
 
 export const New = ({ vintageId }: NewProps) => {

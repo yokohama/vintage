@@ -27,7 +27,7 @@ export const siteConfig = {
   images: {
     homeBanner: "/images/home-banner.jpg",
     defaultOgImage: "/images/og-default.jpg",
-    defaultProfileAvatar: "/images/default-avatar.jpg",
+    defaultProfileAvatar: "/images/default-avatar.webp",
   },
 
   // SVG関連
@@ -51,6 +51,7 @@ export const siteConfig = {
 export const siteUrls = {
   home: () => "/",
   brands: () => "/brands",
+  newBrand: () => `/brands/new`,
   products: (brandId: number) => `/brands/${brandId}/products`,
   product: (brandId: number, productId: number) =>
     `/brands/${brandId}/products/${productId}`,

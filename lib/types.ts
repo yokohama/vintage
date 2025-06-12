@@ -13,13 +13,15 @@ export interface UserProfileType {
   checkPointLikes: CheckPointType[];
 }
 
-export type CheckPointsFilterType = "all" | "profile" | "vintage";
+//export type CheckPointsFilterType = "all" | "profile" | "vintage";
 
 export interface BrandType {
   id: number;
   name: string;
   imageUrl: string;
   description: string;
+  profileId?: string;
+  profile?: UserProfileType | null;
   products: ProductType[];
 }
 
