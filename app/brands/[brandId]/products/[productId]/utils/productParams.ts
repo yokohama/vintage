@@ -1,28 +1,16 @@
 import { productsAPI } from "@/lib/api/supabase/productsAPI";
-import { ProductType, ApiErrorType } from "@/lib/types";
+import { ProductType } from "@/lib/types";
+import { throwError } from "@/lib/error";
 
-export async function productParams(params: { productId: string }): Promise<{
-  product: ProductType | null;
-  error: string | null;
-}> {
+export async function productParams(params: {
+  productId: string;
+}): Promise<ProductType> {
   const productId = parseInt(params.productId, 10);
 
-  let product: ProductType | null = null;
-  let error = null;
-
-  if (!productId) {
-    return { product, error: "無効なプロダクトIDです" };
+  if (!productId || isNaN(productId)) {
+    throwError("無効なプロダクトIDです");
   }
 
-  try {
-    product = await productsAPI.getSimpleProduct(productId);
-  } catch (err) {
-    const apiError = err as Error | ApiErrorType;
-    error =
-      "message" in apiError
-        ? apiError.message
-        : "プロダクトの取得中にエラーが発生しました";
-  }
-
-  return { product, error };
+  // throwNotFoundをtrueに設定して、データがない場合は404エラーを返す
+  return await productsAPI.getSimpleProduct(productId, true);
 }

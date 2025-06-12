@@ -1,12 +1,12 @@
 import { supabase } from "@/lib/supabase";
 import { BrandType } from "@/lib/types";
 import { SupabaseBrandType } from "./utils/types";
+import { notFound } from "next/navigation";
+import { throwError } from "@/lib/error";
 import {
   mapBrand,
   processSupabaseArrayResponse,
-  handleSupabaseError,
   processSupabaseResponse,
-  handleSupabaseUnknownError,
 } from "./utils/formatHelper";
 
 export class brandsAPI {
@@ -24,9 +24,18 @@ export class brandsAPI {
       .order("updated_at", { ascending: true })
       .range(from, to);
 
+    if (error) {
+      throwError(error, "ブランド一覧の取得中にエラーが発生しました");
+    }
+
+    // 最初のページでデータがない場合は404エラーを返す
+    if (page === 1 && (!data || data.length === 0)) {
+      notFound();
+    }
+
     return processSupabaseArrayResponse<SupabaseBrandType, BrandType>(
       data,
-      error,
+      error, //TODO: 不要になる
       mapBrand,
     );
   }
@@ -49,9 +58,8 @@ export class brandsAPI {
         .select("*, profile:profiles(*)")
         .single();
 
-      if (error !== null) {
-        console.error("Supabase error:", error);
-        handleSupabaseError(error, "ブランドの追加に失敗しました");
+      if (error) {
+        throwError(error, "ブランドの追加に失敗しました");
       }
 
       return processSupabaseResponse<SupabaseBrandType, BrandType>(
@@ -61,10 +69,9 @@ export class brandsAPI {
         "ブランド",
       );
     } catch (error: unknown) {
-      handleSupabaseUnknownError({
-        msg: "ブランドの追加に失敗しました。",
-        error,
-      });
+      if (error) {
+        throwError(error, "ブランドの追加で不明なエラーが発生しました");
+      }
     }
     // 明示的にneverを返すことを示す
     throw new Error("This code will never be executed");

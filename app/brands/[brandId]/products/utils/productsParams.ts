@@ -1,39 +1,34 @@
+import { notFound } from "next/navigation";
 import { productsAPI } from "@/lib/api/supabase/productsAPI";
-import { ProductType, ApiErrorType, BrandType } from "@/lib/types";
+import { ProductType, BrandType } from "@/lib/types";
 
 /**
  * ブランドIDパラメータから製品情報を取得する関数
  * @param params ルートパラメータ（brandIdを含むオブジェクト）
- * @returns 製品リスト、エラー情報、ブランド名を含むオブジェクト
+ * @returns 製品リスト、ブランド情報
  */
 export async function productsParams(params: { brandId: string }): Promise<{
   brand: BrandType | null;
   products: ProductType[];
-  error: string | null;
 }> {
   const brandParams = await params;
   const brandId = parseInt(brandParams.brandId, 10);
 
-  let products: ProductType[] = [];
-  let error = null;
-  let brand: BrandType | null = null;
-
+  // 無効なブランドIDの場合は即座にnotFound()を返す
   if (isNaN(brandId)) {
-    return { products, error: "無効なブランドIDです", brand };
+    notFound();
   }
 
-  try {
-    products = await productsAPI.getProductsByBrandId(brandId);
-    if (products.length > 0) {
-      brand = products[0].brand;
-    }
-  } catch (err) {
-    const apiError = err as Error | ApiErrorType;
-    error =
-      "message" in apiError
-        ? apiError.message
-        : "製品の取得中にエラーが発生しました";
+  // APIからデータを取得
+  const products = await productsAPI.getProductsByBrandId(brandId);
+
+  // 製品が見つからない場合はnotFound()を呼び出す
+  if (products.length === 0) {
+    notFound();
   }
 
-  return { brand, products, error };
+  // ブランド情報を取得
+  const brand = products[0].brand;
+
+  return { brand, products };
 }

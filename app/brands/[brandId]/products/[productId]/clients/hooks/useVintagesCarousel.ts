@@ -36,7 +36,11 @@ export function useVintagesCarousel({
       try {
         const product = await productsAPI.getProduct(productId);
         setProduct(product);
-        setCurrentVintage(product.vintages[currentIndex]);
+        if (product.vintages && product.vintages.length > 0) {
+          setCurrentVintage(product.vintages[currentIndex]);
+        } else {
+          setError("このプロダクトにはヴィンテージ情報がありません");
+        }
       } catch (err) {
         const apiError = err as Error | ApiErrorType;
         const error =
@@ -48,7 +52,7 @@ export function useVintagesCarousel({
     };
 
     fetchProduct();
-  }, []);
+  }, [productId, currentIndex]);
 
   // カルーセルAPIのイベントハンドリング
   useEffect(() => {

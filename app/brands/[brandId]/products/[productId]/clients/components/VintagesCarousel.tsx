@@ -45,11 +45,10 @@ const VintagesCarousel = ({ productId }: VintagesCarouselProps) => {
               product.vintages.map((_, index) => (
                 <div
                   key={index}
-                  className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${
-                    index === currentIndex
+                  className={`w-2.5 h-2.5 rounded-full transition-colors cursor-pointer ${index === currentIndex
                       ? "bg-red-700"
                       : "bg-amber-200 hover:bg-red-400"
-                  }`}
+                    }`}
                 />
               ))}
           </div>

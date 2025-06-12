@@ -7,11 +7,11 @@ import { siteConfig } from "@/lib/config/siteConfig";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import PageTitle from "@/components/ui/PageTitle";
-import Error from "@/components/ui/Error";
 import NotFound from "@/components/ui/NotFound";
 import Spinner from "@/components/ui/Spinner";
 import { ApiErrorType, BrandType } from "@/lib/types";
 import { brandsAPI } from "@/lib/api/supabase/brandsAPI";
+import { throwError } from "@/lib/error";
 import {
   InfiniteScrollProvider,
   useInfiniteData,
@@ -37,6 +37,11 @@ export default function Brands({ initialBrands, initialError }: BrandsProps) {
     itemStatusChangeCount: 0,
   });
 
+  // エラーがある場合は、Next.jsのエラーバウンダリにスローする
+  if (error) {
+    throwError(error, "ブランド一覧の読み込み中にエラーが発生しました");
+  }
+
   return (
     <main>
       <div>
@@ -44,9 +49,7 @@ export default function Brands({ initialBrands, initialError }: BrandsProps) {
         <PageTitle title="ブランド一覧" />
         <Suspense fallback={<Spinner />}>
           <InfiniteScrollProvider>
-            {error ? (
-              <Error />
-            ) : brands.length === 0 ? (
+            {brands.length === 0 ? (
               <NotFound msg="ブランドが見つかりませんでした。" />
             ) : (
               <InfiniteScroll onLoadMore={loadMoreBrands}>

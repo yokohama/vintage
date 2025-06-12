@@ -69,8 +69,28 @@ Next.js v14の標準に合わせるためには、以下の変更が必要です
 - app/checkpointsの下を標準の実装で実装する。
 - 現在checkpointsの下では、ErrorもNotFoundも使用していないので、新規作成になる。
 
-## STEP3
+## STEP3 (close)
 - STEP2の実装を参考にして、
 - app/brands/page.tsxも同様に実装する。
 - app/brands/[brandId]以下は対象外。
 - app/brands/page.tsxでは、brandsAPI.tsを使用しているので、notfound()や、throwErrorなど必要かつ適切なのであればであれば、brandsAPIに実装する。
+
+## STEP4 (close)
+- 今までの実装を参考にして、
+- app/brands/[brandId]/products/[productId]/page.tsxも同様に実装する。
+
+## STEP5 (current open)
+- 今までの実装を参考にして、以下も同様の設計で実装。
+./app/likes/page.tsx
+
+## STEP6 (next)
+- 今までの実装を参考にして、以下も同様の設計で実装。
+./app/brands/[brandId]/products/page.tsx
+
+## STEP7 (next)
+- 今までの実装を参考にして、以下も同様の設計で実装。
+./app/profiles/[id]/page.tsx
+
+## STEP7 (next)
+- 今までの実装を参考にして、以下も同様の設計で実装。
+./app/auth/callback/page.tsx
