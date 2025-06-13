@@ -10,6 +10,7 @@ import React, {
 } from "react";
 
 import { siteConfig } from "@/lib/config/siteConfig";
+import { throwError } from "@/lib/error";
 
 interface InfiniteScrollContextType {
   isLoading: boolean;
@@ -26,9 +27,7 @@ const InfiniteScrollContext = createContext<
 export function useInfiniteScroll() {
   const context = useContext(InfiniteScrollContext);
   if (context === undefined) {
-    throw new Error(
-      "useInfiniteScroll must be used within an InfiniteScrollProvider",
-    );
+    throwError(null, "スクロール読み込みでとんでもねーエラーだぞ！");
   }
   return context;
 }
@@ -53,8 +52,8 @@ export function InfiniteScrollProvider({
         setIsLoading(true);
         await callback();
       } catch (error) {
-        console.error("Error loading more items:", error);
         setHasMore(false);
+        throwError(error, "次のアイテム読み込みでエラーが発生しました");
       } finally {
         setIsLoading(false);
       }
@@ -79,21 +78,18 @@ export function InfiniteScrollProvider({
 
 export function useInfiniteData<T, P extends unknown[]>({
   initialData,
-  initialError,
   fetchFunction,
   fetchParams = [] as unknown as P,
   pageSize = siteConfig.pagination.checkPoints.itemsPerPage,
   itemStatusChangeCount,
 }: {
   initialData: T[] | undefined;
-  initialError: unknown | null;
   fetchFunction: (page: number, pageSize: number, ...params: P) => Promise<T[]>;
   fetchParams?: P;
   pageSize?: number;
   itemStatusChangeCount: number;
 }) {
   const [data, setData] = useState<T[]>(initialData || []);
-  const [error, setError] = useState<unknown | null>(initialError);
   const [page, setPage] = useState<number>(1);
   const { setHasMore, isLoading } = useInfiniteScroll();
 
@@ -110,9 +106,7 @@ export function useInfiniteData<T, P extends unknown[]>({
     }
 
     setPage(1);
-
-    setError(initialError);
-  }, [initialData, initialError, pageSize, setHasMore]);
+  }, [initialData, pageSize, setHasMore]);
 
   // 前回の itemStatusChangeCount を記録する参照
   const prevCountRef = React.useRef(0);
@@ -194,7 +188,6 @@ export function useInfiniteData<T, P extends unknown[]>({
 
   return {
     data,
-    error,
     loadMoreData,
     setData,
     page,

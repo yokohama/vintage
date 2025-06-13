@@ -1,8 +1,8 @@
 import { supabase } from "@/lib/supabase";
 import { UserProfileType } from "@/lib/types";
 import { SupabaseProfileType } from "./utils/types";
+import { throwError } from "@/lib/error";
 import {
-  handleSupabaseError,
   processSupabaseResponse,
   mapCheckPointLike,
 } from "./utils/formatHelper";
@@ -31,13 +31,9 @@ export class userProfilesAPI {
     } = await supabase.auth.getUser();
 
     if (!user) {
-      handleSupabaseError({
-        message: "認証されたユーザーが見つかりません",
-        code: "auth/user-not-found",
-      });
+      throwError(null, "認証したユーザーが見つかりません");
     }
 
-    // この時点でuserはnullではないことが確定しているため、型アサーションを使用
     const userId = user!.id;
 
     const { data, error } = await supabase
@@ -59,10 +55,6 @@ export class userProfilesAPI {
       )
       .eq("id", id)
       .single();
-
-    if (error) {
-      throw error;
-    }
 
     return processSupabaseResponse(data, error, mapUserProfile, "プロフィール");
   }
@@ -89,12 +81,14 @@ export class userProfilesAPI {
         .update(updateData)
         .eq("id", id);
 
-      return { error };
+      if (error) {
+        throwError(null, "プロフィールの更新でエラーが発生しました");
+      }
     } catch (error) {
       console.error("プロフィール更新エラー:", error);
-      return {
-        error: { message: "プロフィールの更新に失敗しました" },
-      };
+      if (error) {
+        throwError(null, "プロフィールの更新で不明なエラーが発生しました");
+      }
     }
   }
 }

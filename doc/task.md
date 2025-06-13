@@ -79,18 +79,15 @@ Next.js v14の標準に合わせるためには、以下の変更が必要です
 - 今までの実装を参考にして、
 - app/brands/[brandId]/products/[productId]/page.tsxも同様に実装する。
 
-## STEP5 (current open)
+## STEP5 (close)
 - 今までの実装を参考にして、以下も同様の設計で実装。
 ./app/likes/page.tsx
 
 ## STEP6 (next)
-- 今までの実装を参考にして、以下も同様の設計で実装。
-./app/brands/[brandId]/products/page.tsx
-
-## STEP7 (next)
-- 今までの実装を参考にして、以下も同様の設計で実装。
-./app/profiles/[id]/page.tsx
-
-## STEP7 (next)
-- 今までの実装を参考にして、以下も同様の設計で実装。
-./app/auth/callback/page.tsx
+- 残タスク
+```
+> grep -r 'import Not' ./app/*
+./app/profiles/[id]/page.tsx:import NotFound from "@/components/ui/NotFound";
+> grep -r 'import Erro' ./app/*
+./app/auth/callback/page.tsx:import Error from "@/components/ui/Error";
+```

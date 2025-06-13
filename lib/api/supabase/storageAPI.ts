@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { handleSupabaseError } from "./utils/formatHelper";
+import { throwError } from "@/lib/error";
 
 type UploadImageProps = {
   file: File;
@@ -35,9 +35,8 @@ export class storageAPI {
         upsert: false,
       });
 
-    if (error !== null) {
-      console.error("Storage upload error:", error);
-      handleSupabaseError(error, `画像のアップロードに失敗しました`);
+    if (error) {
+      throwError(error, "画像のアップロードに失敗しました");
     }
 
     // 公開URLを取得

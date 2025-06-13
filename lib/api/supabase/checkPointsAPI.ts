@@ -3,12 +3,11 @@ import { CheckPointType } from "@/lib/types";
 import {
   mapCheckPoint,
   processSupabaseArrayResponse,
-  handleSupabaseError,
-  handleSupabaseUnknownError,
   processSupabaseResponse,
   mapIsLiked,
 } from "./utils/formatHelper";
 import { SupabaseCheckPointType } from "./utils/types";
+import { throwError } from "@/lib/error";
 
 export class checkPointsAPI {
   static useLimit = (page: number, limit: number) => {
@@ -132,10 +131,7 @@ export class checkPointsAPI {
       .range(from, to);
 
     if (likedError) {
-      handleSupabaseError(
-        likedError,
-        "いいねした鑑定ポイントの取得に失敗しました",
-      );
+      throwError(likedError, "いいねした鑑定ポイントの取得に失敗しました");
     }
 
     // いいねした鑑定ポイントがない場合は空配列を返す
@@ -192,24 +188,16 @@ export class checkPointsAPI {
         )
         .single();
 
-      if (error !== null) {
-        console.error("Supabase error:", error);
-        handleSupabaseError(error, "チェックポイントの追加に失敗しました");
-      }
-
-      console.log(data);
-
       return processSupabaseResponse<SupabaseCheckPointType, CheckPointType>(
         data,
-        null,
+        error,
         mapCheckPoint,
         "チェックポイント",
       );
     } catch (error: unknown) {
-      handleSupabaseUnknownError({
-        msg: "チェックポイントの追加に失敗しました。",
-        error,
-      });
+      if (error) {
+        throwError(error, "チェックポイントの追加で不明なエラーが発生しました");
+      }
     }
 
     // 明示的にneverを返すことを示す
@@ -224,15 +212,13 @@ export class checkPointsAPI {
         .update({ deleted_at: new Date().toISOString() })
         .eq("id", checkPointId);
 
-      if (error !== null) {
-        console.error("Delete check point error:", error);
-        handleSupabaseError(error, "チェックポイントの削除に失敗しました");
+      if (error) {
+        throwError(error, "チェックポイントの削除に失敗しました");
       }
     } catch (error: unknown) {
-      handleSupabaseUnknownError({
-        msg: "チェックポイントの削除に失敗しました。",
-        error,
-      });
+      if (error) {
+        throwError(error, "チェックポイントの削除で不明なエラーが発せいました");
+      }
     }
   }
 
@@ -256,14 +242,12 @@ export class checkPointsAPI {
       );
 
       if (error) {
-        console.error("Like check point error:", error);
-        handleSupabaseError(error, "いいねの追加に失敗しました");
+        throwError(error, "いいねの追加に失敗しました");
       }
     } catch (error: unknown) {
-      handleSupabaseUnknownError({
-        msg: "いいねの追加に失敗しました。",
-        error,
-      });
+      if (error) {
+        throwError(error, "いいねの追加で不明なエラーが発生しました");
+      }
     }
   }
 
@@ -281,14 +265,12 @@ export class checkPointsAPI {
         .eq("profile_id", profileId);
 
       if (error) {
-        console.error("Unlike check point error:", error);
-        handleSupabaseError(error, "いいねの取り消しに失敗しました");
+        throwError(error, "いいねの取り消しに失敗しました");
       }
     } catch (error: unknown) {
-      handleSupabaseUnknownError({
-        msg: "いいねの取り消しに失敗しました。",
-        error,
-      });
+      if (error) {
+        throwError(error, "いいねの取り消しにで不明なエラーが発せいました");
+      }
     }
   }
 }

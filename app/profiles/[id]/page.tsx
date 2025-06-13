@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import PageTitle from "@/components/ui/PageTitle";
-import Error from "@/components/ui/Error";
 import NotFound from "@/components/ui/NotFound";
 import Spinner from "@/components/ui/Spinner";
 import { profilesParams } from "../utils/profilesParams";
@@ -30,7 +29,7 @@ export default async function ProfilePage({
 }: {
   params: { id: string };
 }) {
-  const { profile, error } = await profilesParams(params);
+  const { profile } = await profilesParams(params);
 
   return (
     <main>
@@ -40,9 +39,7 @@ export default async function ProfilePage({
           successMsg="プロフィールを更新しました。"
           errorMsg="プロフィールの更新に失敗しました。"
         />
-        {error ? (
-          <Error />
-        ) : !profile ? (
+        {!profile ? (
           <NotFound msg="プロフィールが見つかりませんでした。" />
         ) : (
           <>

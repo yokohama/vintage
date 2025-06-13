@@ -1,7 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { BrandType } from "@/lib/types";
 import { SupabaseBrandType } from "./utils/types";
-import { notFound } from "next/navigation";
 import { throwError } from "@/lib/error";
 import {
   mapBrand,
@@ -24,18 +23,9 @@ export class brandsAPI {
       .order("updated_at", { ascending: true })
       .range(from, to);
 
-    if (error) {
-      throwError(error, "ブランド一覧の取得中にエラーが発生しました");
-    }
-
-    // 最初のページでデータがない場合は404エラーを返す
-    if (page === 1 && (!data || data.length === 0)) {
-      notFound();
-    }
-
     return processSupabaseArrayResponse<SupabaseBrandType, BrandType>(
       data,
-      error, //TODO: 不要になる
+      error,
       mapBrand,
     );
   }
@@ -58,13 +48,9 @@ export class brandsAPI {
         .select("*, profile:profiles(*)")
         .single();
 
-      if (error) {
-        throwError(error, "ブランドの追加に失敗しました");
-      }
-
       return processSupabaseResponse<SupabaseBrandType, BrandType>(
         data,
-        null,
+        error,
         mapBrand,
         "ブランド",
       );

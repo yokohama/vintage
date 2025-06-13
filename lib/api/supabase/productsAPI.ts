@@ -1,8 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import { ProductType } from "@/lib/types";
 import { SupabaseProductType } from "./utils/types";
-import { notFound } from "next/navigation";
-import { throwError } from "@/lib/error";
 
 import {
   mapProduct,
@@ -12,10 +10,7 @@ import {
 } from "./utils/formatHelper";
 
 export class productsAPI {
-  static async getSimpleProduct(
-    productId: number,
-    throwNotFound: boolean = false,
-  ): Promise<ProductType> {
+  static async getSimpleProduct(productId: number): Promise<ProductType> {
     const { data, error } = await supabase
       .from("products")
       .select("*")
@@ -23,18 +18,6 @@ export class productsAPI {
       .is("deleted_at", null)
       .order("updated_at", { ascending: false })
       .single();
-
-    if (error) {
-      if (error.code === "PGRST116" && throwNotFound) {
-        // PGRST116はレコードが見つからない場合のエラーコード
-        notFound();
-      }
-      throwError(error, `製品ID ${productId} の取得中にエラーが発生しました`);
-    }
-
-    if (!data && throwNotFound) {
-      notFound();
-    }
 
     const formattedData: ProductType = processSupabaseResponse(
       data,
@@ -49,10 +32,7 @@ export class productsAPI {
     return formattedData;
   }
 
-  static async getProduct(
-    productId: number,
-    throwNotFound: boolean = false,
-  ): Promise<ProductType> {
+  static async getProduct(productId: number): Promise<ProductType> {
     // 製品情報、ブランド情報、ヴィンテージ情報、チェックポイント情報を一度に取得
     const { data, error } = await supabase
       .from("products")
@@ -90,23 +70,11 @@ export class productsAPI {
       .order("updated_at", { ascending: false })
       .single();
 
-    if (error) {
-      if (error.code === "PGRST116" && throwNotFound) {
-        // PGRST116はレコードが見つからない場合のエラーコード
-        notFound();
-      }
-      throwError(error, `製品ID ${productId} の取得中にエラーが発生しました`);
-    }
-
-    if (!data && throwNotFound) {
-      notFound();
-    }
-
     const formattedData: ProductType = processSupabaseResponse(
       data,
       error,
       (item) => {
-        // まずProductをマッピング
+        // Productをマッピング
         const product = mapProduct(item as SupabaseProductType);
 
         // vintagesが存在する場合、それらをマッピングして製品に追加

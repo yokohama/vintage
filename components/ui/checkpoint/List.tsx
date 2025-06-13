@@ -75,21 +75,15 @@ export const List = ({
     throwError(initialError, "鑑定ポイントの取得でエラーが発生しました");
   }
 
-  const {
-    data: checkPoints,
-    error,
-    loadMoreData,
-  } = useInfiniteData<CheckPointType, []>({
+  const { data: checkPoints, loadMoreData } = useInfiniteData<
+    CheckPointType,
+    []
+  >({
     initialData: initialCheckPoints,
-    initialError,
     fetchFunction: fetchFunction,
     pageSize: siteConfig.pagination.checkPoints.itemsPerPage,
     itemStatusChangeCount: cpStatusChangeCount,
   });
-
-  if (error) {
-    throwError(error, "鑑定ポイントの読み込み中にエラーが発生しました");
-  }
 
   const router = useRouter();
 

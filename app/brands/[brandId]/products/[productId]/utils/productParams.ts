@@ -11,6 +11,5 @@ export async function productParams(params: {
     throwError("無効なプロダクトIDです");
   }
 
-  // throwNotFoundをtrueに設定して、データがない場合は404エラーを返す
-  return await productsAPI.getSimpleProduct(productId, true);
+  return await productsAPI.getSimpleProduct(productId);
 }

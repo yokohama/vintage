@@ -1,11 +1,12 @@
 import { supabase } from "@/lib/supabase";
+import { throwError } from "@/lib/error";
+import { notFound } from "next/navigation";
 
 import {
   BrandType,
   ProductType,
   VintageType,
   CheckPointType,
-  ApiErrorType,
   UserProfileType,
 } from "@/lib/types";
 
@@ -19,45 +20,6 @@ import {
   SupabaseErrorType,
 } from "./types";
 
-// 共通のエラーハンドリング関数
-export const handleSupabaseError = (
-  error: SupabaseErrorType,
-  customMessage?: string,
-): never => {
-  const apiError: ApiErrorType = {
-    message: customMessage || error.message,
-    code: error.code,
-  };
-  throw apiError;
-};
-
-export const handleSupabaseUnknownError = ({
-  msg,
-  error,
-}: {
-  msg: string;
-  error: Error | SupabaseErrorType | unknown;
-}) => {
-  console.error("Unlike check point error:", error);
-  const apiError = {
-    message: error instanceof Error ? msg : "未知のエラーが発生しました。",
-    code:
-      typeof error === "object" && error !== null && "code" in error
-        ? (error.code as string)
-        : "unknown",
-  };
-  throw apiError;
-};
-
-// データが存在しない場合のエラーハンドリング
-export const handleNotFoundError = (entityName: string = "データ"): never => {
-  const notFound: ApiErrorType = {
-    message: `${entityName}が見つかりませんでした`,
-    code: "NOT_FOUND",
-  };
-  throw notFound;
-};
-
 // Supabaseのレスポンスを処理する汎用関数
 export const processSupabaseResponse = <T, R>(
   data: T | null,
@@ -65,12 +27,12 @@ export const processSupabaseResponse = <T, R>(
   mapper: (item: T) => R,
   entityName: string = "データ",
 ): R => {
-  if (error !== null) {
-    handleSupabaseError(error);
+  if (error) {
+    throwError(error, `${entityName}の取得でエラーが発生しました`);
   }
 
   if (!data) {
-    handleNotFoundError(entityName);
+    notFound();
   }
 
   return mapper(data as T);
@@ -83,7 +45,11 @@ export const processSupabaseArrayResponse = <T, R>(
   mapper: (item: T) => R,
 ): R[] => {
   if (error) {
-    handleSupabaseError(error);
+    if (error.code === "PGRST116") {
+      // PGRST116はレコードが見つからない場合のエラーコード
+      notFound();
+    }
+    throwError(error, "データの取得でエラーが発生しました");
   }
 
   return (data || []).map((item) => mapper(item));
@@ -124,17 +90,7 @@ export const mapProduct = (product: SupabaseProductType): ProductType => ({
 
 export const mapVintage = (vintage: SupabaseVintageType): VintageType => {
   if (!vintage) {
-    console.error("mapVintage: vintage is undefined or null");
-    return {
-      id: 0,
-      name: "",
-      product: {} as ProductType,
-      manufacturing_start_year: 0,
-      manufacturing_end_year: 0,
-      imageUrl: "",
-      description: "",
-      checkPoints: [],
-    };
+    throwError(vintage, "vintageデータがぶっ壊れてるぜ！");
   }
 
   return {

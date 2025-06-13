@@ -117,19 +117,10 @@ export const useEdit = ({ profileId }: useEditProps) => {
     }
 
     // プロフィール情報の更新
-    const { error: updateError } = await userProfilesAPI.updateProfile(
-      profileId,
-      {
-        ...formData,
-        avatarUrl,
-      },
-    );
-
-    if (updateError) {
-      console.error(updateError);
-      errorRedirect();
-      setSaving(false);
-    }
+    await userProfilesAPI.updateProfile(profileId, {
+      ...formData,
+      avatarUrl,
+    });
 
     // 成功時はクエリパラメータを付けてリダイレクト
     router.push(`${siteUrls.profile(profileId)}?t=${Date.now()}&success=true`);

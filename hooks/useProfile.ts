@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
 import { userProfilesAPI } from "@/lib/api/supabase/userProfilesAPI";
-import { UserProfileType, ApiErrorType } from "@/lib/types";
+import { UserProfileType } from "@/lib/types";
+import { throwError } from "@/lib/error";
 
 export const useProfile = () => {
   const [profile, setProfile] = useState<UserProfileType | null>(null);
-  const [error, setError] = useState<ApiErrorType | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,13 +14,7 @@ export const useProfile = () => {
         const profileData = await userProfilesAPI.getCurrentUserProfile();
         setProfile(profileData);
       } catch (err) {
-        const apiError = err as Error | ApiErrorType;
-        setError({
-          message:
-            "message" in apiError
-              ? apiError.message
-              : "プロフィールの取得中にエラーが発生しました",
-        });
+        throwError(err, "プロフィールの取得中にエラーが発生しました");
       } finally {
         setLoading(false);
       }
@@ -31,7 +25,6 @@ export const useProfile = () => {
 
   return {
     profile,
-    error,
     loading,
   };
 };

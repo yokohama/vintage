@@ -6,7 +6,6 @@ import { siteConfig } from "@/lib/config/siteConfig";
 import Header from "@/components/ui/Header";
 import Footer from "@/components/ui/Footer";
 import PageTitle from "@/components/ui/PageTitle";
-import Error from "@/components/ui/Error";
 import Spinner from "@/components/ui/Spinner";
 import { productsParams } from "./utils/productsParams";
 
@@ -15,21 +14,8 @@ export default async function ProductsPage({
 }: {
   params: { brandId: string };
 }) {
-  const { brand, products, error } = await productsParams(params);
+  const { brand, products } = await productsParams(params);
   const brandId = parseInt(params.brandId, 10);
-
-  // エラーがある場合はエラーページを表示
-  if (error) {
-    return (
-      <main>
-        <div>
-          <Header />
-          <Error />
-          <Footer />
-        </div>
-      </main>
-    );
-  }
 
   // 製品が見つからない場合はnotFound()を呼び出す
   if (products.length === 0) {
